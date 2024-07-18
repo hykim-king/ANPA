@@ -7,6 +7,10 @@
         <result column="big_list" property="bigList"/>
         <result column="mid_list" property="midList"/>
         <result column="use_yn" property="useYn"/>
+        <result column="reg_id" property="regId"/>
+        <result column="mod_id" property="modId"/>
+        <result column="reg_dt" property="regDt"/>
+        <result column="mod_dt" property="modDt"/>
     </resultMap>
 
     <select id="doRetrieve" parameterType="Code" resultMap="codeMap">
