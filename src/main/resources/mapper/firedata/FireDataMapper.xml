@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pcwk.ehr.mapper.BoardMapper">
+
+    <insert id="doSave" parameterType="Firedata" >
+	    INSERT INTO FIRE_DATA (
+	        injured_sum,
+	        dead,
+	        injured,
+	        amount,
+	        sub_factor,
+	        sub_loc,
+	        sub_city,
+	        reg_id,
+	        mod_id
+	    ) VALUES (
+	        #{injuredSum},
+	        #{dead},
+	        #{injured},
+	        #{amount},
+	        #{subFactor},
+	        #{subLoc},
+	        #{subCity},
+	        #{regId},
+	        #{regId}
+	    )   
+    </insert>    
+</mapper>

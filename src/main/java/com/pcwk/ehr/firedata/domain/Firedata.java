@@ -1,8 +1,8 @@
-package com.pcwk.ehr.firedata;
+package com.pcwk.ehr.firedata.domain;
 
 import com.pcwk.ehr.cmn.DTO;
 
-public class firedata extends DTO{
+public class Firedata extends DTO{
 	private	int    fireSeq;	// 화재정보시퀀스
 	private	int    injuredSum;	// 피해자 소계
 	private	int    dead;		// 사망자
@@ -16,9 +16,9 @@ public class firedata extends DTO{
 	private String regDt;		// 수정일
 	private String modDt;		// 등록일
 	
-	public firedata() {}
+	public Firedata() {}
 
-	public firedata(int fireSeq, int injuredSum, int dead, int injured, int amount, int subFactor, int subLoc,
+	public Firedata(int fireSeq, int injuredSum, int dead, int injured, int amount, int subFactor, int subLoc,
 			int subCity, String regId, String modId, String regDt, String modDt) {
 		super();
 		this.fireSeq = fireSeq;
