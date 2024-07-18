@@ -14,11 +14,64 @@ public class DTO {
 	private int pageSize;//페이지 사이즈
 	private int pageNo;//페이지 번호
 	
+	private String regId;//등록자
+	private String modId;//수정자
+	private String regDt;//등록일
+	private String modDt;//수정일
+	
 	public DTO() {	 
 		pageSize = 10;
 		pageNo = 1;
 	}
 	
+	public String getRegId() {
+		return regId;
+	}
+
+
+
+	public void setRegId(String regId) {
+		this.regId = regId;
+	}
+
+
+
+	public String getModId() {
+		return modId;
+	}
+
+
+
+	public void setModId(String modId) {
+		this.modId = modId;
+	}
+
+
+
+	public String getRegDt() {
+		return regDt;
+	}
+
+
+
+	public void setRegDt(String regDt) {
+		this.regDt = regDt;
+	}
+
+
+
+	public String getModDt() {
+		return modDt;
+	}
+
+
+
+	public void setModDt(String modDt) {
+		this.modDt = modDt;
+	}
+
+
+
 	public int getPageSize() {
 		return pageSize;
 	}
@@ -53,7 +106,8 @@ public class DTO {
 
 	@Override
 	public String toString() {
-		return "DTO [totalCnt=" + totalCnt + ", no=" + no + ", pageSize=" + pageSize + ", pageNo=" + pageNo + "]";
+		return "DTO [totalCnt=" + totalCnt + ", no=" + no + ", pageSize=" + pageSize + ", pageNo=" + pageNo + ", regId="
+				+ regId + ", modId=" + modId + ", regDt=" + regDt + ", modDt=" + modDt + "]";
 	}
 
 	

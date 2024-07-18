@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pcwk.ehr.code.dao/CodeMapper">
+    <resultMap type="Code" id="codeMap">
+        <result column="master_code" property="masterCode"/>
+        <result column="sub_code" property="subCode"/>
+        <result column="big_list" property="bigList"/>
+        <result column="mid_list" property="midList"/>
+        <result column="use_yn" property="useYn"/>
+    </resultMap>
 
+    
 
 
 </mapper>
