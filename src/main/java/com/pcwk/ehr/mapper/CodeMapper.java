@@ -1,4 +1,4 @@
-package com.pcwk.ehr.code.dao;
+package com.pcwk.ehr.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 

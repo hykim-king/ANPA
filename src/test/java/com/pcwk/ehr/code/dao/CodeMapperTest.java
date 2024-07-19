@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pcwk.ehr.cmn.PLog;
 import com.pcwk.ehr.code.domain.Code;
+import com.pcwk.ehr.mapper.CodeMapper;
 
 
 @RunWith(SpringRunner.class) //스프링 컨텍스트 프레임워크의 JUnit 확장기능 지정

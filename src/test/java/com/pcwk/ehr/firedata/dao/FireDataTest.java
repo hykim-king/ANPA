@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pcwk.ehr.cmn.PLog;
 import com.pcwk.ehr.firedata.domain.Firedata;
+import com.pcwk.ehr.mapper.FireDataMapper;
 
 @RunWith(SpringRunner.class) // 스프링 컨텍스트 프레임워크의 JUnit확장기능 지정
 @ContextConfiguration(locations = {
@@ -31,7 +32,7 @@ public class FireDataTest implements PLog {
 	ApplicationContext context;
 	
 	@Autowired
-	FireMapper fireMapper;
+	FireDataMapper fireMapper;
 	
 	Firedata fire01;
 	
