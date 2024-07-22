@@ -3,6 +3,7 @@ package com.pcwk.ehr.firedata.dao;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pcwk.ehr.cmn.PLog;
+import com.pcwk.ehr.cmn.Search;
 import com.pcwk.ehr.firedata.domain.Firedata;
 import com.pcwk.ehr.mapper.FireDataMapper;
 
@@ -35,6 +37,7 @@ public class FireDataTest implements PLog {
 	FireDataMapper fireMapper;
 	
 	Firedata fire01;
+	Search 	search;
 	
 	public void isSameUser(Firedata fireIn, Firedata fireOut) {
 		assertEquals(fireIn.getFireSeq(), fireOut.getFireSeq());
@@ -63,10 +66,77 @@ public class FireDataTest implements PLog {
 		log.debug("│ tearDown()");
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
-
+	
+	@Ignore
+	@Test
+	public void doRetrieve() throws SQLException {
+		// 검색 페이징 설정
+		search.setPageNo(1);
+		search.setPageSize(10);
+		
+		// 검색 조건 설정
+		search.setSearchDiv("10");
+		search.setSearchWord("");
+		
+		List<Firedata> list = fireMapper.doRetrieve(search);
+		assertEquals(10, list.size());		
+	}
+	
+	@Ignore
+	@Test
+	public void doUpdate() throws SQLException{
+		// 1. 전체삭제
+		fireMapper.deleteAll();
+		
+		// 2. 데이터 1건 입력
+		int flag = fireMapper.doSave(fire01);	
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doSave(flag) : " + flag);
+		log.debug("└─────────────────────────────────────────────────────────");
+		assertEquals(1, flag);
+		
+		// 2_1. 시퀀스 세팅
+		int seq = fireMapper.getSequence();
+		log.debug("seq" + seq);
+		fire01.setFireSeq(seq);
+		
+		// 3. 단건 조회
+		Firedata outVO01 = fireMapper.doSelectOne(fire01);
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doSelectOne(flag) : " + flag);
+		log.debug("└─────────────────────────────────────────────────────────");
+		assertNotNull(outVO01);
+		isSameUser(fire01, outVO01);
+		
+		// 4. 조회 데이터로 데이터 수정 및 Update
+		String updateStr = "_U";
+		
+		outVO01.setInjuredSum(10);
+		outVO01.setDead(5);
+		outVO01.setInjured(5);
+		outVO01.setAmount(5000);
+		outVO01.setSubFactor(5555);
+		outVO01.setSubLoc(555);
+		outVO01.setSubCity(55555);
+		outVO01.setModId(outVO01.getModId() + updateStr);
+		outVO01.setFireSeq(outVO01.getFireSeq());
+		
+		flag = fireMapper.doUpdate(outVO01);		
+		assertEquals(1, flag);
+		
+		// 5. 수정된데이터 조회
+		Firedata upOutVO = fireMapper.doSelectOne(outVO01);
+		
+		// 6. 비교	
+		isSameUser(upOutVO, outVO01);
+	}
+	
 	@Test
 	public void doSave() throws SQLException{
-		// 1. 데이터 1건 입력
+		// 1. 전체삭제
+		fireMapper.deleteAll();
+		
+		// 2. 데이터 1건 입력
 		int flag = fireMapper.doSave(fire01);	
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ doSave(flag) : " + flag);

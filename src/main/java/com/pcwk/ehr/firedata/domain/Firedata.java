@@ -10,7 +10,7 @@ public class Firedata extends DTO{
 	private int    amount;		// 피해액
 	private int    subFactor;	// 화재요인코드
 	private int    subLoc;		// 화재장소코드
-	private int    subCity;	// 시군구 코드
+	private int    subCity;		// 시군구 코드
 	private String regId;		// 수정자
 	private String modId;		// 등록자
 	private String regDt;		// 수정일

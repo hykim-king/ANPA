@@ -2,6 +2,72 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pcwk.ehr.mapper.FireDataMapper">
 
+    <select id="doRetrieve" parameterType="Search" resultType="Firedata">
+    SELECT A.*, B.*                                                                                                                                     
+    FROM( 
+        SELECT  TT1.RNUM AS NO,
+                TT1.injured_sum as injuredSum,
+                TT1.dead,
+                TT1.injured,
+                TT1.amount,
+                TT1.sub_factor as subFactor,
+                TT1.sub_loc as subLoc,
+                TT1.sub_city as subCity,
+                TT1.mod_id as modId,
+                DECODE(
+                TO_CHAR(TT1.mod_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
+                TO_CHAR(TT1.mod_dt, 'HH24:MI'), TO_CHAR(TT1.mod_dt,'YYYY/MM/DD')
+                ) AS modDt
+        FROM    (
+            SELECT ROWNUM AS RNUM, T1.*
+            FROM(
+                SELECT  *
+                FROM    FIRE_DATA
+                --WHERE injuredSum(10), dead(20), injured(30), amount(40), subFactor(50), subLoc(60), subCity(70)
+                <include refid="doRetrieveWhere"></include>
+                ORDER BY mod_dt DESC
+            ) T1
+            WHERE ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
+        ) TT1
+        WHERE TT1.RNUM <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]> 
+    )A
+    CROSS JOIN                                                                                                                                           
+        (                                                                                                                                                    
+        SELECT COUNT(*) totalCnt                                                                                                                             
+        FROM FIRE_DATA     
+        --WHERE injuredSum(10), dead(20), injured(30), amount(40), subFactor(50), subLoc(60), subCity(70)              
+        <include refid="doRetrieveWhere"></include>                                                                                                                   
+        )B
+    </select>
+
+    <sql id="doRetrieveWhere">
+       <where>
+           <choose>
+                 <when test="searchDiv != null and searchDiv == '10'">
+                   injured_sum LIKE #{injuredSum} || '%'
+                 </when>                                                                                                                                                     
+                 <when test="searchDiv != null and searchDiv == '20'">
+                   dead LIKE #{dead} || '%'
+                 </when>                                                                                                                                   
+                 <when test="searchDiv != null and searchDiv == '30'">
+                   injured LIKE #{injured} || '%'
+                 </when>                                                                                                                                    
+                 <when test="searchDiv != null and searchDiv == '40'">
+                   amount LIKE #{amount} || '%'
+                 </when>                                                                                                                                    
+                 <when test="searchDiv != null and searchDiv == '50'">
+                   sub_factor LIKE #{subFactor} || '%'
+                 </when>                                                                                                                                    
+                 <when test="searchDiv != null and searchDiv == '60'">
+                   sub_loc LIKE #{subLoc} || '%'
+                 </when>                                                                                                                                    
+                 <when test="searchDiv != null and searchDiv == '70'">
+                   sub_city LIKE #{subCity} || '%'
+                 </when>                                                                                                                                    
+           </choose>                                                                                                                                   
+       </where>          
+    </sql>
+
     <insert id="doSave" parameterType="Firedata" >
 	    INSERT INTO FIRE_DATA (
 	        injured_sum,
@@ -25,4 +91,55 @@
 	        #{regId}
 	    )   
     </insert>    
+    
+    <update id="doUpdate" parameterType="Firedata">
+        UPDATE  FIRE_DATA                  
+        SET                              
+                injured_sum = #{injuredSum},        
+                dead        = #{dead},        
+                injured     = #{injured},
+                amount      = #{amount},
+                sub_factor  = #{subFactor},
+                sub_loc     = #{subLoc},
+                sub_city    = #{subCity},
+                mod_id      = #{modId},       
+                mod_dt      = SYSDATE   
+        WHERE   fire_seq     = #{fireSeq}         
+    </update>
+
+	<delete id="doDelete" parameterType="Firedata">
+	    DELETE FROM FIRE_DATA
+	    WHERE fire_seq = #{fireSeq}
+	</delete>
+	
+	<select id="doSelectOne" parameterType="Firedata" resultType = "Firedata">
+	    SELECT
+	        fire_seq as fireSeq,
+	        injured_sum as injuredSum,
+	        dead,
+	        injured,
+	        amount,
+	        sub_factor as subFactor,
+	        sub_loc as subLoc,
+	        sub_city as subCity,
+	        reg_id as regId,
+	        TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as regDt,
+	        mod_id as modId,
+	        TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as modDt
+	    FROM
+	        FIRE_DATA
+	    WHERE fire_seq = #{fireSeq}                                    
+	</select>
+    
+    <!-- 테스트용 DAO 메서드 -->
+	<select id="getSequence" resultType = "int">
+	    SELECT MAX(fire_seq) fire_seq     
+	    FROM FIRE_DATA      
+	</select>
+    
+	<delete id="deleteAll">
+	    DELETE FROM FIRE_DATA
+	</delete>  
+    <!-- 테스트용 DAO 메서드 -->
+    
 </mapper>
