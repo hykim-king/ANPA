@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pcwk.ehr.mapper.BoardMapper">
+    
+    <insert id="doSave" parameterType="Board">
+        INSERT INTO board (
+		    title,
+		    contents,
+		    admin_yn,
+		    reg_id,
+		    mod_id
+		) VALUES (
+		    #{title},
+		    #{contents},
+		    #{adminYn},
+		    #{regId},
+		    #{regId}
+		)
+    </insert>
+    
+    <delete id="doDelete" parameterType="Board">
+        DELETE FROM board
+        WHERE board_seq = #{boardSeq}
+    </delete>
+    
+    <update id="doUpdate" parameterType="Board">
+        UPDATE board
+		SET
+		    title = #{title},
+		    read_cnt = #{readCnt},
+		    contents = #{contents},
+		    admin_yn = #{adminYn},
+		    mod_id = #{modId},
+		    mod_dt = SYSDATE
+		WHERE board_seq = #{boardSeq}
+    </update>
+
+
+</mapper>
