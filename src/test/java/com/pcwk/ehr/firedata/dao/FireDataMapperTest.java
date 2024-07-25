@@ -28,7 +28,7 @@ import com.pcwk.ehr.mapper.FireDataMapper;
 		"file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"
 })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING) // 알파벳 순서대로 메서드 실행
-public class FireDataTest implements PLog {
+public class FireDataMapperTest implements PLog {
 
 	@Autowired
 	ApplicationContext context;
@@ -55,9 +55,13 @@ public class FireDataTest implements PLog {
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ setUp()");
 		log.debug("└─────────────────────────────────────────────────────────");
-	
+		
+		// 0. 전체삭제 + fire_seq초기화
+		fireMapper.deleteAll();
+		
 		fire01 = new Firedata(1, 0, 0, 0, 0, 1000, 100, 11010, "admin1", "admin1", "SYSDATE", "SYSDATE");
-	
+		
+		search = new Search();
 	}
 
 	@After
@@ -69,14 +73,59 @@ public class FireDataTest implements PLog {
 	
 	@Ignore
 	@Test
+	public void doDelete() throws SQLException{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doDeleteMapper()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		int flag = fireMapper.doSave(fire01);	
+		assertEquals(1, flag);
+		
+		int seq = fireMapper.getSequence();		
+		fire01.setFireSeq(seq);
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ fire01()" + fire01);
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		flag = fireMapper.doDelete(fire01);
+		assertEquals(1, flag);
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ deleteComplete()");
+		log.debug("└─────────────────────────────────────────────────────────");
+	}
+	
+	@Ignore
+	@Test
+	public void doSelectOne() throws SQLException{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doSelectOne()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		int flag = fireMapper.doSave(fire01);	
+		assertEquals(1, flag);
+		
+		int seq = fireMapper.getSequence();
+		
+		fire01.setFireSeq(seq);
+		
+		Firedata inVO = fireMapper.doSelectOne(fire01);
+		log.debug(inVO);
+	}
+
+	@Test
 	public void doRetrieve() throws SQLException {
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doRetrieve()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		int flag = fireMapper.multipleSave();
+		assertEquals(101, flag);
+		
 		// 검색 페이징 설정
 		search.setPageNo(1);
 		search.setPageSize(10);
 		
-		// 검색 조건 설정
 		search.setSearchDiv("10");
-		search.setSearchWord("");
+		search.setSearchWord("0");
 		
 		List<Firedata> list = fireMapper.doRetrieve(search);
 		assertEquals(10, list.size());		
@@ -85,8 +134,6 @@ public class FireDataTest implements PLog {
 	@Ignore
 	@Test
 	public void doUpdate() throws SQLException{
-		// 1. 전체삭제
-		fireMapper.deleteAll();
 		
 		// 2. 데이터 1건 입력
 		int flag = fireMapper.doSave(fire01);	
@@ -130,11 +177,10 @@ public class FireDataTest implements PLog {
 		// 6. 비교	
 		isSameUser(upOutVO, outVO01);
 	}
-	
+
+	@Ignore
 	@Test
 	public void doSave() throws SQLException{
-		// 1. 전체삭제
-		fireMapper.deleteAll();
 		
 		// 2. 데이터 1건 입력
 		int flag = fireMapper.doSave(fire01);	

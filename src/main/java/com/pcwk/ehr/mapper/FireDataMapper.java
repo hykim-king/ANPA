@@ -9,6 +9,7 @@ import com.pcwk.ehr.firedata.domain.Firedata;
 
 @Mapper
 public interface FireDataMapper extends WorkDiv<Firedata> {
+	
 	/*
 	 * 테스트용 전체 데이터 삭제
 	 * @return
@@ -22,4 +23,11 @@ public interface FireDataMapper extends WorkDiv<Firedata> {
 	 * @throws SQLException
 	 * */
 	int getSequence() throws SQLException;
+	
+	/*
+	 * 다건 데이터 등록
+	 * @return
+	 * @throws SQLException
+	 */
+	int multipleSave() throws SQLException;	
 }

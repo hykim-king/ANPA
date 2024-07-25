@@ -6,6 +6,7 @@
     SELECT A.*, B.*                                                                                                                                     
     FROM( 
         SELECT  TT1.RNUM AS NO,
+                TT1.fire_seq as fireSeq,
                 TT1.injured_sum as injuredSum,
                 TT1.dead,
                 TT1.injured,
@@ -44,25 +45,25 @@
        <where>
            <choose>
                  <when test="searchDiv != null and searchDiv == '10'">
-                   injured_sum LIKE #{injuredSum} || '%'
+                   injured_sum LIKE #{searchWord} || '%'
                  </when>                                                                                                                                                     
                  <when test="searchDiv != null and searchDiv == '20'">
-                   dead LIKE #{dead} || '%'
+                   dead LIKE #{searchWord} || '%'
                  </when>                                                                                                                                   
                  <when test="searchDiv != null and searchDiv == '30'">
-                   injured LIKE #{injured} || '%'
+                   injured LIKE #{searchWord} || '%'
                  </when>                                                                                                                                    
                  <when test="searchDiv != null and searchDiv == '40'">
-                   amount LIKE #{amount} || '%'
+                   amount LIKE #{searchWord} || '%'
                  </when>                                                                                                                                    
                  <when test="searchDiv != null and searchDiv == '50'">
-                   sub_factor LIKE #{subFactor} || '%'
+                   sub_factor LIKE #{searchWord} || '%'
                  </when>                                                                                                                                    
                  <when test="searchDiv != null and searchDiv == '60'">
-                   sub_loc LIKE #{subLoc} || '%'
+                   sub_loc LIKE #{searchWord} || '%'
                  </when>                                                                                                                                    
                  <when test="searchDiv != null and searchDiv == '70'">
-                   sub_city LIKE #{subCity} || '%'
+                   sub_city LIKE #{searchWord} || '%'
                  </when>                                                                                                                                    
            </choose>                                                                                                                                   
        </where>          
@@ -140,6 +141,24 @@
 	<delete id="deleteAll">
 	    DELETE FROM FIRE_DATA
 	</delete>  
+
+    <insert id="multipleSave">
+    INSERT INTO FIRE_DATA
+    SELECT  ROWNUM,
+            DECODE(MOD(ROWNUM, 2), 1, '10', '0'),
+            DECODE(MOD(ROWNUM, 2), 1, '5', '0'),
+            DECODE(MOD(ROWNUM, 2), 1, '5', '0'),
+            DECODE(MOD(ROWNUM, 2), 1, '100', '0'),
+            DECODE(MOD(ROWNUM, 2), 1, '11000', '0'),
+            DECODE(MOD(ROWNUM, 2), 1, '11000', '0'),
+            DECODE(MOD(ROWNUM, 2), 1, '11000', '0'),
+            'ADMIN',   
+            'ADMIN',  
+            SYSDATE-ROWNUM/24 + 1,                        
+            SYSDATE-ROWNUM/24
+    FROM    dual
+    CONNECT BY LEVEL <![CDATA[<= 101]]> 
+    </insert>
     <!-- 테스트용 DAO 메서드 -->
     
 </mapper>
