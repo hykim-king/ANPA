@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+/* 영역 시작 */
+#mRfrm{margin-top: 30px;}
+#mRselect,
+#mRselect option{
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, .5);
+}
+.mRsysdate{height: 40px;}
+.mRsysdate{padding-top: 5px;}
+.card-icon{font-size: 55px;}
+/* 영역 끝 */

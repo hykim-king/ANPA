@@ -1,0 +1,113 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+
+@keyframes fadeAndSlideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px); /* 시작 위치를 아래로 20px 이동 */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* 최종 위치는 원래 위치 */
+    }
+}
+
+@keyframes jelly {
+    0%, 100% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(0.9, 1.1) translateY(-20px);
+    }
+    50% {
+      transform: scale(1.1, 0.9) translateY(20px);
+    }
+    75% {
+      transform: scale(0.95, 1.05) translateY(-10px);
+    }
+  }
+
+/* 헤더 */
+body *{
+    font-family: "Noto Sans KR", sans-serif;
+}
+#top_header .top_header_il *{transition: .3s ease-out;}
+#top_header .nav .show{transition: .1s ease-out;}
+#top_header{
+    padding-top: 10px;
+}
+.top_header_il{
+    height : 50px;
+}
+.top_header_il .top_header_il_obj{
+    width : 100px;
+    height : 100%;
+}
+.top_header_il .top_header_il_obj img,
+.top_header_il .top_header_il_obj svg{
+    width: auto;
+    height: 100%;
+    cursor: pointer;
+}
+.top_header_il .top_header_il_obj img{height: 60px;}
+.top_header_il .top_header_il_obj:nth-child(3):hover svg{
+    fill: #333;
+}
+#top_header .nav{margin-top: 10px;}
+#top_header .nav .nav-item .nav-link.active{color : #111;}
+#top_header .nav .nav-item .nav-link{color : #c0c0c0;}
+#top_header .nav .nav-item .nav-link:hover{
+    color : #111;
+    transition: .3s ease-out;
+}
+/* 헤더 끝 */
+
+/* 영역 시작 */
+.content2 h3,
+.content3 h3{
+    border-bottom: 2px solid #111;
+    padding: 20px 0;
+} /* section 머리글 */
+.form-select{cursor: pointer;}
+@media screen and (min-width: 1500px){
+    .content{
+        padding: 20px 5%;
+        min-height: 730px;        
+    }
+    .content2{
+        padding: 20px 15%;
+        min-height: 730px;        
+    }
+}
+@media screen and (max-width: 1499px){
+    .content{
+        padding: 20px 0;
+        min-height: 550px;
+    }
+    .content2{
+        padding: 20px 30px;
+        min-height: 600px;
+    }
+    .content3{
+        padding: 20px 30px;
+        min-height: 700px;
+    }
+}
+.content{
+    width: 100%;
+    height: auto;
+    background-color: #f8f9fa;
+    vertical-align: middle;
+}
+/* 영역 끝 */
+    
+/* 푸터 시작 */
+.footer{
+    border-top: 1px solid #dfdfdf;
+    background-color: #f8f9fa;
+    text-align: center;
+    font-size: 11px;
+    color : #999c9d;
+    padding: 10px 0;
+}
+/* 푸터 끝 */
