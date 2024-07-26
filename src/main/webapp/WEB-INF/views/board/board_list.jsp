@@ -15,19 +15,21 @@
  --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="CP" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
 <html lang="kor">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <head>
 <!-- 파비콘 추가 -->
-<link rel="icon" type="image/png" href="assest/img/favicon.ico">
-<link rel="stylesheet" href="assest/css/bootstrap.css">
+<link rel="icon" type="image/png" href="${CP }/resources/img/favicon.ico">
+<link rel="stylesheet" href="${CP }/resources/css/bootstrap.css">
 <!-- bootstrap icon -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <!-- bootstrap icon -->
-<link rel="stylesheet" href="assest/css/basic_style.css">
-<link rel="stylesheet" href="assest/css/board_style.css">
+<link rel="stylesheet" href="${CP }/resources/css/basic_style.css">
+<link rel="stylesheet" href="${CP }/resources/css/board_style.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>ANPA</title>
 <script>
@@ -41,17 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>
+
     <header id = "top_header">
         <div class = "d-flex justify-content-between align-items-center top_header_il">
             <div class="text-center top_header_il_obj top_logo">
-                <img src="assest/img/logo_x.png" alt="#logo">                 
+                <img src="${CP }/resources/img/logo_x.png" alt="#logo">                 
             </div>
             <h2 class="title d-flex align-items-center justify-content-center">ANPA</h2>
             <div class="text-center top_header_il_obj appmenu">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"  width="24px" fill="#dfdfdf"><path d="M240-160q-33 0-56.5-23.5T160-240q0-33 23.5-56.5T240-320q33 0 56.5 23.5T320-240q0 33-23.5 56.5T240-160Zm240 0q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm240 0q-33 0-56.5-23.5T640-240q0-33 23.5-56.5T720-320q33 0 56.5 23.5T800-240q0 33-23.5 56.5T720-160ZM240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400ZM240-640q-33 0-56.5-23.5T160-720q0-33 23.5-56.5T240-800q33 0 56.5 23.5T320-720q0 33-23.5 56.5T240-640Zm240 0q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Zm240 0q-33 0-56.5-23.5T640-720q0-33 23.5-56.5T720-800q33 0 56.5 23.5T800-720q0 33-23.5 56.5T720-640Z"/></svg>
             </div>
         </div>
-    
+        
         <ul class="nav nav-tabs text-center justify-content-center">
             <li class="nav-item d-flex justify-content-center align-items-center">
                 <a class="nav-link" aria-current="page" href="#">화재통계</a>
@@ -127,6 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
     전화 : 02-2231-6412</p>            
     <p>Copyright(C) 2024 National Fire Data System. All rights reserved.</p>
 </footer>    
-<script src = "assest/js/bootstrap.bundle.min.js"></script>     
+<script src = "${CP }/resources/js/bootstrap.bundle.min.js"></script>     
 </body>
 </html>
