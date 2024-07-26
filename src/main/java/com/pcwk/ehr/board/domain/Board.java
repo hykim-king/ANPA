@@ -7,7 +7,7 @@ public class Board extends DTO{
 	private String title    ;//제목
 	private int readCnt ;//조회수
 	private String contents ;//내용
-	private int adminYn ;//공지사항 여부
+	private int div ;//공지사항 여부
 	private String regId   ;//생성자
 	private String regDt   ;//생성일
 	private String modId   ;//수정자
@@ -22,7 +22,7 @@ public class Board extends DTO{
 		this.title = title;
 		this.readCnt = readCnt;
 		this.contents = contents;
-		this.adminYn = adminYn;
+		this.div = adminYn;
 		this.regId = regId;
 		this.regDt = regDt;
 		this.modId = modId;
@@ -61,12 +61,12 @@ public class Board extends DTO{
 		this.contents = contents;
 	}
 
-	public int getAdminYn() {
-		return adminYn;
+	public int getDiv() {
+		return div;
 	}
 
-	public void setAdminYn(int adminYn) {
-		this.adminYn = adminYn;
+	public void setDiv(int div) {
+		this.div = div;
 	}
 
 	public String getRegId() {
@@ -104,7 +104,7 @@ public class Board extends DTO{
 	@Override
 	public String toString() {
 		return "Board [boardSeq=" + boardSeq + ", title=" + title + ", readCnt=" + readCnt + ", contents=" + contents
-				+ ", adminYn=" + adminYn + ", regId=" + regId + ", regDt=" + regDt + ", modId=" + modId + ", modDt="
+				+ ", div=" + div + ", regId=" + regId + ", regDt=" + regDt + ", modId=" + modId + ", modDt="
 				+ modDt + ", toString()=" + super.toString() + "]";
 	}
 

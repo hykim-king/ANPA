@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+/* 영역 시작 */
+.content .main{
+    position: relative;
+    width: 70%;
+    max-width: fit-content;
+    margin: 0 0 0 20px;
+    display: inline-block;
+    float: left;
+    border-radius: 5px;
+    overflow: hidden;
+
+    -webkit-user-drag: none; /* Safari 및 구형 브라우저 대응 */
+    -webkit-user-select: none; /* Safari 및 구형 브라우저 대응 */
+    -moz-user-select: none; /* Firefox 대응 */
+    -ms-user-select: none; /* IE 및 Edge 대응 */
+    user-select: none; /* 일반적인 표준 */    
+}
+
+.content .main img{
+    width: 100%;
+    max-width: 626px;
+    height: auto;
+}
+
+.main_title_box{
+    position: absolute;
+    left : 30px;
+    bottom: 20px;
+    color: white;
+    text-shadow: 3px 3px 3px rgba(0, 0, 0, .5);
+}
+.main_title{
+    font-size: 30px;
+    font-weight: bold;
+}
+.main_sub_title{
+    left : 30px;
+    bottom: 50px;
+    font-size: 15px;
+}
+.main_fd1{animation: fadeAndSlideUp 0.5s ease forwards;}
+.main_fd2{animation: fadeAndSlideUp 0.5s ease .5s forwards;}
+.main_fd3{animation: fadeAndSlideUp 0.5s ease 1s forwards;}
+.main_fd1,
+.main_fd2,
+.main_fd3{
+    display: inline-block;
+    font-size: 15px;    
+}
+.main_fd2,
+.main_fd3{margin-left: 40px;}
+
+.graph{
+    width: calc(100% - 680px);
+    height: 352px;
+    margin: 0 20px 0 0;
+    background-color: white;
+    display: inline-block;
+    border: 1px solid #e2e2e2;
+    float: right;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
+    padding: 10px 20px;
+
+    -webkit-user-drag: none; /* Safari 및 구형 브라우저 대응 */
+    -webkit-user-select: none; /* Safari 및 구형 브라우저 대응 */
+    -moz-user-select: none; /* Firefox 대응 */
+    -ms-user-select: none; /* IE 및 Edge 대응 */
+    user-select: none; /* 일반적인 표준 */    
+}
+.graph .main_fd1,
+.graph .main_fd2,
+.graph .main_fd3{color : #7e7c7c;}
+
+@media screen and (max-width: 1000px) {
+    .content .main,
+    .graph{
+        width: 95%;
+        max-width: none;
+        margin: 0 auto;
+        display: block;
+        float: none;
+    }
+    .content .main img{
+        max-width: 100%;
+    }
+    .graph{
+        margin: 20px auto 0 auto;
+        height: 150px;
+        background-color: white;
+        border: 1px solid #e2e2e2;
+    }
+    }
+/* 영역 끝 */
