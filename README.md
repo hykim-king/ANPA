@@ -41,6 +41,9 @@
 
 ---  
 ## 🚒 ERD  
+<div align="center">
+<img style="width:800px;" src="https://github.com/user-attachments/assets/c3509099-6d27-41f2-b54a-5a7a3fdb77ad">
+</div>
 
 ---  
 ## 🚒  웹화면    
