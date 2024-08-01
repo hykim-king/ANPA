@@ -8,6 +8,8 @@
     </settings>
     
     <typeAliases>
+        <typeAlias alias="Member" type="com.pcwk.ehr.member.domain.Member"/>
+        <typeAlias alias="Login" type="com.pcwk.ehr.login.domain.Login"/>
         <typeAlias alias="Board" type="com.pcwk.ehr.board.domain.Board"/>
         <typeAlias alias="Search" type="com.pcwk.ehr.cmn.Search"/>
         <typeAlias alias="Code" type="com.pcwk.ehr.code.domain.Code"/>
