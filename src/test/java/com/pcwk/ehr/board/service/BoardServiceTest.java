@@ -43,8 +43,8 @@ public class BoardServiceTest implements PLog {
 		
 		boardMapper.deleteAll();
 		
-		board01 = new Board(999, "제목01", 0, "내용이지1", 20, "admin", "안씀", "admin", "안씀");
-		board02 = new Board(1000, "제목02", 0, "내용이지2", 20, "admin1", "안씀", "admin1", "안씀");
+		board01 = new Board(999, "제목01", 0, "내용이지1", "20", "admin", "안씀", "admin", "안씀");
+		board02 = new Board(1000, "제목02", 0, "내용이지2", "20", "admin1", "안씀", "admin1", "안씀");
 		
 	}
 

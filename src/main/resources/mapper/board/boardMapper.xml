@@ -12,20 +12,26 @@
     </resultMap>
     
     <sql id="doRetrieveWhere">
-        <where>
-           <choose> <!-- when에 and 사용 금지 -->
-                 <when test="searchDiv != null and searchDiv == '10'">
-                   title LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                                     
-                 <when test="searchDiv != null and searchDiv == '20'">
-                   contents LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                   
-                 <when test="searchDiv != null and searchDiv == '30'">
-                   title LIKE #{searchWord} || '%'
-                   OR contents LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-           </choose>                                                                                                                                   
-       </where>    
+       <choose> <!-- when에 and 사용 금지 -->
+             <when test="searchDiv != null and searchDiv == '10'">
+               AND title LIKE #{searchWord} || '%'
+             </when>                                                                                                                                                     
+             <when test="searchDiv != null and searchDiv == '20'">
+               AND contents LIKE #{searchWord} || '%'
+             </when>                                                                                                                                   
+             <when test="searchDiv != null and searchDiv == '30'">
+               AND title LIKE #{searchWord} || '%'
+               OR contents LIKE #{searchWord} || '%'
+             </when>                                                                                                                                    
+       </choose>                                                                                                                                   
+    </sql>
+    
+    <sql id="divWhere">
+        <choose>
+            <when test="div != null and div !='' ">
+                AND div = #{div}
+            </when>
+        </choose>
     </sql>
     
     <select id="getSequence" resultType = "int">
@@ -54,9 +60,10 @@
 		    SELECT  TT1.no,
 		            TT1.board_seq,
 		            TT1.title,
+		            TT1.contents,
 		            TT1.read_cnt,
 		            TT1.div,
-		            TT1.mod_id as modId,
+		            TT1.mod_id,
 		            DECODE(
 		            TO_CHAR(TT1.mod_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
 		            TO_CHAR(TT1.mod_dt, 'HH24:MI'), TO_CHAR(TT1.mod_dt,'YYYY/MM/DD')
@@ -66,7 +73,9 @@
 		        FROM(
 		            SELECT  *
 		            FROM    board
+		            WHERE 1=1
 		            <include refid="doRetrieveWhere"></include>
+		            <include refid="divWhere"></include>
 		            ORDER BY mod_dt DESC
 		        ) T1
 		        WHERE ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
@@ -76,8 +85,10 @@
 		CROSS JOIN                                                                                                                                           
 		(                                                                                                                                                    
 		    SELECT COUNT(*) totalCnt                                                                                                                             
-		    FROM board     
+		    FROM board  
+		    WHERE 1=1   
 		    <include refid="doRetrieveWhere"></include>                                                                                                                   
+		    <include refid="divWhere"></include>
 		)B           
     </select>
     

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pcwk.ehr.board.domain.Board;
@@ -34,8 +35,8 @@ public class BoardController implements PLog{
 		log.debug("└─────────────────────────");	
 	}
 	
-	@GetMapping("/doRetrieve.do")
-	public String doRetrieve(Model model, HttpServletRequest req) throws SQLException {
+	@GetMapping("/{div}")
+	public String doRetrieve(@PathVariable("div")String div, Model model, HttpServletRequest req) throws SQLException {
 		String viewName = "board/board_list";
 		
 		Search search = new Search();
@@ -52,7 +53,7 @@ public class BoardController implements PLog{
 		String pageNo = StringUtil.nvl(req.getParameter("pageNo"), "1");
 				
 		//div값이 없으면 전체 조회
-		String div = StringUtil.nvl(req.getParameter("div"), "");
+		//String div = StringUtil.nvl(req.getParameter("div"), "");
 		search.setDiv(div);
 		
 		List<Board> list = boardService.doRetrieve(search);

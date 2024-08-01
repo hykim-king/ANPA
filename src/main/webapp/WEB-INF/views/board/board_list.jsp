@@ -109,14 +109,35 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="table-outset mt-2">
         <table class="table">
             <tbody>
-                <tr>
-                    <th class = "tbseq" style="display: none;"></th>
-                    <th rowspan="2" class="table-dark text-center align-middle col-2">건의사항 / 소통</th>
-                    <td class="table-light">제목1</td>
-                </tr>
-                <tr>
-                    <td class="table-light">수정자 : ${userId} 조회수 : ${cnt}</td>                
-                </tr>
+                <c:choose>
+                    <c:when test="${list.size()>0 }">
+		                <c:forEach var="vo" items="${list }">
+		                    <tr>
+		                    <th class = "tbseq" style="display: none;"></th>
+		                    <th rowspan="2" class="table-dark text-center align-middle col-2">
+		                      <c:choose>
+		                          <c:when test="${vo.getDiv() == '10' }">
+		                                                          공지사항
+		                          </c:when>
+		                          <c:otherwise>
+		                                                          건의사항 / 소통
+		                          </c:otherwise>
+		                      </c:choose>
+		                    </th>       
+		                    <td class="table-light">${vo.title }</td>
+		                </tr>
+		                <tr>
+		                    <td class="table-light">작성자 :${vo.modId }  조회수 :${vo.readCnt } </td>                
+		                </tr>
+		                </c:forEach>
+                    
+                    </c:when>
+                    <c:otherwise>
+                        <tr><td> 데이터가 없습니다. </td> </tr>
+                    </c:otherwise>
+                
+                </c:choose>
+            
             </tbody>                      
         </table>
     </div>
