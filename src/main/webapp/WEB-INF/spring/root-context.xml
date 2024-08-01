@@ -68,8 +68,8 @@
         <!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> -->
         <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
         <!-- <property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:xe"></property> -->
-        <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@192.168.0.40:1521:xe"></property>
-        <property name="username" value="scottLsh"></property>
+        <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@118.33.104.105:7777:xe"></property>
+        <property name="username" value="ANPA"></property>
         <property name="password" value="pcwk12"></property>
         
         <!--  Optional settings -->
