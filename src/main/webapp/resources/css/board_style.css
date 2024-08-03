@@ -13,8 +13,12 @@
     padding: 0;
     background-color: #212529;
 }
-.board_con .table tbody{transition: .5s ease-out;}
-.board_con .table tbody:hover{text-shadow: 1px 1px 2px rgba(0, 0, 0, .5);}
+.board_con .table tbody tr{transition: .5s ease-out;}
+.board_con .table tbody tr:hover{text-shadow: 1px 1px 2px rgba(0, 0, 0, .5);}
+.board_con .table tbody tr:hover th{
+    animation: jelly .8s alternate;
+    background-color: transparent;
+}
 .board_con .table td{
     border-top: 1px solid #c6c7c8;
 }
@@ -22,9 +26,10 @@
     border-top: none;
     border-bottom: 1px solid #c6c7c8;
 }
-.board_con .table tbody:hover th{
-    animation: jelly .8s alternate;
-    background-color: transparent;
+.board_con .table tbody tr .title{padding-bottom: 8px;}
+.board_con .table tbody tr .details{
+  padding-top: 8px;
+  border-top: 1px solid #c6c7c8;
 }
 .board_con .table tbody:last-child tr:nth-child(2) td{border-bottom: none;}
 /* 게시판 끝 */
