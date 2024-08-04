@@ -28,6 +28,20 @@
 	     AND use_yn = 1
     </select>
     
-
+    <select id="doSelectCode" parameterType="Code" resultMap="codeMap">
+        SELECT master_code,
+               sub_code,
+               big_list,
+               mid_list,
+               use_yn,
+               reg_id,
+               mod_id,
+               reg_dt,
+               mod_dt
+		FROM CODE
+		WHERE use_yn = 1
+		AND master_code = #{masterCode}
+		AND sub_code = #{subCode}
+    </select>
 
 </mapper>

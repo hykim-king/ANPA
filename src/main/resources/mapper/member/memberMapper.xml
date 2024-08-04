@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pcwk.ehr.mapper.MemberMapper">
+
+    <select id="doRetrieveLocEmail" parameterType="String" resultType="Member">
+		SELECT  user_id as userId,
+		        user_name as userName,
+		        email,
+		        email_yn as emailYn,
+		        sub_city as subCity,
+		        tel,
+		        mod_id as modId,
+		        mod_dt as modDt,
+		        reg_id as regId,
+		        reg_dt as regDt
+		FROM    member
+		WHERE   email_yn = 1
+		AND     sub_city = #{subCity}
+    </select>
+    
+</mapper>
