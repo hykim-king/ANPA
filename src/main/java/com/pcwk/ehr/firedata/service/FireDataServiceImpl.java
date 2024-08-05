@@ -136,4 +136,3 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 		return 0;
 	}    
 }
-

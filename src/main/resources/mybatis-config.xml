@@ -8,6 +8,7 @@
     </settings>
     
     <typeAliases>
+        <typeAlias alias="Member" type="com.pcwk.ehr.member.domain.Member"/>
         <!-- <typeAlias alias="Login" type="com.pcwk.ehr.login.domain.Login"/> 추가시 주석 해제 -->
         <!-- <typeAlias alias="Board" type="com.pcwk.ehr.board.domain.Board"/> 추가시 주석 해제 -->
         <typeAlias alias="Search" type="com.pcwk.ehr.cmn.Search"/>
