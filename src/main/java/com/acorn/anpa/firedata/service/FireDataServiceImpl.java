@@ -14,6 +14,8 @@ import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.mapper.CodeMapper;
 import com.acorn.anpa.mapper.FireDataMapper;
+import com.acorn.anpa.mapper.MemberMapper;
+import com.acorn.anpa.member.domain.Member;
 
 @Service
 public class FireDataServiceImpl implements PLog, FireDataService {
@@ -26,10 +28,13 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 	
     @Autowired
     private MailSender mailSender;
+    
+    @Autowired
+    MemberMapper memberMapper;
 
     Code code = new Code();
 	List<Code> codeList;
-    
+	
     public FireDataServiceImpl() {}
     
     @Override
@@ -41,7 +46,9 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 		
 		String title = "화재가 발생하였습니다";
 		String contents = "";
-		String userEmail = "anpa1995@naver.com";
+		/* String userEmail = "anpa1995@naver.com"; */
+		String userEmail = "";
+		String userName = "";
 		
 		String masterCode = "city";
 		int subCode = 0;
@@ -53,7 +60,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 			
 			code.setMasterCode(masterCode);
 			code.setSubCode(inVO.getSubCity());
-			List<Code> outVO = codeMapper.doSelectCode(code);
+			List<Code> outVO = codeMapper.doSelectCode(code);	
 			
 			for(Code vo : outVO) {
 				log.debug("┌──────────────────────────────────────────┐");
@@ -63,8 +70,17 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 				midList = vo.getMidList();
 			}
 			
-			contents = bigList + midList + " 해당 지역에 화재가 발생하였습니다";
-			sendEmail(title, contents, userEmail);
+			List<Member> list = memberMapper.doRetrieveLocEmail(inVO.getSubCity() + "");
+			
+			for (Member member : list) {
+		        log.debug("┌─────────────────────────────────────────────────────────");
+		        log.debug("│ Member : " + member.getUserName() + " Email : " + member.getEmail());
+		        log.debug("└─────────────────────────────────────────────────────────");
+		        userEmail = member.getEmail();
+		        userName = member.getUserName();
+		        contents = userName + "님이 거주하시는 " + bigList + midList + " 해당 지역에 화재가 발생하였습니다";
+		        sendEmail(title, contents, userEmail);
+		    }			
 			
             log.debug("┌──────────────────────────────────────────┐");
             log.debug("│ title : " + title);
