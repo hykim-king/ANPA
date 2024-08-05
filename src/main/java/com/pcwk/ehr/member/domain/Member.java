@@ -10,16 +10,12 @@ public class Member extends DTO {
     private int    adminYn  ;//관리자여부
     private int    subCity  ;//CODE 참조
     private String tel      ;//전화번호
-    private String modId    ;//수정자
-    private String modDt    ;//수정일
-    private String regId    ;//등록자
-    private String regDt    ;//등록일
     
     public Member() {
     }
 
 	public Member(String userId, String password, String userName, String email, int emailYn, int adminYn, int subCity,
-			String tel, String modId, String modDt, String regId, String regDt) {
+			String tel) {
 		super();
 		this.userId = userId;
 		this.password = password;
@@ -29,10 +25,6 @@ public class Member extends DTO {
 		this.adminYn = adminYn;
 		this.subCity = subCity;
 		this.tel = tel;
-		this.modId = modId;
-		this.modDt = modDt;
-		this.regId = regId;
-		this.regDt = regDt;
 	}
 
 	public String getUserId() {
@@ -99,43 +91,10 @@ public class Member extends DTO {
 		this.tel = tel;
 	}
 
-	public String getModId() {
-		return modId;
-	}
-
-	public void setModId(String modId) {
-		this.modId = modId;
-	}
-
-	public String getModDt() {
-		return modDt;
-	}
-
-	public void setModDt(String modDt) {
-		this.modDt = modDt;
-	}
-
-	public String getRegId() {
-		return regId;
-	}
-
-	public void setRegId(String regId) {
-		this.regId = regId;
-	}
-
-	public String getRegDt() {
-		return regDt;
-	}
-
-	public void setRegDt(String regDt) {
-		this.regDt = regDt;
-	}
-
 	@Override
 	public String toString() {
 		return "Member [userId=" + userId + ", password=" + password + ", userName=" + userName + ", email=" + email
-				+ ", emailYn=" + emailYn + ", adminYn=" + adminYn + ", subCity=" + subCity + ", tel=" + tel + ", modId="
-				+ modId + ", modDt=" + modDt + ", regId=" + regId + ", regDt=" + regDt + "]";
+				+ ", emailYn=" + emailYn + ", adminYn=" + adminYn + ", subCity=" + subCity + ", tel=" + tel + "]";
 	}
     
 }
