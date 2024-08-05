@@ -11,7 +11,7 @@
         
     <!-- mapper interface 설정  scanner 매퍼 읽을 위치 정하기-->   
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-       <property name="basePackage" value="com.pcwk.ehr.mapper"></property>
+       <property name="basePackage" value="com.acorn.anpa.mapper"></property>
     </bean>
         
     <!-- sqlSessionTemplate -->
@@ -54,7 +54,7 @@
     <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
     
     <aop:config>
-       <aop:pointcut expression="execution( * com.pcwk.ehr..service.*Impl.*Tx(..) )" id="txPointCut"/>
+       <aop:pointcut expression="execution( * com.acorn.anpa..service.*Impl.*Tx(..) )" id="txPointCut"/>
        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
     </aop:config>
     
