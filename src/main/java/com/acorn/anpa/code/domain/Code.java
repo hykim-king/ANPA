@@ -8,6 +8,7 @@ public class Code extends DTO{
 	private String bigList   ;//대분류
 	private String midList   ;//소분류
 	private int    useYn     ;//사용여부
+	private int    mainCode  ;//대분류 코드
 	
 	public Code() {	}
 
@@ -60,10 +61,18 @@ public class Code extends DTO{
 		this.useYn = useYn;
 	}
 
+	public int getMainCode() {
+		return mainCode;
+	}
+
+	public void setMainCode(int mainCode) {
+		this.mainCode = mainCode;
+	}
+
 	@Override
 	public String toString() {
 		return "Code [masterCode=" + masterCode + ", subCode=" + subCode + ", bigList=" + bigList + ", midList="
-				+ midList + ", useYn=" + useYn + ", toString()=" + super.toString() + "]";
+				+ midList + ", useYn=" + useYn + ", mainCode=" + mainCode + ", toString()=" + super.toString() + "]";
 	}
 	
 	

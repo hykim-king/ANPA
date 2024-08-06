@@ -8,5 +8,5 @@ import com.acorn.anpa.firedata.domain.Firedata;
 public interface FireDataService extends WorkDiv<Firedata>{
 	void sendEmail(String title, String contents, String userEmail);
 
-	Firedata doSaveData(Firedata inVO) throws SQLException;
+	int doSaveData(Firedata inVO) throws SQLException;
 }

@@ -28,6 +28,38 @@
          AND use_yn = 1
     </select>
     
+    <select id="codeList" parameterType="Search" resultMap="codeMap">
+        SELECT master_code,
+               sub_code,
+               big_list,
+               mid_list,
+               main_code,
+               use_yn,
+               reg_id,
+               mod_id,
+               reg_dt,
+               mod_dt
+        FROM CODE
+        WHERE use_yn = 1
+        <include refid="codeWhen"></include>
+        
+    </select>
+        
+    <sql id="codeWhen">
+        <choose>
+            <when test="searchDiv != null and searchDiv == 10">
+                AND master_code = #{div}
+                AND main_code is null
+            </when>
+            <when test="searchDiv != null and searchDiv == 20">
+                AND master_code = #{div}
+                AND main_code = #{searchWord}
+            </when>
+        
+        </choose>
+        
+    </sql>
+    
     <select id="doSelectCode" parameterType="Code" resultMap="codeMap">
         SELECT master_code,
                sub_code,

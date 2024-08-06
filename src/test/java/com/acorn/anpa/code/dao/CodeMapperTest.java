@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.acorn.anpa.cmn.PLog;
+import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.mapper.CodeMapper;
 
@@ -34,6 +35,8 @@ public class CodeMapperTest implements PLog{
 	Code code;
 	List<Code> codeList;
 	
+	Search search;
+	
 	@Before
 	public void setUp() throws Exception {
 		log.debug("┌──────────────────────────────┐");
@@ -42,6 +45,7 @@ public class CodeMapperTest implements PLog{
 		
 		codeList = new ArrayList<Code>();
 		code = new Code();
+		search = new Search();
 	}
 
 	@After
@@ -51,6 +55,20 @@ public class CodeMapperTest implements PLog{
 		log.debug("└──────────────────────────────┘");	
 	}
 
+	@Test
+	public void codeList()throws Exception{
+		log.debug("┌──────────────────────────────┐");
+		log.debug("│ codeList()");
+		log.debug("└──────────────────────────────┘");
+		
+		search.setSearchDiv("10");
+		search.setDiv("location");
+		search.setSearchWord("100");
+		
+		codeList = codeMapper.codeList(search);
+	}
+	
+	@Ignore
 	@Test
 	public void doSelectCode()throws Exception {
 		log.debug("┌──────────────────────────────┐");

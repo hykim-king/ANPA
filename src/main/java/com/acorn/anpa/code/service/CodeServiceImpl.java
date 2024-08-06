@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.acorn.anpa.cmn.DTO;
 import com.acorn.anpa.cmn.PLog;
+import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.mapper.CodeMapper;
 
@@ -52,6 +53,18 @@ public class CodeServiceImpl implements CodeService,PLog{
 	public int doDelete(Code inVO) throws SQLException {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public List<Code> doSelectCode(Code code) throws SQLException {
+		
+		return codeMapper.doSelectCode(code);
+	}
+
+	@Override
+	public List<Code> codeList(Search search) throws SQLException {
+		
+		return codeMapper.codeList(search);
 	}
 	
 }

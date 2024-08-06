@@ -57,9 +57,9 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 		
 		// 0. 전체삭제 + fire_seq초기화
-		fireMapper.deleteAll();
+		//fireMapper.deleteAll();
 		
-		fire01 = new Firedata(1, 0, 0, 0, 0, 1000, 100, 11010, "admin1", "admin1", "SYSDATE", "SYSDATE");
+		fire01 = new Firedata(1, 0, 0, 0, 0, 1000, 100, 11010);
 		
 		search = new Search();
 	}
@@ -69,6 +69,61 @@ public class FireDataMapperTest implements PLog {
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ tearDown()");
 		log.debug("└─────────────────────────────────────────────────────────");
+	}
+	
+	@Test
+	public void doRetrieve() throws Exception{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doRetrieve()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		List<Firedata> list = fireMapper.doRetrieve(search);
+		assertEquals(list.size(), 10);
+		
+		search.setSearchDiv("10");
+		search.setSearchWord("5___");
+		
+		list = fireMapper.doRetrieve(search);
+		assertEquals(list.size(), 10);
+		
+		search.setSearchDiv("20");
+		search.setSearchWord("5010");
+		
+		list = fireMapper.doRetrieve(search);
+		assertEquals(list.size(), 10);
+		
+		search.setSearchDiv("30");
+		search.setSearchWord("4__");
+		
+		list = fireMapper.doRetrieve(search);
+		assertEquals(list.size(), 10);
+		
+		search.setSearchDiv("40");
+		search.setSearchWord("402");
+		
+		list = fireMapper.doRetrieve(search);
+		assertEquals(list.size(), 10);
+		
+		//시군구
+		search.setSearchCity("11030");
+		search.setSearchDiv(null);
+		search.setSearchWord(null);
+		
+		list = fireMapper.doRetrieve(search);
+		assertEquals(list.size(), 10);	
+				
+		// 기간 조회
+		search.setSearchCity(null);
+		
+		search.setSearchDateStart("20230301");
+		search.setSearchDateEnd("20230401");
+		
+		list = fireMapper.doRetrieve(search);
+		assertEquals(list.size(), 10);	
+		
+		for(Firedata vo : list) {
+			log.debug(vo);
+		}
 	}
 	
 	@Ignore
@@ -94,6 +149,7 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
+	@Ignore
 	@Test
 	public void doSelectOne() throws SQLException{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -111,26 +167,6 @@ public class FireDataMapperTest implements PLog {
 		log.debug(inVO);
 	}
 
-	@Ignore
-	@Test
-	public void doRetrieve() throws SQLException {
-		log.debug("┌─────────────────────────────────────────────────────────");
-		log.debug("│ doRetrieve()");
-		log.debug("└─────────────────────────────────────────────────────────");
-		int flag = fireMapper.multipleSave();
-		assertEquals(101, flag);
-		
-		// 검색 페이징 설정
-		search.setPageNo(1);
-		search.setPageSize(10);
-		
-		search.setSearchDiv("10");
-		search.setSearchWord("0");
-		
-		List<Firedata> list = fireMapper.doRetrieve(search);
-		assertEquals(10, list.size());		
-	}
-	
 	@Ignore
 	@Test
 	public void doUpdate() throws SQLException{

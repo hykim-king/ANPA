@@ -68,7 +68,7 @@ public class FireDataServiceImplTest implements PLog {
         
         // 0. 전체 삭제
         // fireDataMapper.deleteAll();
-        fireData01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010, "sjm", "SYSDATE", "sjm", "SYSDATE");
+        fireData01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);
         fireDataMapper.doDeleteTest(fireData01);        
     }
     

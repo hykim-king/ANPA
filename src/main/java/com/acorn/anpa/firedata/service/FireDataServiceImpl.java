@@ -14,6 +14,8 @@ import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.mapper.CodeMapper;
 import com.acorn.anpa.mapper.FireDataMapper;
+import com.acorn.anpa.mapper.MemberMapper;
+import com.acorn.anpa.member.domain.Member;
 
 @Service
 public class FireDataServiceImpl implements PLog, FireDataService {
@@ -26,14 +28,17 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 	
     @Autowired
     private MailSender mailSender;
+    
+    @Autowired
+    MemberMapper memberMapper;
 
     Code code = new Code();
 	List<Code> codeList;
-    
+	
     public FireDataServiceImpl() {}
     
     @Override
-    public Firedata doSaveData(Firedata inVO)throws SQLException {
+    public int doSaveData(Firedata inVO)throws SQLException {
 		log.debug("1. param : " + inVO);
 		int flag = 0;
 		flag = fireDataMapper.doSave(inVO);
@@ -41,19 +46,23 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 		
 		String title = "화재가 발생하였습니다";
 		String contents = "";
-		String userEmail = "anpa1995@naver.com";
-		
+		/* String userEmail = "anpa1995@naver.com"; */
+		String userEmail = "";
+		String userName = "";
+		 
 		String masterCode = "city";
 		int subCode = 0;
 		
 		String bigList = "";
 		String midList = "";
 		
+		int emailCount = 0;
+		
 		if(flag == 1) {
 			
 			code.setMasterCode(masterCode);
 			code.setSubCode(inVO.getSubCity());
-			List<Code> outVO = codeMapper.doSelectCode(code);
+			List<Code> outVO = codeMapper.doSelectCode(code);	
 			
 			for(Code vo : outVO) {
 				log.debug("┌──────────────────────────────────────────┐");
@@ -63,8 +72,18 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 				midList = vo.getMidList();
 			}
 			
-			contents = bigList + midList + " 해당 지역에 화재가 발생하였습니다";
-			sendEmail(title, contents, userEmail);
+			List<Member> list = memberMapper.doRetrieveLocEmail(inVO.getSubCity() + "");
+			
+			for (Member member : list) {
+		        log.debug("┌─────────────────────────────────────────────────────────");
+		        log.debug("│ Member : " + member.getUserName() + " Email : " + member.getEmail());
+		        log.debug("└─────────────────────────────────────────────────────────");
+		        userEmail = member.getEmail();
+		        userName = member.getUserName();
+		        contents = userName + "님이 거주하시는 " + bigList + midList + " 해당 지역에 화재가 발생하였습니다";
+		        sendEmail(title, contents, userEmail);
+		        emailCount++;
+		    }			
 			
             log.debug("┌──────────────────────────────────────────┐");
             log.debug("│ title : " + title);
@@ -73,7 +92,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
             log.debug("└──────────────────────────────────────────┘");    			
 		}
 		
-		return null;
+		return emailCount;
 	}
     
     public void sendEmail(String title, String contents, String userEmail) {
@@ -120,19 +139,20 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 
 	@Override
 	public List<Firedata> doRetrieve(DTO search) throws SQLException {
-		// TODO Auto-generated method stub
+		
+		
 		return null;
 	}
 
 	@Override
 	public int doUpdate(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		log.debug("1. param : " + inVO);
+		return this.fireDataMapper.doUpdate(inVO);
 	}
 
 	@Override
 	public int doDelete(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		log.debug("1. param : " + inVO);
+		return this.fireDataMapper.doDelete(inVO);
 	}    
 }
