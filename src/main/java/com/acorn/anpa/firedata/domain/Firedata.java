@@ -8,9 +8,15 @@ public class Firedata extends DTO{
 	private	int    dead;		// 사망자
 	private int    injured;		// 부상자
 	private int    amount;		// 피해액
+	
 	private int    subFactor;	// 화재요인코드
+	private String subFactorNm; // 화재요인이름
+	
 	private int    subLoc;		// 화재장소코드
+	private String subLocNm;    // 화재장소이름
+	
 	private int    subCity;		// 시군구 코드
+	private String subCityNm;   // 시군구 이름
 	
 	public Firedata() {}
 
@@ -25,6 +31,31 @@ public class Firedata extends DTO{
 		this.subFactor = subFactor;
 		this.subLoc = subLoc;
 		this.subCity = subCity;
+	}
+
+	
+	public String getSubFactorNm() {
+		return subFactorNm;
+	}
+
+	public void setSubFactorNm(String subFactorNm) {
+		this.subFactorNm = subFactorNm;
+	}
+
+	public String getSubLocNm() {
+		return subLocNm;
+	}
+
+	public void setSubLocNm(String subLocNm) {
+		this.subLocNm = subLocNm;
+	}
+
+	public String getSubCityNm() {
+		return subCityNm;
+	}
+
+	public void setSubCityNm(String subCityNm) {
+		this.subCityNm = subCityNm;
 	}
 
 	public int getFireSeq() {
@@ -94,7 +125,8 @@ public class Firedata extends DTO{
 	@Override
 	public String toString() {
 		return "Firedata [fireSeq=" + fireSeq + ", injuredSum=" + injuredSum + ", dead=" + dead + ", injured=" + injured
-				+ ", amount=" + amount + ", subFactor=" + subFactor + ", subLoc=" + subLoc + ", subCity=" + subCity
+				+ ", amount=" + amount + ", subFactor=" + subFactor + ", subFactorNm=" + subFactorNm + ", subLoc="
+				+ subLoc + ", subLocNm=" + subLocNm + ", subCity=" + subCity + ", subCityNm=" + subCityNm
 				+ ", toString()=" + super.toString() + "]";
 	}
 

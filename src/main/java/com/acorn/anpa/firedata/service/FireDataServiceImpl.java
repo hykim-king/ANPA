@@ -139,7 +139,8 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 
 	@Override
 	public List<Firedata> doRetrieve(DTO search) throws SQLException {
-		// TODO Auto-generated method stub
+		
+		
 		return null;
 	}
 
