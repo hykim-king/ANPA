@@ -145,13 +145,13 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 
 	@Override
 	public int doUpdate(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		log.debug("1. param : " + inVO);
+		return this.fireDataMapper.doUpdate(inVO);
 	}
 
 	@Override
 	public int doDelete(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		log.debug("1. param : " + inVO);
+		return this.fireDataMapper.doDelete(inVO);
 	}    
 }

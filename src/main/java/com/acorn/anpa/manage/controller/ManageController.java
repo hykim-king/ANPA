@@ -55,5 +55,33 @@ public class ManageController implements PLog{
 		jsonString = gson.toJson(new Message(flag, message));
 		
 		return jsonString;
+	} // doSaveData끝
+	
+	@RequestMapping(
+			value = "/doDelete.do",
+			method = RequestMethod.GET,
+			produces = "text/plain;charset=UTF-8"
+	)		// produces : 화면으로 전송할 때 encoding
+	@ResponseBody
+	public String doDelete(Firedata inVO)throws SQLException {
+		String jsonString = "";
+		
+		log.debug("param Firedata : " + inVO);
+		
+		int flag = fireDataService.doDelete(inVO);
+		log.debug("flag : " + flag);
+		
+		String message = "";
+		
+		if(1==flag) {
+			message = "화재 데이터가 삭제되었습니다.";
+		}else {
+			message = "삭제 실패! 존재하지 않는 데이터입니다.";			
+		}
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		jsonString = gson.toJson(new Message(flag, message));
+		
+		return jsonString;
 	}
 }

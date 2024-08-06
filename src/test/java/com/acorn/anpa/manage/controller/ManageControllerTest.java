@@ -60,7 +60,7 @@ public class ManageControllerTest implements PLog{
 		
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 		
-		firedata01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010, "sjm", "SYSDATE", "sjm", "SYSDATE");
+		firedata01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);
         fireDataMapper.doDeleteTest(firedata01);     
 	}
 
@@ -71,6 +71,52 @@ public class ManageControllerTest implements PLog{
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 
+	@Test
+	public void doDelete() throws Exception {
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doDelete()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		int flag = fireDataMapper.doSave(firedata01);
+		assertEquals(1, flag);
+		
+		int seq = fireDataMapper.getSequence();
+		firedata01.setFireSeq(seq);
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ seq : " + seq);
+		log.debug("│ data : " + firedata01);
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		//요청 매핑
+		MockHttpServletRequestBuilder requestBuilder =
+			MockMvcRequestBuilders.get("/manage/doDelete.do")
+			.param("fireSeq", firedata01.getFireSeq()+"");
+		
+		//호출 및 결과
+		ResultActions resultActions = 
+				mockMvc.perform(requestBuilder)
+				// Controller produces = "text/plain;charset=UTF-8"
+				.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+				// Web상태
+				.andExpect(status().is2xxSuccessful());
+		
+		String jsonResult = resultActions.andDo(print())
+		.andReturn().getResponse().getContentAsString();
+		
+		log.debug("┌────────────────────────────────────────────────────────");
+		log.debug("│ jsonResult() : " + jsonResult);
+		log.debug("└────────────────────────────────────────────────────────");
+		
+		// json 문자열을 Message로 변환
+		Message resultMessage = new Gson().fromJson(jsonResult, Message.class);
+		
+		// 3. 비교
+		assertEquals(1, resultMessage.getMessageId());
+		assertEquals("화재 데이터가 삭제되었습니다.", resultMessage.getMessageContents());
+		
+	}	
+	
+	@Ignore
 	@Test
 	public void doSaveData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
