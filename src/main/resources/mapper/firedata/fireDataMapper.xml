@@ -24,7 +24,8 @@
             FROM(
                 SELECT  *
                 FROM    FIRE_DATA
-                --WHERE injuredSum(10), dead(20), injured(30), amount(40), subFactor(50), subLoc(60), subCity(70)
+                WHERE 1=1
+                -- searchDiv : 10(대분류 ) 20(소분류) 
                 <include refid="doRetrieveWhere"></include>
                 ORDER BY mod_dt DESC
             ) T1
@@ -35,38 +36,32 @@
     CROSS JOIN                                                                                                                                           
         (                                                                                                                                                    
         SELECT COUNT(*) totalCnt                                                                                                                             
-        FROM FIRE_DATA     
-        --WHERE injuredSum(10), dead(20), injured(30), amount(40), subFactor(50), subLoc(60), subCity(70)              
+        FROM FIRE_DATA 
+        WHERE 1=1    
         <include refid="doRetrieveWhere"></include>                                                                                                                   
         )B
     </select>
 
     <sql id="doRetrieveWhere">
-       <where>
            <choose>
-                 <when test="searchDiv != null and searchDiv == '10'">
-                   injured_sum LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                                     
-                 <when test="searchDiv != null and searchDiv == '20'">
-                   dead LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                   
-                 <when test="searchDiv != null and searchDiv == '30'">
-                   injured LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '40'">
-                   amount LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '50'">
-                   sub_factor LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '60'">
-                   sub_loc LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '70'">
-                   sub_city LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
+                <when test="searchDiv != null and saerchDiv == 10">
+                    AND main_code = #{searchWord}
+                </when>
+                <when test="searchDiv != null and saerchDiv == 20">
+                    AND sub_code = #{searchWord}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchCity != null">
+                    AND sub_loc = #{searchCity}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchDateStart != null and searchDateEnd != null ">
+                    AND mod_dt <![CDATA[>=]]>  #{searchDateStart}
+                    AND mod_dt <![CDATA[<=]]>  #{searchDateEnd}
+                </when>
            </choose>                                                                                                                                   
-       </where>          
     </sql>
 
     <insert id="doSave" parameterType="Firedata" >

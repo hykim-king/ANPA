@@ -57,7 +57,7 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 		
 		// 0. 전체삭제 + fire_seq초기화
-		fireMapper.deleteAll();
+		//fireMapper.deleteAll();
 		
 		fire01 = new Firedata(1, 0, 0, 0, 0, 1000, 100, 11010, "admin1", "admin1", "SYSDATE", "SYSDATE");
 		
