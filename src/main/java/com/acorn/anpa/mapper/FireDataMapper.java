@@ -1,9 +1,11 @@
 package com.acorn.anpa.mapper;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.cmn.WorkDiv;
 import com.acorn.anpa.firedata.domain.Firedata;
 
@@ -38,4 +40,12 @@ public interface FireDataMapper extends WorkDiv<Firedata> {
 	 * @throws SQLException
 	 */
 	int multipleSave() throws SQLException;	
+	
+	/**
+	 * 화재통계 자료
+	 * @param search
+	 * @return
+	 * @throws SQLException
+	 */
+	List<Firedata> doRetrieveDB(Search search) throws SQLException;
 }

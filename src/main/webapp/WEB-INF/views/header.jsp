@@ -13,20 +13,20 @@
 
     <ul class="nav nav-tabs text-center justify-content-center">
         <li class="nav-item d-flex justify-content-center align-items-center">
-            <a class="nav-link" aria-current="page" href="#">화재통계</a>
+            <a class="nav-link" aria-current="page" href="#">íì¬íµê³</a>
         </li>
         <li class="nav-item d-flex justify-content-center align-items-center">
-            <a class="nav-link" href="#">1달 화재현황</a>
+            <a class="nav-link" href="#">1ë¬ íì¬íí©</a>
         </li>
         <li class="nav-item d-flex justify-content-center align-items-center">
-            <a class="nav-link" href="#">화재 예방법</a>
+            <a class="nav-link" href="#">íì¬ ìë°©ë²</a>
         </li>
         <li class="nav-item dropdown d-flex justify-content-center align-items-center">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">알림마당</a>
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">ìë¦¼ë§ë¹</a>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">공지사항</a></li>
+                <li><a class="dropdown-item" href="#">ê³µì§ì¬í­</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">건의사항</a></li>
+                <li><a class="dropdown-item" href="#">ê±´ìì¬í­</a></li>
             </ul>
         </li>
     </ul>
