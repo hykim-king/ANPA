@@ -60,6 +60,9 @@ body *{
     color : #111;
     transition: .3s ease-out;
 }
+@media screen and (max-width: 600px){
+    .top_header_il .top_header_il_obj img{height: 50px;}
+}
 /* 헤더 끝 */
 
 /* 영역 시작 */

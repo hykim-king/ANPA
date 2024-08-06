@@ -12,7 +12,7 @@
 <header id="top_header">
     <div class="d-flex justify-content-between align-items-center top_header_il">
         <div class="text-center top_header_il_obj top_logo">
-            <img src="${CP}/resources/img/logo_x.png" alt="#logo">                 
+            <img src="${CP}/resources/img/logo_x.png" alt="#logo">                   
         </div>
         <h2 class="title d-flex align-items-center justify-content-center">ANPA</h2>
         <div class="text-center top_header_il_obj appmenu">
