@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pcwk.ehr.mapper.PreventMapper">
+
+   <insert id="doSave" parameterType="Preventdata" >
+       INSERT INTO prevent (
+         title,
+         read_cnt,
+         contents,
+         img_src,
+         mod_dt,
+         reg_id,
+         reg_dt,
+         mod_id
+) VALUES (
+    #{title},
+    #{readCnt},
+    #{contents},
+    #{imgSrc},
+    SYSDATE,
+    #{regId},
+    #{regDt},
+    #{regId}
+) 
+    </insert>    
+
+
+ <update id="doUpdate" parameterType="Preventdata">
+        UPDATE prevent
+        SET
+  
+            title = #{title},
+            read_cnt = #{readCnt}},
+            contents = #{contents},
+            img_src =  #{imgSrc},
+            mod_dt =  #{modDt},
+             reg_id =  #{regId},
+             reg_dt =  #{regDt},
+             mod_id =  #{modId}  
+    
+    WHERE prevent_seq = #{preventSeq}
+    </update>
+
+
+    <delete id="doDelete" parameterType="Preventdata">
+        DELETE FROM PREVENT
+        WHERE prevent_seq = #{preventSeq}
+      </delete>
+      
+      
+      <select id="doSelectOne" parameterType="Preventdata" resultType = "Preventdata">
+       SELECT
+            prevent_seq as preventSeq,
+            title,
+            read_cnt as readCnt,
+            contents,
+            img_src as imgSrc,
+            mod_dt as modDt,
+           reg_id as regId,//등록자
+            TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as regDt,//등록일
+            reg_dt as,
+           mod_id as modId,
+            TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as modDt//수정일
+          FROM
+            prevent;
+       WHERE prevent_seq = #{preventSeq}                                   
+    </select>
+      
+      
+      
+      
+      
+
+</mapper>
