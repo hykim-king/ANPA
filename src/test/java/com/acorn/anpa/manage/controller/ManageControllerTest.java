@@ -59,9 +59,8 @@ public class ManageControllerTest implements PLog{
 		log.debug("└─────────────────────────────────────────────────────────");
 		
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		
-		firedata01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);
-        fireDataMapper.doDeleteTest(firedata01);     
+		firedata01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);   
+		firedata01.setRegId("admin1");
 	}
 
 	@After
@@ -72,7 +71,56 @@ public class ManageControllerTest implements PLog{
 	}
 
 	@Test
-	public void doDelete() throws Exception {
+	public void doUpdateData() throws Exception{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doUpdateData()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		int flag = fireDataMapper.doSave(firedata01);
+		assertEquals(1, flag);
+		
+		int seq = fireDataMapper.getSequence();
+		firedata01.setFireSeq(seq);
+		
+		//요청 매핑
+		MockHttpServletRequestBuilder requestBuilder =
+			MockMvcRequestBuilders.post("/manage/doUpdateData.do")
+			.param("fireSeq", firedata01.getFireSeq()+"")
+			.param("injuredSum", "2")
+			.param("dead", "1")
+			.param("injured", "1")
+			.param("amount", "50")
+			.param("subFactor", "1000")
+			.param("subLoc", "100")
+			.param("subCity", "11010")
+			.param("modId", "admin2");
+	
+		//호출 및 결과
+		ResultActions resultActions = 
+				mockMvc.perform(requestBuilder)
+				// Controller produces = "text/plain;charset=UTF-8"
+				.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+				// Web상태
+				.andExpect(status().is2xxSuccessful());
+		
+		String jsonResult = resultActions.andDo(print())
+		.andReturn().getResponse().getContentAsString();
+		
+		log.debug("┌────────────────────────────────────────────────────────");
+		log.debug("│ jsonResult() : " + jsonResult);
+		log.debug("└────────────────────────────────────────────────────────");
+		// json 문자열을 Message로 변환
+		Message resultMessage = new Gson().fromJson(jsonResult, Message.class);
+		
+		// 3. 비교
+		assertEquals(1, resultMessage.getMessageId());
+		assertEquals("화재정보가 수정되었습니다.", resultMessage.getMessageContents());
+		
+	}
+	
+	@Ignore
+	@Test
+	public void doDeleteData() throws Exception {
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ doDelete()");
 		log.debug("└─────────────────────────────────────────────────────────");
@@ -89,7 +137,7 @@ public class ManageControllerTest implements PLog{
 		
 		//요청 매핑
 		MockHttpServletRequestBuilder requestBuilder =
-			MockMvcRequestBuilders.get("/manage/doDelete.do")
+			MockMvcRequestBuilders.get("/manage/doDeleteData.do")
 			.param("fireSeq", firedata01.getFireSeq()+"");
 		
 		//호출 및 결과
