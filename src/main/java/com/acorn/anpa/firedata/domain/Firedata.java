@@ -11,15 +11,11 @@ public class Firedata extends DTO{
 	private int    subFactor;	// 화재요인코드
 	private int    subLoc;		// 화재장소코드
 	private int    subCity;		// 시군구 코드
-	private String regId;		// 수정자
-	private String modId;		// 등록자
-	private String regDt;		// 수정일
-	private String modDt;		// 등록일
 	
 	public Firedata() {}
 
 	public Firedata(int fireSeq, int injuredSum, int dead, int injured, int amount, int subFactor, int subLoc,
-			int subCity, String regId, String modId, String regDt, String modDt) {
+			int subCity) {
 		super();
 		this.fireSeq = fireSeq;
 		this.injuredSum = injuredSum;
@@ -29,10 +25,6 @@ public class Firedata extends DTO{
 		this.subFactor = subFactor;
 		this.subLoc = subLoc;
 		this.subCity = subCity;
-		this.regId = regId;
-		this.modId = modId;
-		this.regDt = regDt;
-		this.modDt = modDt;
 	}
 
 	public int getFireSeq() {
@@ -99,43 +91,14 @@ public class Firedata extends DTO{
 		this.subCity = subCity;
 	}
 
-	public String getRegId() {
-		return regId;
-	}
-
-	public void setRegId(String regId) {
-		this.regId = regId;
-	}
-
-	public String getModId() {
-		return modId;
-	}
-
-	public void setModId(String modId) {
-		this.modId = modId;
-	}
-
-	public String getRegDt() {
-		return regDt;
-	}
-
-	public void setRegDt(String regDt) {
-		this.regDt = regDt;
-	}
-
-	public String getModDt() {
-		return modDt;
-	}
-
-	public void setModDt(String modDt) {
-		this.modDt = modDt;
-	}
-
 	@Override
 	public String toString() {
-		return "firedata [fireSeq=" + fireSeq + ", injuredSum=" + injuredSum + ", dead=" + dead + ", injured=" + injured
+		return "Firedata [fireSeq=" + fireSeq + ", injuredSum=" + injuredSum + ", dead=" + dead + ", injured=" + injured
 				+ ", amount=" + amount + ", subFactor=" + subFactor + ", subLoc=" + subLoc + ", subCity=" + subCity
-				+ ", regId=" + regId + ", modId=" + modId + ", regDt=" + regDt + ", modDt=" + modDt + ", toString()="
-				+ super.toString() + "]";
+				+ ", toString()=" + super.toString() + "]";
 	}
+
+	
+	
+	
 }
