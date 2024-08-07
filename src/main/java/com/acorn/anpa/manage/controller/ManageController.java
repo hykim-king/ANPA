@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -116,5 +117,42 @@ public class ManageController implements PLog{
 		jsonString = gson.toJson(new Message(flag, message));
 		
 		return jsonString;
+	}
+	
+	@RequestMapping(
+			value = "/doSelectOne.do",
+			method = RequestMethod.GET,
+			produces = "text/plain;charset=UTF-8"
+	)
+	@ResponseBody
+	public String doSelectOne(Firedata inVO) throws SQLException, NullPointerException {
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ doSelectOne()");
+		log.debug("└──────────────────────────────────────────────");	
+		
+		String jsonString = "";		
+		
+		log.debug("1. param : " + inVO);
+		Firedata outVO = fireDataService.doSelectOne(inVO);
+		
+		String message = "";
+		int flag = 0;
+		if (null != outVO) {
+			message = inVO.getFireSeq() + " 의 데이터가 조회되었습니다";
+			flag = 1;
+		}else {
+			message = inVO.getFireSeq() + " 조회 실패!";
+		}
+		
+		//message
+		jsonString = new Gson().toJson(new Message(flag, message));
+		log.debug("3. jsonString : " + jsonString);
+		
+		//user
+		String jsonFireData = new Gson().toJson(outVO);
+		
+		String allMessage = "{\"firedata\" : "+jsonFireData + ",\"message\": "+jsonString+"}";		
+		
+		return allMessage;
 	}
 }

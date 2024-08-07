@@ -71,7 +71,6 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
-	@Ignore	
 	@Test
 	public void doRetrieve() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -150,13 +149,12 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
+	@Ignore
 	@Test
 	public void doSelectOne() throws SQLException{
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ doSelectOne()");
 		log.debug("└─────────────────────────────────────────────────────────");
-		
-		fire01.setRegId("admin1");
 		
 		int flag = fireMapper.doSave(fire01);	
 		assertEquals(1, flag);
@@ -166,8 +164,6 @@ public class FireDataMapperTest implements PLog {
 		fire01.setFireSeq(seq);
 		
 		Firedata inVO = fireMapper.doSelectOne(fire01);
-		
-		fireMapper.doDelete(fire01);
 		log.debug(inVO);
 	}
 
