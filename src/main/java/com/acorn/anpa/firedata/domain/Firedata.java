@@ -21,6 +21,14 @@ public class Firedata extends DTO{
 	private String subCityBigNm;   // 시도 이름
 	private String subCityMidNm;   // 시군구 이름
 	
+	//월별화재데이터 검색 시 필요 추가(승희)
+	private int fireCount; //현재 화재건수
+	private int monthFireCount;//월별 화재건수
+	private int monthDead;//월별 사망자수
+	private int monthInjured;//월별 부상자수
+	private int monthAmount;//월별 피해액
+	private int monthAvg;//월별 평균 데이터
+	
 	public Firedata() {}
 
 	public Firedata(int fireSeq, int injuredSum, int dead, int injured, int amount, int subFactor, int subLoc,
@@ -148,13 +156,56 @@ public class Firedata extends DTO{
 		this.subCityMidNm = subCityMidNm;
 	}
 
+	public int getFireCount() {
+		return fireCount;
+	}
+
+	public void setFireCount(int fireCount) {
+		this.fireCount = fireCount;
+	}
+
+	public int getMonthFireCount() {
+		return monthFireCount;
+	}
+
+	public void setMonthFireCount(int monthFireCount) {
+		this.monthFireCount = monthFireCount;
+	}
+
+	public int getMonthDead() {
+		return monthDead;
+	}
+
+	public void setMonthDead(int monthDead) {
+		this.monthDead = monthDead;
+	}
+
+	public int getMonthInjured() {
+		return monthInjured;
+	}
+
+	public void setMonthInjured(int monthInjured) {
+		this.monthInjured = monthInjured;
+	}
+
+	public int getMonthAmount() {
+		return monthAmount;
+	}
+
+	public void setMonthAmount(int monthAmount) {
+		this.monthAmount = monthAmount;
+	}
+
 	@Override
 	public String toString() {
 		return "Firedata [fireSeq=" + fireSeq + ", injuredSum=" + injuredSum + ", dead=" + dead + ", injured=" + injured
 				+ ", amount=" + amount + ", subFactor=" + subFactor + ", subFactorBigNm=" + subFactorBigNm
 				+ ", subFactorMidNm=" + subFactorMidNm + ", subLoc=" + subLoc + ", subLocBigNm=" + subLocBigNm
 				+ ", subLocMidNm=" + subLocMidNm + ", subCity=" + subCity + ", subCityBigNm=" + subCityBigNm
-				+ ", subCityMidNm=" + subCityMidNm + ", toString()=" + super.toString() + "]";
+				+ ", subCityMidNm=" + subCityMidNm + ", fireCount=" + fireCount + ", monthFireCount=" + monthFireCount
+				+ ", monthDead=" + monthDead + ", monthInjured=" + monthInjured + ", monthAmount=" + monthAmount
+				+ ", toString()=" + super.toString() + "]";
 	}
 
+	
 }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.acorn.anpa.mapper.MonthFireDataMapper">
+
+    <select id="todayMonthData" parameterType="String" resultType="Firedata">
+	    SELECT A.*,B.*
+		FROM
+		(SELECT count(fire_seq) as fireCount,
+		        nvl(sum(dead),0) as dead,
+		        nvl(sum(injured),0) as injured,
+		        nvl(sum(amount),0) as amount
+		FROM fire_data
+		WHERE TRUNC(reg_dt) = TRUNC(SYSDATE)
+		)A,
+		(SELECT count(fire_seq) as monthFireCount,
+		        sum(dead) as monthDead,
+		        sum(injured) as monthInjured,
+		        sum(amount) as monthAmount
+		FROM fire_data
+		WHERE TO_CHAR(reg_dt,'YYYYMM') = #{regDt}
+		)B
+    </select>
+    
+    <select id="locBigData" parameterType="String" resultType="Firedata">
+	    SELECT big_list, monthFireCount,round(monthFireCount/12)AS monthAvg
+		FROM (
+		        WITH RankedData AS (
+		            SELECT
+		                c.big_list,
+		                COUNT(*) AS monthFireCount,
+		                DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk
+		            FROM fire_data f
+		            JOIN code c ON f.sub_loc = c.sub_code
+		            WHERE c.master_code = 'location'    
+		            AND TO_CHAR(f.reg_dt,'YYYYMM') = #{regDt}
+		            GROUP BY c.big_list
+		        )
+		        SELECT big_list, monthFireCount
+		        FROM RankedData
+		        WHERE rnk <![CDATA[<=3]]>
+		        ORDER BY rnk
+		    )
+    </select>
+    
+    <select id="locMidData" parameterType="String" resultType="Firedata">
+    SELECT mid_list, monthFireCount,round(monthFireCount/12)AS monthAvg
+	FROM (
+	        WITH RankedData AS (
+	            SELECT
+	                c.mid_list,
+	                COUNT(*) AS monthFireCount,
+	                DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk
+	            FROM fire_data f
+	            JOIN code c ON f.sub_loc = c.sub_code
+	            WHERE c.master_code = 'location'    
+	            AND TO_CHAR(f.reg_dt,'YYYYMM') = #{regDt}
+	            GROUP BY c.mid_list
+	        )
+	        SELECT mid_list, monthFireCount
+	        FROM RankedData
+	        WHERE rnk <![CDATA[<=3]]>
+	        ORDER BY rnk
+	    )
+    </select>
+    
+    <select id="factorMidData" parameterType="String" resultType="Firedata">
+		SELECT mid_list, monthFireCount,round(monthFireCount/12)AS monthAvg
+		FROM (
+		        WITH RankedData AS (
+		            SELECT
+		                c.mid_list,
+		                COUNT(*) AS monthFireCount,
+		                DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk
+		            FROM fire_data f
+		            JOIN code c ON f.sub_factor = c.sub_code
+		            WHERE c.master_code = 'factor'    
+		            AND TO_CHAR(f.reg_dt,'YYYYMM') = #{regDt}
+		            GROUP BY c.mid_list
+		        )
+		        SELECT mid_list, monthFireCount
+		        FROM RankedData
+		        WHERE rnk <![CDATA[<=3]]>
+		        ORDER BY rnk
+		    )
+    </select>
+</mapper>
