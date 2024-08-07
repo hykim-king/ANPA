@@ -133,8 +133,8 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 
 	@Override
 	public Firedata doSelectOne(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+
+		return fireDataMapper.doSelectOne(inVO);
 	}
 
 	@Override
