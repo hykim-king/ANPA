@@ -3,7 +3,7 @@
 <mapper namespace="com.acorn.anpa.mapper.UserMapper">
 
     <!-- 로그인 -->
-    <select id="login" parameterType="map" resultType="Member">
+    <select id="login" parameterType="Member" resultType="Member">
         SELECT * 
         FROM member 
         WHERE user_id = #{userId} 
@@ -12,35 +12,36 @@
 
     <!-- 회원 가입 -->
     <insert id="signUp" parameterType="Member">
-        INSERT INTO member 
-            (user_id, 
+        INSERT INTO member(
+             user_id, 
              password, 
              user_name, 
              email, 
              email_yn, 
              admin_yn, 
              sub_city, 
-             tel)
-        VALUES 
-            (#{userId}, 
+             tel
+             )VALUES(
+             #{userId}, 
              #{password}, 
              #{userName}, 
              #{email}, 
              #{emailYn}, 
              #{adminYn}, 
              #{subCity}, 
-             #{tel})
+             #{tel}
+             )
     </insert>
 
     <!-- ID 중복 체크 -->
-    <select id="idDuplicateCheck" parameterType="Member" resultType="int">
+    <select id="idCheck" parameterType="Member" resultType="int">
         SELECT COUNT(*) 
         FROM member 
         WHERE user_id = #{userId}
     </select>
 
     <!-- 아이디 찾기 -->
-    <select id="findUserId" parameterType="map" resultType="String">
+    <select id="findUserId" parameterType="Member" resultType="String">
         SELECT user_id 
         FROM member 
         WHERE user_name = #{userName} 
@@ -48,12 +49,17 @@
     </select>
 
     <!-- 비밀번호 찾기 -->
-    <select id="findPassword" parameterType="map" resultType="String">
+    <select id="findPassword" parameterType="Member" resultType="String">
         SELECT password 
         FROM member 
         WHERE user_id = #{userId} 
         AND user_name = #{userName} 
         AND email = #{email}
     </select>
+    
+    <!-- 모든 데이터 삭제 (테스트 용도) -->
+    <delete id="deleteAll">
+        DELETE FROM member
+    </delete>
 
 </mapper>

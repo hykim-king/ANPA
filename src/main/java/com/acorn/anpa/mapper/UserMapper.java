@@ -36,7 +36,7 @@ public interface UserMapper extends WorkDiv<Member> {
      * @return 1(사용불가)/0(사용가능)
      * @throws SQLException
      */
-    int idDuplicateCheck(Member inVO) throws SQLException;
+    int idCheck(@Param("userId") String userId) throws SQLException;
     
     /**
      * 아이디 찾기
@@ -56,4 +56,7 @@ public interface UserMapper extends WorkDiv<Member> {
      * @throws SQLException
      */
     String findPassword(@Param("userId") String userId, @Param("userName") String userName, @Param("email") String email) throws SQLException;
+
+    void deleteAll() throws SQLException;
+    
 }
