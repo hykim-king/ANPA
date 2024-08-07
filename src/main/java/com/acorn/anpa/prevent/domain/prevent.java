@@ -1,4 +1,4 @@
-package com.acorn.anpa.prevent;
+package com.acorn.anpa.prevent.domain;
 
 import com.acorn.anpa.cmn.DTO;
 

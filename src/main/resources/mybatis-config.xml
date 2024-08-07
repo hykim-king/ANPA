@@ -14,5 +14,6 @@
         <typeAlias alias="Search" type="com.acorn.anpa.cmn.Search"/>
         <typeAlias alias="Code" type="com.acorn.anpa.code.domain.Code"/>
         <typeAlias alias="Firedata" type="com.acorn.anpa.firedata.domain.Firedata"/>
+       <typeAlias alias="prevent" type="com.acorn.anpa.prevent.domain.prevent"/>
     </typeAliases>
 </configuration>
