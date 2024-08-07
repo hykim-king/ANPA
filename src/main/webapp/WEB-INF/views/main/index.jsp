@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>    
 </head>
 <body>
-<jsp:include page="${CP}/WEB-INF/views/header.jsp" />
+<jsp:include page="/WEB-INF/views/header.jsp" />
 
 <section class="content align-items-center">
     <div class="main">
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 </section>
 
-<jsp:include page="${CP}/WEB-INF/views/footer.jsp" />
+<jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>        
 </body>
 </html>

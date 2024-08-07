@@ -8,18 +8,23 @@ public class Firedata extends DTO{
 	private	int    dead;		// 사망자
 	private int    injured;		// 부상자
 	private int    amount;		// 피해액
+	
 	private int    subFactor;	// 화재요인코드
+	private String subFactorBigNm; // 화재요인 대분류 이름
+	private String subFactorMidNm; // 화재요인 소분류 이름
+	
 	private int    subLoc;		// 화재장소코드
+	private String subLocBigNm;    // 화재장소 대분류 이름
+	private String subLocMidNm;    // 화재장소 소분류 이름
+	
 	private int    subCity;		// 시군구 코드
-	private String regId;		// 수정자
-	private String modId;		// 등록자
-	private String regDt;		// 수정일
-	private String modDt;		// 등록일
+	private String subCityBigNm;   // 시도 이름
+	private String subCityMidNm;   // 시군구 이름
 	
 	public Firedata() {}
 
 	public Firedata(int fireSeq, int injuredSum, int dead, int injured, int amount, int subFactor, int subLoc,
-			int subCity, String regId, String modId, String regDt, String modDt) {
+			int subCity) {
 		super();
 		this.fireSeq = fireSeq;
 		this.injuredSum = injuredSum;
@@ -29,10 +34,6 @@ public class Firedata extends DTO{
 		this.subFactor = subFactor;
 		this.subLoc = subLoc;
 		this.subCity = subCity;
-		this.regId = regId;
-		this.modId = modId;
-		this.regDt = regDt;
-		this.modDt = modDt;
 	}
 
 	public int getFireSeq() {
@@ -83,12 +84,44 @@ public class Firedata extends DTO{
 		this.subFactor = subFactor;
 	}
 
+	public String getSubFactorBigNm() {
+		return subFactorBigNm;
+	}
+
+	public void setSubFactorBigNm(String subFactorBigNm) {
+		this.subFactorBigNm = subFactorBigNm;
+	}
+
+	public String getSubFactorMidNm() {
+		return subFactorMidNm;
+	}
+
+	public void setSubFactorMidNm(String subFactorMidNm) {
+		this.subFactorMidNm = subFactorMidNm;
+	}
+
 	public int getSubLoc() {
 		return subLoc;
 	}
 
 	public void setSubLoc(int subLoc) {
 		this.subLoc = subLoc;
+	}
+
+	public String getSubLocBigNm() {
+		return subLocBigNm;
+	}
+
+	public void setSubLocBigNm(String subLocBigNm) {
+		this.subLocBigNm = subLocBigNm;
+	}
+
+	public String getSubLocMidNm() {
+		return subLocMidNm;
+	}
+
+	public void setSubLocMidNm(String subLocMidNm) {
+		this.subLocMidNm = subLocMidNm;
 	}
 
 	public int getSubCity() {
@@ -99,43 +132,29 @@ public class Firedata extends DTO{
 		this.subCity = subCity;
 	}
 
-	public String getRegId() {
-		return regId;
+	public String getSubCityBigNm() {
+		return subCityBigNm;
 	}
 
-	public void setRegId(String regId) {
-		this.regId = regId;
+	public void setSubCityBigNm(String subCityBigNm) {
+		this.subCityBigNm = subCityBigNm;
 	}
 
-	public String getModId() {
-		return modId;
+	public String getSubCityMidNm() {
+		return subCityMidNm;
 	}
 
-	public void setModId(String modId) {
-		this.modId = modId;
-	}
-
-	public String getRegDt() {
-		return regDt;
-	}
-
-	public void setRegDt(String regDt) {
-		this.regDt = regDt;
-	}
-
-	public String getModDt() {
-		return modDt;
-	}
-
-	public void setModDt(String modDt) {
-		this.modDt = modDt;
+	public void setSubCityMidNm(String subCityMidNm) {
+		this.subCityMidNm = subCityMidNm;
 	}
 
 	@Override
 	public String toString() {
-		return "firedata [fireSeq=" + fireSeq + ", injuredSum=" + injuredSum + ", dead=" + dead + ", injured=" + injured
-				+ ", amount=" + amount + ", subFactor=" + subFactor + ", subLoc=" + subLoc + ", subCity=" + subCity
-				+ ", regId=" + regId + ", modId=" + modId + ", regDt=" + regDt + ", modDt=" + modDt + ", toString()="
-				+ super.toString() + "]";
+		return "Firedata [fireSeq=" + fireSeq + ", injuredSum=" + injuredSum + ", dead=" + dead + ", injured=" + injured
+				+ ", amount=" + amount + ", subFactor=" + subFactor + ", subFactorBigNm=" + subFactorBigNm
+				+ ", subFactorMidNm=" + subFactorMidNm + ", subLoc=" + subLoc + ", subLocBigNm=" + subLocBigNm
+				+ ", subLocMidNm=" + subLocMidNm + ", subCity=" + subCity + ", subCityBigNm=" + subCityBigNm
+				+ ", subCityMidNm=" + subCityMidNm + ", toString()=" + super.toString() + "]";
 	}
+
 }

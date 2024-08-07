@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>
-<jsp:include page="${CP}/WEB-INF/views/header.jsp" />
+<jsp:include page="/WEB-INF/views/header.jsp" />
 
 <section class="board_con content content2 content3 align-items-center">
     <h3>공지사항</h3>
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 </section>
 
-<jsp:include page="${CP}/WEB-INF/views/footer.jsp" />
+<jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>        
 </body>
 </html>

@@ -38,7 +38,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
     public FireDataServiceImpl() {}
     
     @Override
-    public Firedata doSaveData(Firedata inVO)throws SQLException {
+    public int doSaveData(Firedata inVO)throws SQLException {
 		log.debug("1. param : " + inVO);
 		int flag = 0;
 		flag = fireDataMapper.doSave(inVO);
@@ -49,12 +49,14 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 		/* String userEmail = "anpa1995@naver.com"; */
 		String userEmail = "";
 		String userName = "";
-		
+		 
 		String masterCode = "city";
 		int subCode = 0;
 		
 		String bigList = "";
 		String midList = "";
+		
+		int emailCount = 0;
 		
 		if(flag == 1) {
 			
@@ -80,6 +82,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 		        userName = member.getUserName();
 		        contents = userName + "님이 거주하시는 " + bigList + midList + " 해당 지역에 화재가 발생하였습니다";
 		        sendEmail(title, contents, userEmail);
+		        emailCount++;
 		    }			
 			
             log.debug("┌──────────────────────────────────────────┐");
@@ -89,7 +92,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
             log.debug("└──────────────────────────────────────────┘");    			
 		}
 		
-		return null;
+		return emailCount;
 	}
     
     public void sendEmail(String title, String contents, String userEmail) {
@@ -130,25 +133,25 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 
 	@Override
 	public Firedata doSelectOne(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+
+		return fireDataMapper.doSelectOne(inVO);
 	}
 
 	@Override
 	public List<Firedata> doRetrieve(DTO search) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fireDataMapper.doRetrieve(search);
 	}
 
 	@Override
 	public int doUpdate(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		log.debug("1. param : " + inVO);
+		return this.fireDataMapper.doUpdate(inVO);
 	}
 
 	@Override
 	public int doDelete(Firedata inVO) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
+		log.debug("1. param : " + inVO);
+		return this.fireDataMapper.doDelete(inVO);
 	}    
 }

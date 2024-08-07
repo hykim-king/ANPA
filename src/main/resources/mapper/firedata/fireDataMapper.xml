@@ -14,17 +14,20 @@
                 TT1.sub_factor as subFactor,
                 TT1.sub_loc as subLoc,
                 TT1.sub_city as subCity,
+                TT1.reg_id as regId,
                 TT1.mod_id as modId,
                 DECODE(
-                TO_CHAR(TT1.mod_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
-                TO_CHAR(TT1.mod_dt, 'HH24:MI'), TO_CHAR(TT1.mod_dt,'YYYY/MM/DD')
-                ) AS modDt
+                TO_CHAR(TT1.reg_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
+                TO_CHAR(TT1.reg_dt, 'HH24:MI'), TO_CHAR(TT1.reg_dt,'YYYY/MM/DD')
+                ) AS regDt
         FROM    (
             SELECT ROWNUM AS RNUM, T1.*
             FROM(
                 SELECT  *
                 FROM    FIRE_DATA
-                --WHERE injuredSum(10), dead(20), injured(30), amount(40), subFactor(50), subLoc(60), subCity(70)
+                WHERE 1=1
+                -- searchDiv : 10(발화요인 대분류 ) 20(발화요인 소분류) 30(발화장소 대분류) 40(발화장소 소분류)
+                -- 발화 장소는 100번대 1씩증가  요인은 1000번대 10씩증가
                 <include refid="doRetrieveWhere"></include>
                 ORDER BY mod_dt DESC
             ) T1
@@ -35,41 +38,41 @@
     CROSS JOIN                                                                                                                                           
         (                                                                                                                                                    
         SELECT COUNT(*) totalCnt                                                                                                                             
-        FROM FIRE_DATA     
-        --WHERE injuredSum(10), dead(20), injured(30), amount(40), subFactor(50), subLoc(60), subCity(70)              
+        FROM FIRE_DATA 
+        WHERE 1=1    
         <include refid="doRetrieveWhere"></include>                                                                                                                   
         )B
     </select>
 
     <sql id="doRetrieveWhere">
-       <where>
            <choose>
-                 <when test="searchDiv != null and searchDiv == '10'">
-                   injured_sum LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                                     
-                 <when test="searchDiv != null and searchDiv == '20'">
-                   dead LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                   
-                 <when test="searchDiv != null and searchDiv == '30'">
-                   injured LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '40'">
-                   amount LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '50'">
-                   sub_factor LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '60'">
-                   sub_loc LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
-                 <when test="searchDiv != null and searchDiv == '70'">
-                   sub_city LIKE #{searchWord} || '%'
-                 </when>                                                                                                                                    
+                <when test="searchDiv != null and searchDiv == 10">
+                    AND sub_factor LIKE #{searchWord}
+                </when>
+                <when test="searchDiv != null and searchDiv == 20">
+                    AND sub_factor = #{searchWord}
+                </when>
+                <when test="searchDiv != null and searchDiv == 30">
+                    AND sub_loc LIKE #{searchWord}
+                </when>
+                <when test="searchDiv != null and searchDiv == 40">
+                    AND sub_loc = #{searchWord}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchCity != null">
+                    AND sub_city = #{searchCity}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchDateStart != null and searchDateEnd != null ">
+                    AND reg_dt <![CDATA[>=]]>  #{searchDateStart}
+                    AND reg_dt <![CDATA[<=]]>  #{searchDateEnd}
+                </when>
            </choose>                                                                                                                                   
-       </where>          
     </sql>
 
-    <insert id="doSave" parameterType="Firedata" >
+    <insert id="doSave" parameterType="Firedata">
 	    INSERT INTO FIRE_DATA (
 	        injured_sum,
 	        dead,
@@ -114,22 +117,32 @@
 	</delete>
 	
 	<select id="doSelectOne" parameterType="Firedata" resultType = "Firedata">
-	    SELECT
-	        fire_seq as fireSeq,
-	        injured_sum as injuredSum,
-	        dead,
-	        injured,
-	        amount,
-	        sub_factor as subFactor,
-	        sub_loc as subLoc,
-	        sub_city as subCity,
-	        reg_id as regId,
-	        TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as regDt,
-	        mod_id as modId,
-	        TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as modDt
-	    FROM
-	        FIRE_DATA
-	    WHERE fire_seq = #{fireSeq}                                    
+	    SELECT  fd.fire_seq AS fireSeq,
+				fd.injured_sum AS injuredSum,
+				fd.dead,
+				fd.injured,
+				fd.amount,
+				fd.sub_factor AS subFactor,
+				fac_big.big_list AS subFactorBigNm,
+				fac_mid.mid_list AS subFactorMidNm,
+				fd.sub_loc AS subLoc,
+				loc_big.big_list AS subLocBigNm,
+				loc_mid.mid_list AS subLocMidNm,
+				fd.sub_city AS subCity,
+				city_big.big_list AS subCityBigNm,
+				city_mid.mid_list AS subCityMidNm,
+				fd.reg_id AS regId,
+				TO_CHAR(fd.reg_dt, 'YYYY/MM/DD HH24:MI:SS') AS regDt,
+				fd.mod_id AS modId,
+				TO_CHAR(fd.mod_dt, 'YYYY/MM/DD HH24:MI:SS') AS modDt
+		FROM    FIRE_DATA fd
+				INNER JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = fd.sub_factor
+				INNER JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = fd.sub_factor
+				INNER JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = fd.sub_loc
+				INNER JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = fd.sub_loc
+				INNER JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = fd.sub_city
+				INNER JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = fd.sub_city
+		WHERE   fd.fire_seq = #{fireSeq}                                    
 	</select>
     
     <!-- 테스트용 DAO 메서드 -->
