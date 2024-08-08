@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -26,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.acorn.anpa.cmn.Message;
 import com.acorn.anpa.cmn.PLog;
+import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.firedata.service.FireDataService;
 import com.acorn.anpa.mapper.FireDataMapper;
@@ -57,6 +60,8 @@ public class ManageControllerTest implements PLog{
 	Firedata firedata01;
 	Firedata firedata02;
 	Firedata firedata03;
+
+	Search search;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -74,6 +79,48 @@ public class ManageControllerTest implements PLog{
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ tearDown");
 		log.debug("└─────────────────────────────────────────────────────────");
+	}
+	
+	@Ignore
+	@Test
+	public void doRetrieve() throws Exception{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doRetrieve Test()");
+		log.debug("└─────────────────────────────────────────────────────────");
+	
+		search.setPageNo(1);
+		search.setPageSize(10);
+		
+		search.setDiv("");
+		
+		//요청 매핑
+		MockHttpServletRequestBuilder requestBuilder =
+			MockMvcRequestBuilders.get("/manage/doRetrieve.do")
+			.param("searchDiv", search.getSearchDiv())
+			.param("searchWord", search.getSearchWord())
+			.param("pageSize", search.getPageSize()+"")
+			.param("pageNo", search.getPageNo()+"")
+			.param("div",search.getDiv());
+		
+		//호출 및 결과
+		ResultActions resultActions = 
+				mockMvc.perform(requestBuilder)
+				// Web상태
+				.andExpect(status().is2xxSuccessful());
+		
+		//Model
+		MvcResult mvcResult = resultActions.andDo(print()).andReturn();
+		
+		Map<String, Object> modelMap = mvcResult.getModelAndView().getModel();
+		
+		List<Firedata> list = (List<Firedata>) modelMap.get("list");
+		assertNotNull(list);
+		for (Firedata vo : list) log.debug(vo);		
+		
+		String viewName = mvcResult.getModelAndView().getViewName();
+		
+		int totalCnt = (int) modelMap.get("totalCnt");
+		log.debug("totalCnt: "+totalCnt);	
 	}
 	
 	@Test
@@ -122,9 +169,11 @@ public class ManageControllerTest implements PLog{
         Message resultMessage = new Gson().fromJson(messageJson, messageType);
 		assertEquals(1, resultMessage.getMessageId());
 		assertEquals(firedata01.getFireSeq() + " 의 데이터가 조회되었습니다", resultMessage.getMessageContents());
+		
+		flag = fireDataMapper.doDelete(firedata01);
+		assertEquals(1, flag);
 	}
 
-	@Ignore
 	@Test
 	public void doUpdateData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -173,7 +222,6 @@ public class ManageControllerTest implements PLog{
 		
 	}
 	
-	@Ignore
 	@Test
 	public void doDeleteData() throws Exception {
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -219,7 +267,6 @@ public class ManageControllerTest implements PLog{
 		
 	}	
 	
-	@Ignore
 	@Test
 	public void doSaveData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -256,7 +303,13 @@ public class ManageControllerTest implements PLog{
 		Message resultMessage = new Gson().fromJson(jsonResult, Message.class);
 		
 		// 3. 비교
-		assertEquals("등록이 완료되었습니다 2건의 메일이 전송되었습니다", resultMessage.getMessageContents());
+		assertEquals("등록이 완료되었습니다 1건의 메일이 전송되었습니다", resultMessage.getMessageContents());
+		
+		int seq = fireDataMapper.getSequence();
+		firedata01.setFireSeq(seq);
+		
+		int flag = fireDataMapper.doDelete(firedata01);
+		assertEquals(1, flag);
 	}
 	
 	@Ignore

@@ -1,17 +1,24 @@
 package com.acorn.anpa.manage.controller;
 
 import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.acorn.anpa.cmn.Message;
 import com.acorn.anpa.cmn.PLog;
+import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.cmn.StringUtil;
+import com.acorn.anpa.code.domain.Code;
+import com.acorn.anpa.code.service.CodeService;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.firedata.service.FireDataService;
 import com.google.gson.Gson;
@@ -25,10 +32,65 @@ public class ManageController implements PLog{
 	@Autowired
 	FireDataService fireDataService;
 	
+	@Autowired
+	CodeService codeService;
+	
 	public ManageController() {
 		log.debug("┌──────────────────────────────────────────────");
 		log.debug("│ FireDataController()");
 		log.debug("└──────────────────────────────────────────────");
+	}
+	
+	@GetMapping("/doRetrieve.do")
+	public String doRetrieve(Model model, HttpServletRequest req) throws SQLException {
+		String viewName = "manage/manageData";
+		
+		Search search = new Search();	
+		
+		//검색구분
+		//searchDiv = "" (기본값)
+		String searchDiv = StringUtil.nvl(req.getParameter("searchDiv"), "");
+		search.setSearchDiv(searchDiv);
+		//searchWord = "" (기본값)
+		String searchWord = StringUtil.nvl(req.getParameter("searchWord"), "");
+		search.setSearchWord(searchWord);
+		
+		//pageSize=10 (기본값)
+		String pageSize = StringUtil.nvl(req.getParameter("pageSize"), "10");		
+		//pageNo=1 (기본값)
+		String pageNo = StringUtil.nvl(req.getParameter("pageNo"), "1");
+		
+		search.setPageSize(Integer.parseInt(pageSize));
+		search.setPageNo(Integer.parseInt(pageNo));
+		
+		//div값이 없으면 전체 조회
+		String div = StringUtil.nvl(req.getParameter("div"), "");
+		search.setDiv(div);
+		
+		List<Firedata> list = fireDataService.doRetrieve(search);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("search", search);
+		
+		Code code = new Code();
+		code.setMasterCode("");
+		List<Code> codeList = codeService.doRetrieve(code);
+		
+		model.addAttribute("", codeList);
+		
+		int totalCnt = 0;
+		if(null!=list && list.size()>0) {
+			Firedata firedata = list.get(0);
+			totalCnt = firedata.getTotalCnt();
+		}
+		
+		model.addAttribute("totalCnt", totalCnt);
+		
+		code.setMasterCode("COM_PAGE_SIZE"); // 페이지 사이즈
+		List<Code> comPageSize = this.codeService.doRetrieve(code);
+		model.addAttribute("COM_PAGE_SIZE", comPageSize); // 검색조건
+		
+		return viewName;
 	}
 	
 	@RequestMapping(
