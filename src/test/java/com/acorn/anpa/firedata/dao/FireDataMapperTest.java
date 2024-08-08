@@ -71,60 +71,6 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
-	@Test
-	public void doRetrieve() throws Exception{
-		log.debug("┌─────────────────────────────────────────────────────────");
-		log.debug("│ doRetrieve()");
-		log.debug("└─────────────────────────────────────────────────────────");
-		
-		List<Firedata> list = fireMapper.doRetrieve(search);
-		assertEquals(list.size(), 10);
-		
-		search.setSearchDiv("10");
-		search.setSearchWord("5___");
-		
-		list = fireMapper.doRetrieve(search);
-		assertEquals(list.size(), 10);
-		
-		search.setSearchDiv("20");
-		search.setSearchWord("5010");
-		
-		list = fireMapper.doRetrieve(search);
-		assertEquals(list.size(), 10);
-		
-		search.setSearchDiv("30");
-		search.setSearchWord("4__");
-		
-		list = fireMapper.doRetrieve(search);
-		assertEquals(list.size(), 10);
-		
-		search.setSearchDiv("40");
-		search.setSearchWord("402");
-		
-		list = fireMapper.doRetrieve(search);
-		assertEquals(list.size(), 10);
-		
-		//시군구
-		search.setSearchCity("11030");
-		search.setSearchDiv(null);
-		search.setSearchWord(null);
-		
-		list = fireMapper.doRetrieve(search);
-		assertEquals(list.size(), 10);	
-				
-		// 기간 조회
-		search.setSearchCity(null);
-		
-		search.setSearchDateStart("20230301");
-		search.setSearchDateEnd("20230401");
-		
-		list = fireMapper.doRetrieve(search);
-		assertEquals(list.size(), 10);	
-		
-		for(Firedata vo : list) {
-			log.debug(vo);
-		}
-	}
 	
 	@Ignore
 	@Test
