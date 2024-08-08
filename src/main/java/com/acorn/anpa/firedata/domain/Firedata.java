@@ -22,11 +22,24 @@ public class Firedata extends DTO{
 	private String subCityMidNm;   // 시군구 이름
 	
 	//월별화재데이터 검색 시 필요 추가(승희)
-	private int fireCount; //현재 화재건수
-	private int monthFireCount;//월별 화재건수
-	private int monthDead;//월별 사망자수
-	private int monthInjured;//월별 부상자수
-	private int monthAmount;//월별 피해액
+	private int todayFireCount        ;//오늘 화재건수
+	private int todayDead             ;//오늘 사망자수
+	private int todayInjured          ;//오늘 부상자수
+	private int todayAmount           ;//오늘 피해액
+	private int monthFireCount        ;//검색 월 화재건수
+	private int monthDead             ;//검색 월 사망자수
+	private int monthInjured          ;//검색 월 부상자수
+	private int monthAmount           ;//검색 월 피해액
+	
+	private int lastYearDayFireCount  ;//전년동기 일 화재건수
+	private int lastYearDayDead       ;//전년동기 일 사망자수
+	private int lastYearDayInjured    ;//전년동기 일 부상자수
+	private int lastYearDayAmount     ;//전년동기 일 피해액
+	private int lastYearMonthFireCount;//전년동기 월 화재건수
+	private int lastYearMonthDead     ;//전년동기 월 사망자수
+	private int lastYearMonthInjured  ;//전년동기 월 부상자수
+	private int lastYearMonthAmount   ;//전년동기 월 피해액
+	
 	private int monthAvg;//월별 평균 데이터
 	
 	public Firedata() {}
@@ -156,12 +169,36 @@ public class Firedata extends DTO{
 		this.subCityMidNm = subCityMidNm;
 	}
 
-	public int getFireCount() {
-		return fireCount;
+	public int getTodayFireCount() {
+		return todayFireCount;
 	}
 
-	public void setFireCount(int fireCount) {
-		this.fireCount = fireCount;
+	public void setTodayFireCount(int todayFireCount) {
+		this.todayFireCount = todayFireCount;
+	}
+
+	public int getTodayDead() {
+		return todayDead;
+	}
+
+	public void setTodayDead(int todayDead) {
+		this.todayDead = todayDead;
+	}
+
+	public int getTodayInjured() {
+		return todayInjured;
+	}
+
+	public void setTodayInjured(int todayInjured) {
+		this.todayInjured = todayInjured;
+	}
+
+	public int getTodayAmount() {
+		return todayAmount;
+	}
+
+	public void setTodayAmount(int todayAmount) {
+		this.todayAmount = todayAmount;
 	}
 
 	public int getMonthFireCount() {
@@ -196,16 +233,94 @@ public class Firedata extends DTO{
 		this.monthAmount = monthAmount;
 	}
 
+	public int getLastYearDayFireCount() {
+		return lastYearDayFireCount;
+	}
+
+	public void setLastYearDayFireCount(int lastYearDayFireCount) {
+		this.lastYearDayFireCount = lastYearDayFireCount;
+	}
+
+	public int getLastYearDayDead() {
+		return lastYearDayDead;
+	}
+
+	public void setLastYearDayDead(int lastYearDayDead) {
+		this.lastYearDayDead = lastYearDayDead;
+	}
+
+	public int getLastYearDayInjured() {
+		return lastYearDayInjured;
+	}
+
+	public void setLastYearDayInjured(int lastYearDayInjured) {
+		this.lastYearDayInjured = lastYearDayInjured;
+	}
+
+	public int getLastYearDayAmount() {
+		return lastYearDayAmount;
+	}
+
+	public void setLastYearDayAmount(int lastYearDayAmount) {
+		this.lastYearDayAmount = lastYearDayAmount;
+	}
+
+	public int getLastYearMonthFireCount() {
+		return lastYearMonthFireCount;
+	}
+
+	public void setLastYearMonthFireCount(int lastYearMonthFireCount) {
+		this.lastYearMonthFireCount = lastYearMonthFireCount;
+	}
+
+	public int getLastYearMonthDead() {
+		return lastYearMonthDead;
+	}
+
+	public void setLastYearMonthDead(int lastYearMonthDead) {
+		this.lastYearMonthDead = lastYearMonthDead;
+	}
+
+	public int getLastYearMonthInjured() {
+		return lastYearMonthInjured;
+	}
+
+	public void setLastYearMonthInjured(int lastYearMonthInjured) {
+		this.lastYearMonthInjured = lastYearMonthInjured;
+	}
+
+	public int getLastYearMonthAmount() {
+		return lastYearMonthAmount;
+	}
+
+	public void setLastYearMonthAmount(int lastYearMonthAmount) {
+		this.lastYearMonthAmount = lastYearMonthAmount;
+	}
+
+	public int getMonthAvg() {
+		return monthAvg;
+	}
+
+	public void setMonthAvg(int monthAvg) {
+		this.monthAvg = monthAvg;
+	}
+
 	@Override
 	public String toString() {
 		return "Firedata [fireSeq=" + fireSeq + ", injuredSum=" + injuredSum + ", dead=" + dead + ", injured=" + injured
 				+ ", amount=" + amount + ", subFactor=" + subFactor + ", subFactorBigNm=" + subFactorBigNm
 				+ ", subFactorMidNm=" + subFactorMidNm + ", subLoc=" + subLoc + ", subLocBigNm=" + subLocBigNm
 				+ ", subLocMidNm=" + subLocMidNm + ", subCity=" + subCity + ", subCityBigNm=" + subCityBigNm
-				+ ", subCityMidNm=" + subCityMidNm + ", fireCount=" + fireCount + ", monthFireCount=" + monthFireCount
-				+ ", monthDead=" + monthDead + ", monthInjured=" + monthInjured + ", monthAmount=" + monthAmount
-				+ ", toString()=" + super.toString() + "]";
+				+ ", subCityMidNm=" + subCityMidNm + ", todayFireCount=" + todayFireCount + ", todayDead=" + todayDead
+				+ ", todayInjured=" + todayInjured + ", todayAmount=" + todayAmount + ", monthFireCount="
+				+ monthFireCount + ", monthDead=" + monthDead + ", monthInjured=" + monthInjured + ", monthAmount="
+				+ monthAmount + ", lastYearDayFireCount=" + lastYearDayFireCount + ", lastYearDayDead="
+				+ lastYearDayDead + ", lastYearDayInjured=" + lastYearDayInjured + ", lastYearDayAmount="
+				+ lastYearDayAmount + ", lastYearMonthFireCount=" + lastYearMonthFireCount + ", lastYearMonthDead="
+				+ lastYearMonthDead + ", lastYearMonthInjured=" + lastYearMonthInjured + ", lastYearMonthAmount="
+				+ lastYearMonthAmount + ", monthAvg=" + monthAvg + ", toString()=" + super.toString() + "]";
 	}
 
+	
 	
 }

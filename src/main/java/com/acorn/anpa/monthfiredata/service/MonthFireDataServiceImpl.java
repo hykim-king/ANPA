@@ -3,13 +3,22 @@ package com.acorn.anpa.monthfiredata.service;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.acorn.anpa.cmn.DTO;
 import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.firedata.domain.Firedata;
-@Service
+import com.acorn.anpa.mapper.MonthFireDataMapper;
+@Service("monthFireDataServiceImpl")
 public class MonthFireDataServiceImpl implements MonthFireDataService, PLog {
+
+	@Autowired
+	MonthFireDataMapper monthFireDataMapper;
+	
+	public MonthFireDataServiceImpl() {
+		
+	}
 
 	@Override
 	public int doSave(Firedata inVO) throws SQLException {

@@ -1,4 +1,4 @@
-package com.acorn.anpa.firedata.dao;
+package com.acorn.anpa.monthfiredata.dao;
 
 import static org.junit.Assert.*;
 

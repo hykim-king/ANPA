@@ -3,22 +3,37 @@
 <mapper namespace="com.acorn.anpa.mapper.MonthFireDataMapper">
 
     <select id="todayMonthData" parameterType="String" resultType="Firedata">
-	    SELECT A.*,B.*
+	    SELECT todayData.*,monthData.*,lastYearDayData.*,lastYearMonthData.*
 		FROM
-		(SELECT count(fire_seq) as fireCount,
-		        nvl(sum(dead),0) as dead,
-		        nvl(sum(injured),0) as injured,
-		        nvl(sum(amount),0) as amount
-		FROM fire_data
-		WHERE TRUNC(reg_dt) = TRUNC(SYSDATE)
-		)A,
-		(SELECT count(fire_seq) as monthFireCount,
-		        sum(dead) as monthDead,
-		        sum(injured) as monthInjured,
-		        sum(amount) as monthAmount
-		FROM fire_data
-		WHERE TO_CHAR(reg_dt,'YYYYMM') = #{regDt}
-		)B
+		    (SELECT count(fire_seq) as todayFireCount,
+		            nvl(sum(dead),0) as todayDead,
+		            nvl(sum(injured),0) as todayInjured,
+		            nvl(sum(amount),0) as todayAmount
+		    FROM fire_data
+		    WHERE TRUNC(reg_dt) = TRUNC(SYSDATE)
+		    )todayData,
+		    (SELECT count(fire_seq) as monthFireCount,
+		            nvl(sum(dead),0) as monthDead,
+		            nvl(sum(injured),0) as monthInjured,
+		            nvl(sum(amount),0) as monthAmount
+		    FROM fire_data
+		    WHERE TO_CHAR(reg_dt,'YYYYMM') = #{regDt}
+		    )monthData,
+		    (SELECT count(fire_seq) as lastYearDayFireCount,
+		            nvl(sum(dead),0) as lastYearDayDead,
+		            nvl(sum(injured),0) as lastYearDayInjured,
+		            nvl(sum(amount),0) as lastYearDayAmount
+		    FROM fire_data
+		    WHERE TRUNC(reg_dt) = TRUNC(ADD_MONTHS(SYSDATE,-12))
+		    )lastYearDayData,
+		    (SELECT count(fire_seq) as lastYearMonthFireCount,
+		            nvl(sum(dead),0) as lastYearMonthDead,
+		            nvl(sum(injured),0) as lastYearMonthInjured,
+		            nvl(sum(amount),0) as lastYearMonthAmount
+		    FROM fire_data
+		    WHERE TO_CHAR(reg_dt,'YYYYMM') = TO_CHAR(ADD_MONTHS(TO_DATE(#{regDt},'YYYYMM'),-12), 'YYYYMM')
+		    )lastYearMonthData
+  
     </select>
     
     <select id="locBigData" parameterType="String" resultType="Firedata">
