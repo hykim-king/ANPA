@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.acorn.anpa.cmn.PLog;
 
-public class MonthFireDataController implements PLog{
+public class MonthFireDataControllerTest implements PLog{
 
 	@Before
 	public void setUp() throws Exception {
