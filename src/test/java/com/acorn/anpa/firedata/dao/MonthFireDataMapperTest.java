@@ -52,7 +52,7 @@ public class MonthFireDataMapperTest implements PLog{
 		log.debug("└─────────────────────────────────────────────────────────");
 	
 	}
-	//@Ignore
+
 	@Test
 	public void factorMidData()throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -63,7 +63,7 @@ public class MonthFireDataMapperTest implements PLog{
 		List<Firedata> result = monthFireDataMapper.factorMidData("202308");
 		log.debug("result:"+result);
 	}
-	@Ignore
+
 	@Test
 	public void locMidData()throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -74,7 +74,7 @@ public class MonthFireDataMapperTest implements PLog{
 		List<Firedata> result = monthFireDataMapper.locMidData("202308");
 		log.debug("result:"+result);
 	}
-	@Ignore
+
 	@Test
 	public void locBigData()throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -85,7 +85,7 @@ public class MonthFireDataMapperTest implements PLog{
 		List<Firedata> result = monthFireDataMapper.locBigData("202308");
 		log.debug("result:"+result);
 	}
-	@Ignore
+
 	@Test
 	public void todayMonthData()throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -96,8 +96,7 @@ public class MonthFireDataMapperTest implements PLog{
 		Firedata result = monthFireDataMapper.todayMonthData("202308");
 		log.debug("result:"+result);
 	}
-	
-	@Ignore
+
 	@Test
 	public void beans() {
 		log.debug("┌─────────────────────────────────────────────────────────");
