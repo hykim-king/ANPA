@@ -72,7 +72,16 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
-	//@Ignore
+	@Test
+	public void doRetrieve() throws SQLException {
+		search.setPageNo(1);
+		search.setPageSize(10);
+		
+		List<Firedata> list = fireMapper.doRetrieve(search);
+		assertEquals(10, list.size());
+	}
+	
+	@Ignore
 	@Test
 	public void totalData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -109,7 +118,7 @@ public class FireDataMapperTest implements PLog {
 		assertNotNull(outVO);
 	}
 	
-	//@Ignore
+	@Ignore
 	@Test
 	public void doDelete() throws SQLException{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -132,7 +141,7 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
-	//@Ignore
+	@Ignore
 	@Test
 	public void doSelectOne() throws SQLException{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -150,8 +159,7 @@ public class FireDataMapperTest implements PLog {
 		log.debug(inVO);
 	}
 	
-	//안됨
-	//@Ignore
+	@Ignore
 	@Test
 	public void doUpdate() throws SQLException{
 		
@@ -198,7 +206,7 @@ public class FireDataMapperTest implements PLog {
 		isSameUser(upOutVO, outVO01);
 	}
 
-	//@Ignore
+	@Ignore
 	@Test
 	public void doSave() throws SQLException{
 		

@@ -140,7 +140,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 
 	@Override
 	public List<Firedata> doRetrieve(DTO search) throws SQLException {
-		
+		log.debug("1. param : " + search);
 		return fireDataMapper.doRetrieve(search);
 	}
 

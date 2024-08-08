@@ -47,73 +47,90 @@
     </select>
     
     <select id="doRetrieve" parameterType="Search" resultType="Firedata">
-        SELECT A.*, B.*                                                                                                                                     
-	    FROM( 
-	        SELECT  TT1.RNUM AS NO,
-	                TT1.fire_seq as fireSeq,
-	                TT1.injured_sum as injuredSum,
-	                TT1.dead,
-	                TT1.injured,
-	                TT1.amount,
-	                TT1.sub_factor as subFactor,
-	                TT1.sub_loc as subLoc,
-	                TT1.sub_city as subCity,
-	                TT1.reg_id as regId,
-	                TT1.mod_id as modId,
-	                DECODE(
-	                TO_CHAR(TT1.reg_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
-	                TO_CHAR(TT1.reg_dt, 'HH24:MI'), TO_CHAR(TT1.reg_dt,'YYYY/MM/DD')
-	                ) AS regDt
-	        FROM    (
-	            SELECT ROWNUM AS RNUM, T1.*
-	            FROM(
-	                SELECT  *
-	                FROM    FIRE_DATA
-	                WHERE 1=1
-	                -- searchDiv : 10(발화요인 대분류 ) 20(발화요인 소분류) 30(발화장소 대분류) 40(발화장소 소분류)
-	                -- 발화 장소는 100번대 1씩증가  요인은 1000번대 10씩증가
-	                <include refid="doRetrieveWhere"/>
-	                ORDER BY mod_dt DESC
-	            ) T1
-	            WHERE ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
-	        ) TT1
-	        WHERE TT1.RNUM <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]> 
-	    )A
-	    CROSS JOIN                                                                                                                                           
-	        (                                                                                                                                                    
-	        SELECT COUNT(*) totalCnt                                                                                                                             
-	        FROM FIRE_DATA 
-	        WHERE 1=1    
-	        <include refid="doRetrieveWhere"/>
-	        )B
+        SELECT
+		    A.*,
+		    B.totalCnt
+		FROM (
+		    SELECT
+		        TT1.RNUM AS NO,
+		        TT1.fire_seq AS fireSeq,
+		        TT1.injured_sum AS injuredSum,
+		        TT1.dead,
+		        TT1.injured,
+		        TT1.amount,
+		        TT1.sub_factor AS subFactor,
+		        subFactorBigNm,
+		        subFactorMidNm,
+		        TT1.sub_loc AS subLoc,
+		        subLocBigNm,
+		        subLocMidNm,
+		        TT1.sub_city AS subCity,
+		        subCityBigNm,
+		        subCityMidNm,
+		        TT1.reg_id AS regId,
+		        TO_CHAR(TT1.reg_dt, 'YYYY/MM/DD HH24:MI:SS') AS regDt,
+		        TT1.mod_id AS modId,
+		        TO_CHAR(TT1.mod_dt, 'YYYY/MM/DD HH24:MI:SS') AS modDt
+		    FROM (
+		        SELECT
+		            ROWNUM AS RNUM,
+		            T1.*
+		        FROM (
+		            SELECT
+		                FIRE_DATA.*,
+		                fac_big.big_list AS subFactorBigNm,
+		                fac_mid.mid_list AS subFactorMidNm,
+		                loc_big.big_list AS subLocBigNm,
+		                loc_mid.mid_list AS subLocMidNm,
+		                city_big.big_list AS subCityBigNm,
+		                city_mid.mid_list AS subCityMidNm
+		            FROM
+		                FIRE_DATA FIRE_DATA
+		                LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = FIRE_DATA.sub_factor AND fac_big.use_yn = 1
+		                LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = FIRE_DATA.sub_factor AND fac_mid.use_yn = 1
+		                LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = FIRE_DATA.sub_loc AND loc_big.use_yn = 1
+		                LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = FIRE_DATA.sub_loc AND loc_mid.use_yn = 1
+		                LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = FIRE_DATA.sub_city AND city_big.use_yn = 1
+		                LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = FIRE_DATA.sub_city AND city_mid.use_yn = 1
+		            WHERE 1=1
+		            <include refid="doRetrieveWhere"/>
+		        ) T1
+		        WHERE
+		            ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
+		    ) TT1
+		    WHERE
+		        TT1.RNUM <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]>
+		) A
+		CROSS JOIN (
+		    SELECT COUNT(*) AS totalCnt
+		    FROM FIRE_DATA
+		    WHERE 1=1
+		    <include refid="doRetrieveWhere"/>
+		) B
     </select>
     
     <sql id="doRetrieveWhere">
         <choose>
             <when test="searchDiv != null and searchDiv == 10">
-                AND sub_factor LIKE #{searchWord}
-            </when>
-            <when test="searchDiv != null and searchDiv == 20">
-                AND sub_factor = #{searchWord}
-            </when>
-            <when test="searchDiv != null and searchDiv == 30">
-                AND sub_loc LIKE #{searchWord}
-            </when>
-            <when test="searchDiv != null and searchDiv == 40">
-                AND sub_loc = #{searchWord}
+                AND   FIRE_DATA.sub_loc = #{searchWord}
             </when>
         </choose>
         <choose>
-            <when test="searchCity != null">
-                AND sub_city = #{searchCity}
+            <when test="searchDiv != null and searchDiv == 20">
+                AND   FIRE_DATA.sub_factor = #{searchWord}
+            </when>
+        </choose>
+        <choose>
+            <when test="searchDiv != null and searchDiv == 30">
+                AND   FIRE_DATA.sub_city = #{searchWord}
             </when>
         </choose>
         <choose>
             <when
                 test="searchDateStart != null and searchDateEnd != null ">
-                AND reg_dt
+                AND   TO_CHAR(FIRE_DATA.reg_dt, 'YYYYMMDD')
                 <![CDATA[>=]]>
-                #{searchDateStart} AND reg_dt
+                #{searchDateStart} AND   TO_CHAR(FIRE_DATA.reg_dt, 'YYYYMMDD')
                 <![CDATA[<=]]>
                 #{searchDateEnd}
             </when>

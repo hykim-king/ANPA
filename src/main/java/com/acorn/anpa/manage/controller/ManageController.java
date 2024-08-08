@@ -41,20 +41,13 @@ public class ManageController implements PLog{
 		log.debug("└──────────────────────────────────────────────");
 	}
 	
-	@GetMapping("/doRetrieve.do")
+	@GetMapping("/doRetrieveData.do")
 	public String doRetrieve(Model model, HttpServletRequest req) throws SQLException {
 		String viewName = "manage/manageData";
 		
 		Search search = new Search();	
 		
-		//검색구분
-		//searchDiv = "" (기본값)
-		String searchDiv = StringUtil.nvl(req.getParameter("searchDiv"), "");
-		search.setSearchDiv(searchDiv);
-		//searchWord = "" (기본값)
-		String searchWord = StringUtil.nvl(req.getParameter("searchWord"), "");
-		search.setSearchWord(searchWord);
-		
+		//검색구분		
 		//pageSize=10 (기본값)
 		String pageSize = StringUtil.nvl(req.getParameter("pageSize"), "10");		
 		//pageNo=1 (기본값)
@@ -63,32 +56,46 @@ public class ManageController implements PLog{
 		search.setPageSize(Integer.parseInt(pageSize));
 		search.setPageNo(Integer.parseInt(pageNo));
 		
-		//div값이 없으면 전체 조회
-		String div = StringUtil.nvl(req.getParameter("div"), "");
-		search.setDiv(div);
-		
 		List<Firedata> list = fireDataService.doRetrieve(search);
 		
+		// 모델에 튜닝 리스트, 검색 조건
 		model.addAttribute("list", list);
 		model.addAttribute("search", search);
+		// 모델에 튜닝 리스트, 검색 조건
 		
 		Code code = new Code();
-		code.setMasterCode("");
-		List<Code> codeList = codeService.doRetrieve(code);
+		// 모델에 튜닝 장소 코드
+		code.setMasterCode("location");
+		List<Code> locCode = codeService.doRetrieve(code);
+		model.addAttribute("LocCode", locCode);
+		// 모델에 튜닝 장소 코드
 		
-		model.addAttribute("", codeList);
+		// 모델에 튜닝 시군구 코드
+		code.setMasterCode("city");
+		List<Code> cityCode = codeService.doRetrieve(code);
+		model.addAttribute("cityCode", cityCode);
+		// 모델에 튜닝 시군구 코드
 		
+		// 모델에 튜닝 화재요인 코드
+		code.setMasterCode("factor");
+		List<Code> factorCode = codeService.doRetrieve(code);
+		model.addAttribute("factorCode", factorCode);
+		// 모델에 튜닝 화재요인 코드
+		
+		// 모델에 튜닝 토탈 카운트
 		int totalCnt = 0;
 		if(null!=list && list.size()>0) {
 			Firedata firedata = list.get(0);
 			totalCnt = firedata.getTotalCnt();
-		}
-		
+		}		
 		model.addAttribute("totalCnt", totalCnt);
+		// 모델에 튜닝 토탈 카운트
 		
+		// 모델에 튜닝 페이지 사이즈
 		code.setMasterCode("COM_PAGE_SIZE"); // 페이지 사이즈
 		List<Code> comPageSize = this.codeService.doRetrieve(code);
 		model.addAttribute("COM_PAGE_SIZE", comPageSize); // 검색조건
+		// 모델에 튜닝 페이지 사이즈
 		
 		return viewName;
 	}

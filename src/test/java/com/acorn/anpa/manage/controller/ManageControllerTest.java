@@ -72,6 +72,8 @@ public class ManageControllerTest implements PLog{
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 		firedata01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);   
 		firedata01.setRegId("admin1");
+		
+		search = new Search();
 	}
 
 	@After
@@ -81,7 +83,6 @@ public class ManageControllerTest implements PLog{
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 
-	@Ignore
 	@Test
 	public void doRetrieve() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -91,16 +92,11 @@ public class ManageControllerTest implements PLog{
 		search.setPageNo(1);
 		search.setPageSize(10);
 		
-		search.setDiv("");
-		
 		//요청 매핑
 		MockHttpServletRequestBuilder requestBuilder =
-			MockMvcRequestBuilders.get("/manage/doRetrieve.do")
-			.param("searchDiv", search.getSearchDiv())
-			.param("searchWord", search.getSearchWord())
+			MockMvcRequestBuilders.get("/manage/doRetrieveData.do")
 			.param("pageSize", search.getPageSize()+"")
-			.param("pageNo", search.getPageNo()+"")
-			.param("div",search.getDiv());
+			.param("pageNo", search.getPageNo()+"");
 		
 		//호출 및 결과
 		ResultActions resultActions = 
@@ -123,6 +119,7 @@ public class ManageControllerTest implements PLog{
 		log.debug("totalCnt: "+totalCnt);	
 	}
 	
+	@Ignore
 	@Test
 	public void doSelectOne() throws Exception{
 		log.debug("┌────────────────────────────────────────────────────────");
