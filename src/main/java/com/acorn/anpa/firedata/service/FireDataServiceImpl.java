@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.acorn.anpa.cmn.DTO;
 import com.acorn.anpa.cmn.PLog;
+import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.mapper.CodeMapper;
@@ -153,5 +154,11 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 	public int doDelete(Firedata inVO) throws SQLException {
 		log.debug("1. param : " + inVO);
 		return this.fireDataMapper.doDelete(inVO);
+	}
+
+	@Override
+	public Firedata totalData(Search search) throws SQLException {
+		log.debug("1. param : " + search);
+		return fireDataMapper.totalData(search);
 	}    
 }

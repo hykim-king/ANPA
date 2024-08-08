@@ -39,6 +39,7 @@ public class FireDataMapperTest implements PLog {
 	Firedata fire01;
 	Search 	search;
 	
+	
 	public void isSameUser(Firedata fireIn, Firedata fireOut) {
 		assertEquals(fireIn.getFireSeq(), fireOut.getFireSeq());
 		assertEquals(fireIn.getInjuredSum(), fireOut.getInjuredSum());
@@ -79,11 +80,32 @@ public class FireDataMapperTest implements PLog {
 		
 		search.setSearchDateStart("20230301");
 		search.setSearchDateEnd("20230801");
+		search.setSubCityBigNm("경기도");
+		search.setSubCityMidNm("부천시");
+		
+		search.setSearchDiv("10");
+		search.setBigNm("부주의");
 		
 		Firedata outVO = fireMapper.totalData(search);
 		assertNotNull(outVO);
 		
+		search.setSearchDiv("20");
+		search.setMidNm("불장난");
 		
+		outVO = fireMapper.totalData(search);
+		assertNotNull(outVO);
+		
+		search.setSearchDiv("30");
+		search.setBigNm("숙박시설");
+		
+		outVO = fireMapper.totalData(search);
+		assertNotNull(outVO);
+		
+		search.setSearchDiv("40");
+		search.setMidNm("모텔");
+		
+		outVO = fireMapper.totalData(search);
+		assertNotNull(outVO);
 	}
 	
 	@Ignore

@@ -27,6 +27,7 @@ public class FireDataController implements PLog {
 		log.debug("└──────────────────────────────────────────┘");
 	}
 	
+	//http://localhost:8080/ehr/firedata/fireData.do
 	@GetMapping("/fireData.do")
 	public String fireData() throws SQLException{
 		
