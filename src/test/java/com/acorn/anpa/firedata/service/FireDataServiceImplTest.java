@@ -69,7 +69,6 @@ public class FireDataServiceImplTest implements PLog {
         // 0. 전체 삭제
         // fireDataMapper.deleteAll();
         fireData01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);
-        fireDataMapper.doDeleteTest(fireData01);        
     }
     
     @After
@@ -85,7 +84,13 @@ public class FireDataServiceImplTest implements PLog {
     	log.debug("│ doSaveData()");
     	log.debug("└─────────────────────────────────────────────────────────");    
     	
+    	fireData01.setRegId("admin1");
+    	
     	fireDataService.doSaveData(fireData01);
+    	
+    	int seq = fireDataMapper.getSequence();    	
+    	fireData01.setFireSeq(seq);
+    	fireDataService.doDelete(fireData01);
     }
     
     @Ignore
