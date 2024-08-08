@@ -42,10 +42,10 @@ public interface FireDataMapper extends WorkDiv<Firedata> {
 	int multipleSave() throws SQLException;	
 	
 	/**
-	 * 화재통계 자료
+	 * 화재통계
 	 * @param search
-	 * @return
+	 * @return Firedata
 	 * @throws SQLException
 	 */
-	List<Firedata> doRetrieveDB(Search search) throws SQLException;
+	Firedata totalData(Search search) throws SQLException;
 }

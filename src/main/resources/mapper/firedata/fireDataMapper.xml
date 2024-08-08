@@ -2,6 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.acorn.anpa.mapper.FireDataMapper">
 
+    <sql id="sumWhen">
+           <choose>
+                <when test="searchDiv != null and searchDiv == 10">
+                    AND t2.big_list = #{searchWord}
+                </when>
+                <when test="searchDiv != null and searchDiv == 20">
+                    AND t2.big_list = #{searchWord}
+                    AND t2.mid_list = #{searchCity}
+                </when>
+                <when test="searchDiv != null and searchDiv == 30">
+                    AND t3.big_list = #{searchWord}
+                </when>
+                <when test="searchDiv != null and searchDiv == 40">
+                    AND t3.big_list = #{searchWord}
+                    AND t3.mid_list = #{searchCity}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchCity != null">
+                    AND sub_city = #{searchCity}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchDateStart != null and searchDateEnd != null ">
+                    AND reg_dt <![CDATA[>=]]>  #{searchDateStart}
+                    AND reg_dt <![CDATA[<=]]>  #{searchDateEnd}
+                </when>
+           </choose>                                                                                                                                   
+    </sql>
+    
+    <select id="totalData" parameterType="Search" resultType="Firedata">
+        SELECT sum(t1.injured_sum) injuredSum,
+		       sum(t1.dead) dead,
+		       sum(t1.injured) injured,
+		       sum(t1.amount) amount
+		  FROM fire_data t1
+		 INNER JOIN code t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
+		 INNER JOIN code t3 ON t3.master_code = 'location' AND t3.sub_code = t1.sub_loc
+		 INNER JOIN code t4 ON t4.master_code = 'city' AND t4.sub_code = t1.sub_city
+		 WHERE 1=1
+		 AND to_char(t1.reg_dt,'yyyymmdd') <![CDATA[>=]]> #{searchDateStart}
+		 AND to_char(t1.reg_dt,'yyyymmdd') <![CDATA[<=]]> #{searchDateEnd}
+    </select>
+
+
     <select id="doRetrieve" parameterType="Search" resultType="Firedata">
     SELECT A.*, B.*                                                                                                                                     
     FROM( 
@@ -72,36 +117,6 @@
            </choose>                                                                                                                                   
     </sql>
     
-    <sql id="sumWhen">
-           <choose>
-                <when test="searchDiv != null and searchDiv == 10">
-                    AND t2.big_list = #{searchWord}
-                </when>
-                <when test="searchDiv != null and searchDiv == 20">
-                    AND t2.big_list = #{searchWord}
-                    AND t2.mid_list = #{searchCity}
-                </when>
-                <when test="searchDiv != null and searchDiv == 30">
-                    AND t3.big_list = #{searchWord}
-                </when>
-                <when test="searchDiv != null and searchDiv == 40">
-                    AND t3.big_list = #{searchWord}
-                    AND t3.mid_list = #{searchCity}
-                </when>
-           </choose>
-           <choose>
-                <when test="searchCity != null">
-                    AND sub_city = #{searchCity}
-                </when>
-           </choose>
-           <choose>
-                <when test="searchDateStart != null and searchDateEnd != null ">
-                    AND reg_dt <![CDATA[>=]]>  #{searchDateStart}
-                    AND reg_dt <![CDATA[<=]]>  #{searchDateEnd}
-                </when>
-           </choose>                                                                                                                                   
-    </sql>
-
     <insert id="doSave" parameterType="Firedata">
 	    INSERT INTO FIRE_DATA (
 	        injured_sum,

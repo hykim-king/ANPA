@@ -71,6 +71,20 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
+	@Test
+	public void totalData() throws Exception{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ totalData()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		search.setSearchDateStart("20230301");
+		search.setSearchDateEnd("20230801");
+		
+		Firedata outVO = fireMapper.totalData(search);
+		assertNotNull(outVO);
+		
+		
+	}
 	
 	@Ignore
 	@Test
