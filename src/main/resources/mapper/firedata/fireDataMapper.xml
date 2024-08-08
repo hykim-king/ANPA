@@ -71,6 +71,36 @@
                 </when>
            </choose>                                                                                                                                   
     </sql>
+    
+    <sql id="sumWhen">
+           <choose>
+                <when test="searchDiv != null and searchDiv == 10">
+                    AND t2.big_list = #{searchWord}
+                </when>
+                <when test="searchDiv != null and searchDiv == 20">
+                    AND t2.big_list = #{searchWord}
+                    AND t2.mid_list = #{searchCity}
+                </when>
+                <when test="searchDiv != null and searchDiv == 30">
+                    AND t3.big_list = #{searchWord}
+                </when>
+                <when test="searchDiv != null and searchDiv == 40">
+                    AND t3.big_list = #{searchWord}
+                    AND t3.mid_list = #{searchCity}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchCity != null">
+                    AND sub_city = #{searchCity}
+                </when>
+           </choose>
+           <choose>
+                <when test="searchDateStart != null and searchDateEnd != null ">
+                    AND reg_dt <![CDATA[>=]]>  #{searchDateStart}
+                    AND reg_dt <![CDATA[<=]]>  #{searchDateEnd}
+                </when>
+           </choose>                                                                                                                                   
+    </sql>
 
     <insert id="doSave" parameterType="Firedata">
 	    INSERT INTO FIRE_DATA (
