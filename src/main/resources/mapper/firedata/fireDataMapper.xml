@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.acorn.anpa.mapper.FireDataMapper">
-
-	<sql id="sumWhen">
-           <choose>
-                <when test="searchDiv != null and searchDiv == 10">
-                    AND t2.big_list = #{BigNm}
-                </when>
-                <when test="searchDiv != null and searchDiv == 20">
-                    AND t2.big_list = #{BigNm}
-                    AND t2.mid_list = #{MidNm}
-                </when>
-                <when test="searchDiv != null and searchDiv == 30">
-                    AND t3.big_list = #{BigNm}
-                </when>
-                <when test="searchDiv != null and searchDiv == 40">
-                    AND t3.big_list = #{BigNm}
-                    AND t3.mid_list = #{MidNm}
-                </when>
-           </choose>
-           <choose>
-                <when test="subCityBigNm != null and subCityMidNm == null or subCityMidNm == ''">
-                    AND t4.big_list = #{subCityBigNm}
-                </when>
-                <otherwise>
-                    AND t4.big_list = #{subCityBigNm}
-                    AND t4.mid_list = #{subCityMidNm}
-                </otherwise>
-           </choose>
+    
+    <sql id="sumWhen">
+        <choose>
+             <when test="searchDiv != null and searchDiv == 10">
+                 AND t2.big_list = #{BigNm}
+             </when>
+             <when test="searchDiv != null and searchDiv == 20">
+                 AND t2.big_list = #{BigNm}
+                 AND t2.mid_list = #{MidNm}
+             </when>
+             <when test="searchDiv != null and searchDiv == 30">
+                 AND t3.big_list = #{BigNm}
+             </when>
+             <when test="searchDiv != null and searchDiv == 40">
+                 AND t3.big_list = #{BigNm}
+                 AND t3.mid_list = #{MidNm}
+             </when>
+        </choose>
+        <choose>
+             <when test="subCityBigNm != null and subCityMidNm == null or subCityMidNm == ''">
+                 AND t4.big_list = #{subCityBigNm}
+             </when>
+             <otherwise>
+                 AND t4.big_list = #{subCityBigNm}
+                 AND t4.mid_list = #{subCityMidNm}
+             </otherwise>
+        </choose>
     </sql>
     
     <select id="totalData" parameterType="Search" resultType="Firedata">
@@ -37,133 +37,193 @@
                sum(t1.injured) injured,
                sum(t1.amount) amount
           FROM fire_data t1
-         INNER JOIN code t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
-         INNER JOIN code t3 ON t3.master_code = 'location' AND t3.sub_code = t1.sub_loc
-         INNER JOIN code t4 ON t4.master_code = 'city' AND t4.sub_code = t1.sub_city
+          LEFT JOIN code t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
+          LEFT JOIN code t3 ON t3.master_code = 'location' AND t3.sub_code = t1.sub_loc
+          LEFT JOIN code t4 ON t4.master_code = 'city' AND t4.sub_code = t1.sub_city
          WHERE 1=1
            AND to_char(t1.reg_dt,'yyyymmdd') <![CDATA[>=]]> #{searchDateStart}
            AND to_char(t1.reg_dt,'yyyymmdd') <![CDATA[<=]]> #{searchDateEnd}
         <include refid="sumWhen"/>
     </select>
+    
+    <select id="doRetrieve" parameterType="Search" resultType="Firedata">
+        SELECT A.*, B.*                                                                                                                                     
+	    FROM( 
+	        SELECT  TT1.RNUM AS NO,
+	                TT1.fire_seq as fireSeq,
+	                TT1.injured_sum as injuredSum,
+	                TT1.dead,
+	                TT1.injured,
+	                TT1.amount,
+	                TT1.sub_factor as subFactor,
+	                TT1.sub_loc as subLoc,
+	                TT1.sub_city as subCity,
+	                TT1.reg_id as regId,
+	                TT1.mod_id as modId,
+	                DECODE(
+	                TO_CHAR(TT1.reg_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
+	                TO_CHAR(TT1.reg_dt, 'HH24:MI'), TO_CHAR(TT1.reg_dt,'YYYY/MM/DD')
+	                ) AS regDt
+	        FROM    (
+	            SELECT ROWNUM AS RNUM, T1.*
+	            FROM(
+	                SELECT  *
+	                FROM    FIRE_DATA
+	                WHERE 1=1
+	                -- searchDiv : 10(발화요인 대분류 ) 20(발화요인 소분류) 30(발화장소 대분류) 40(발화장소 소분류)
+	                -- 발화 장소는 100번대 1씩증가  요인은 1000번대 10씩증가
+	                <include refid="doRetrieveWhere"/>
+	                ORDER BY mod_dt DESC
+	            ) T1
+	            WHERE ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
+	        ) TT1
+	        WHERE TT1.RNUM <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]> 
+	    )A
+	    CROSS JOIN                                                                                                                                           
+	        (                                                                                                                                                    
+	        SELECT COUNT(*) totalCnt                                                                                                                             
+	        FROM FIRE_DATA 
+	        WHERE 1=1    
+	        <include refid="doRetrieveWhere"/>
+	        )B
+    </select>
+    
+    <sql id="doRetrieveWhere">
+        <choose>
+            <when test="searchDiv != null and searchDiv == 10">
+                AND sub_factor LIKE #{searchWord}
+            </when>
+            <when test="searchDiv != null and searchDiv == 20">
+                AND sub_factor = #{searchWord}
+            </when>
+            <when test="searchDiv != null and searchDiv == 30">
+                AND sub_loc LIKE #{searchWord}
+            </when>
+            <when test="searchDiv != null and searchDiv == 40">
+                AND sub_loc = #{searchWord}
+            </when>
+        </choose>
+        <choose>
+            <when test="searchCity != null">
+                AND sub_city = #{searchCity}
+            </when>
+        </choose>
+        <choose>
+            <when
+                test="searchDateStart != null and searchDateEnd != null ">
+                AND reg_dt
+                <![CDATA[>=]]>
+                #{searchDateStart} AND reg_dt
+                <![CDATA[<=]]>
+                #{searchDateEnd}
+            </when>
+        </choose>
+    </sql>
 
-
-	<select id="doRetrieve" parameterType="Search"
-		resultType="Firedata">
-		SELECT A.*, B.* FROM( SELECT TT1.RNUM AS NO, TT1.fire_seq as
-		fireSeq, TT1.injured_sum as injuredSum, TT1.dead, TT1.injured,
-		TT1.amount, TT1.sub_factor as subFactor, TT1.sub_loc as subLoc,
-		TT1.sub_city as subCity, TT1.reg_id as regId, TT1.mod_id as
-		modId, DECODE( TO_CHAR(TT1.reg_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE,
-		'YYYYMMDD'), TO_CHAR(TT1.reg_dt, 'HH24:MI'),
-		TO_CHAR(TT1.reg_dt,'YYYY/MM/DD') ) AS regDt FROM ( SELECT ROWNUM
-		AS RNUM, T1.* FROM( SELECT * FROM FIRE_DATA WHERE 1=1 --
-		searchDiv : 10(발화요인 대분류 ) 20(발화요인 소분류) 30(발화장소 대분류) 40(발화장소 소분류)
-		-- 발화 장소는 100번대 1씩증가 요인은 1000번대 10씩증가
-		<include refid="doRetrieveWhere"></include>
-		ORDER BY mod_dt DESC ) T1 WHERE ROWNUM
-		<![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]>
-		) TT1 WHERE TT1.RNUM
-		<![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]>
-		)A CROSS JOIN ( SELECT COUNT(*) totalCnt FROM FIRE_DATA WHERE
-		1=1
-		<include refid="doRetrieveWhere"></include>
-		)B
-	</select>
-
-	<sql id="doRetrieveWhere">
-		<choose>
-			<when test="searchDiv != null and searchDiv == 10">
-				AND sub_factor LIKE #{searchWord}
-			</when>
-			<when test="searchDiv != null and searchDiv == 20">
-				AND sub_factor = #{searchWord}
-			</when>
-			<when test="searchDiv != null and searchDiv == 30">
-				AND sub_loc LIKE #{searchWord}
-			</when>
-			<when test="searchDiv != null and searchDiv == 40">
-				AND sub_loc = #{searchWord}
-			</when>
-		</choose>
-		<choose>
-			<when test="searchCity != null">
-				AND sub_city = #{searchCity}
-			</when>
-		</choose>
-		<choose>
-			<when
-				test="searchDateStart != null and searchDateEnd != null ">
-				AND reg_dt
-				<![CDATA[>=]]>
-				#{searchDateStart} AND reg_dt
-				<![CDATA[<=]]>
-				#{searchDateEnd}
-			</when>
-		</choose>
-	</sql>
-
-	<insert id="doSave" parameterType="Firedata">
-		INSERT INTO FIRE_DATA ( injured_sum, dead, injured, amount,
-		sub_factor, sub_loc, sub_city, reg_id, mod_id ) VALUES (
-		#{injuredSum}, #{dead}, #{injured}, #{amount}, #{subFactor},
-		#{subLoc}, #{subCity}, #{regId}, #{regId} )
-	</insert>
-
-	<update id="doUpdate" parameterType="Firedata">
-		UPDATE FIRE_DATA SET injured_sum = #{injuredSum}, dead =
-		#{dead}, injured = #{injured}, amount = #{amount}, sub_factor =
-		#{subFactor}, sub_loc = #{subLoc}, sub_city = #{subCity}, mod_id
-		= #{modId}, mod_dt = SYSDATE WHERE fire_seq = #{fireSeq}
-	</update>
-
-	<delete id="doDelete" parameterType="Firedata">
-		DELETE FROM FIRE_DATA WHERE fire_seq = #{fireSeq}
-	</delete>
-
-	<select id="doSelectOne" parameterType="Firedata"
-		resultType="Firedata">
-		SELECT fd.fire_seq AS fireSeq, fd.injured_sum AS injuredSum,
-		fd.dead, fd.injured, fd.amount, fd.sub_factor AS subFactor,
-		fac_big.big_list AS subFactorBigNm, fac_mid.mid_list AS
-		subFactorMidNm, fd.sub_loc AS subLoc, loc_big.big_list AS
-		subLocBigNm, loc_mid.mid_list AS subLocMidNm, fd.sub_city AS
-		subCity, city_big.big_list AS subCityBigNm, city_mid.mid_list AS
-		subCityMidNm, fd.reg_id AS regId, TO_CHAR(fd.reg_dt, 'YYYY/MM/DD
-		HH24:MI:SS') AS regDt, fd.mod_id AS modId, TO_CHAR(fd.mod_dt,
-		'YYYY/MM/DD HH24:MI:SS') AS modDt FROM FIRE_DATA fd INNER JOIN
-		CODE fac_big ON fac_big.master_code = 'factor' AND
-		fac_big.sub_code = fd.sub_factor INNER JOIN CODE fac_mid ON
-		fac_mid.master_code = 'factor' AND fac_mid.sub_code =
-		fd.sub_factor INNER JOIN CODE loc_big ON loc_big.master_code =
-		'location' AND loc_big.sub_code = fd.sub_loc INNER JOIN CODE
-		loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code
-		= fd.sub_loc INNER JOIN CODE city_big ON city_big.master_code =
-		'city' AND city_big.sub_code = fd.sub_city INNER JOIN CODE
-		city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code
-		= fd.sub_city WHERE fd.fire_seq = #{fireSeq}
-	</select>
-
-	<!-- 테스트용 DAO 메서드 -->
-	<select id="getSequence" resultType="int">
-		SELECT MAX(fire_seq) fire_seq FROM FIRE_DATA
-	</select>
-
-	<delete id="doDeleteTest" parameterType="Firedata">
-		DELETE FROM FIRE_DATA WHERE reg_id = #{regId}
-	</delete>
-
-	<delete id="deleteAll">DELETE FROM FIRE_DATA</delete>
-
-	<insert id="multipleSave">
-		INSERT INTO FIRE_DATA SELECT ROWNUM, DECODE(MOD(ROWNUM, 2), 1,
-		'10', '0'), DECODE(MOD(ROWNUM, 2), 1, '5', '0'),
-		DECODE(MOD(ROWNUM, 2), 1, '5', '0'), DECODE(MOD(ROWNUM, 2), 1,
-		'100', '0'), DECODE(MOD(ROWNUM, 2), 1, '11000', '0'),
-		DECODE(MOD(ROWNUM, 2), 1, '11000', '0'), DECODE(MOD(ROWNUM, 2),
-		1, '11000', '0'), 'ADMIN', 'ADMIN', SYSDATE-ROWNUM/24 + 1,
-		SYSDATE-ROWNUM/24 FROM dual CONNECT BY LEVEL
-		<![CDATA[<= 101]]>
-	</insert>
-	<!-- 테스트용 DAO 메서드 -->
-
+    <insert id="doSave" parameterType="Firedata">
+        INSERT INTO FIRE_DATA (
+            injured_sum,
+            dead,
+            injured,
+            amount,
+            sub_factor,
+            sub_loc,
+            sub_city,
+            reg_id,
+            mod_id
+        ) VALUES (
+            #{injuredSum},
+            #{dead},
+            #{injured},
+            #{amount},
+            #{subFactor},
+            #{subLoc},
+            #{subCity},
+            #{regId},
+            #{regId}
+        )   
+    </insert>
+    
+    <update id="doUpdate" parameterType="Firedata">
+        UPDATE  FIRE_DATA                  
+        SET                              
+                injured_sum = #{injuredSum},        
+                dead        = #{dead},        
+                injured     = #{injured},
+                amount      = #{amount},
+                sub_factor  = #{subFactor},
+                sub_loc     = #{subLoc},
+                sub_city    = #{subCity},
+                mod_id      = #{modId},       
+                mod_dt      = SYSDATE   
+        WHERE   fire_seq     = #{fireSeq} 
+    </update>
+    
+    <delete id="doDelete">
+        DELETE FROM FIRE_DATA 
+        WHERE fire_seq = #{fireSeq}
+    </delete>
+    
+    <select id="doSelectOne" parameterType="Firedata" resultType="Firedata">
+        SELECT  fd.fire_seq AS fireSeq,
+                fd.injured_sum AS injuredSum,
+                fd.dead,
+                fd.injured,
+                fd.amount,
+                fd.sub_factor AS subFactor,
+                fac_big.big_list AS subFactorBigNm,
+                fac_mid.mid_list AS subFactorMidNm,
+                fd.sub_loc AS subLoc,
+                loc_big.big_list AS subLocBigNm,
+                loc_mid.mid_list AS subLocMidNm,
+                fd.sub_city AS subCity,
+                city_big.big_list AS subCityBigNm,
+                city_mid.mid_list AS subCityMidNm,
+                fd.reg_id AS regId,
+                TO_CHAR(fd.reg_dt, 'YYYY/MM/DD HH24:MI:SS') AS regDt,
+                fd.mod_id AS modId,
+                TO_CHAR(fd.mod_dt, 'YYYY/MM/DD HH24:MI:SS') AS modDt
+        FROM    FIRE_DATA fd
+                LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = fd.sub_factor
+                LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = fd.sub_factor
+                LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = fd.sub_loc
+                LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = fd.sub_loc
+                LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = fd.sub_city
+                LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = fd.sub_city
+        WHERE   fd.fire_seq = #{fireSeq}
+    </select>
+    
+    <!-- 테스트용 DAO 메서드 -->
+    <select id="getSequence" resultType="int">
+        SELECT MAX(fire_seq) fire_seq     
+        FROM FIRE_DATA
+    </select>
+    
+    <delete id="doDeleteTest" parameterType="Firedata">
+        DELETE FROM FIRE_DATA
+        WHERE reg_id = #{regId}
+    </delete>
+    
+    <delete id="deleteAll">
+        DELETE FROM FIRE_DATA
+    </delete>
+    
+    <insert id="multipleSave">
+        INSERT INTO FIRE_DATA
+	    SELECT  ROWNUM,
+	            DECODE(MOD(ROWNUM, 2), 1, '10', '0'),
+	            DECODE(MOD(ROWNUM, 2), 1, '5', '0'),
+	            DECODE(MOD(ROWNUM, 2), 1, '5', '0'),
+	            DECODE(MOD(ROWNUM, 2), 1, '100', '0'),
+	            DECODE(MOD(ROWNUM, 2), 1, '11000', '0'),
+	            DECODE(MOD(ROWNUM, 2), 1, '11000', '0'),
+	            DECODE(MOD(ROWNUM, 2), 1, '11000', '0'),
+	            'ADMIN',   
+	            'ADMIN',  
+	            SYSDATE-ROWNUM/24 + 1,                        
+	            SYSDATE-ROWNUM/24
+	    FROM    dual
+	    CONNECT BY LEVEL <![CDATA[<= 101]]>
+    </insert>
+    <!-- 테스트용 DAO 메서드 -->
 </mapper>

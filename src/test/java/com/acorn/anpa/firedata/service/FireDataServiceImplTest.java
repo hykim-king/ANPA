@@ -93,7 +93,7 @@ public class FireDataServiceImplTest implements PLog {
     	fireDataService.doDelete(fireData01);
     }
     
-    @Ignore
+    //@Ignore
     @Test
     public void sendMail() {
 		String title = "화재가 발생하였습니다";

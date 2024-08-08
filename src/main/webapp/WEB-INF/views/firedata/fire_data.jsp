@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
         <input type = "hidden" name = "seq" id = "seq">
         <select class="me-2 col form-select" name="fRselect" id="fRselect" style="width: 100px;">
-            <option value="">화재유형</option>
+            <option value="">화재요인</option>
+            <option value="">화재장소</option>
         </select>
         <select class="me-2 col form-select" name="fRselect" id="fRselect">
             <option value="">화재원인</option>
