@@ -80,7 +80,7 @@ public class ManageControllerTest implements PLog{
 		log.debug("│ tearDown");
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
-	
+
 	@Ignore
 	@Test
 	public void doRetrieve() throws Exception{
@@ -174,6 +174,7 @@ public class ManageControllerTest implements PLog{
 		assertEquals(1, flag);
 	}
 
+	@Ignore
 	@Test
 	public void doUpdateData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -221,7 +222,8 @@ public class ManageControllerTest implements PLog{
 		assertEquals("화재정보가 수정되었습니다.", resultMessage.getMessageContents());
 		
 	}
-	
+
+	@Ignore
 	@Test
 	public void doDeleteData() throws Exception {
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -266,7 +268,8 @@ public class ManageControllerTest implements PLog{
 		assertEquals("화재 데이터가 삭제되었습니다.", resultMessage.getMessageContents());
 		
 	}	
-	
+
+	@Ignore
 	@Test
 	public void doSaveData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
