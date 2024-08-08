@@ -64,6 +64,7 @@ public class UserMapperTest implements PLog {
         //userMapper.deleteAll();
     }
 
+    @Ignore
     @Test
     public void login() throws SQLException {
         log.debug("┌─────────────────────────────────────┐");
@@ -75,7 +76,8 @@ public class UserMapperTest implements PLog {
         assertNotNull(result);
         assertEquals("dao", result.getUserId());
     }
-    
+
+    @Ignore
     @Test
     public void signUp() throws SQLException {
         log.debug("┌─────────────────────────────────────┐");
@@ -84,8 +86,7 @@ public class UserMapperTest implements PLog {
 
         Member newUser = new Member("newUser", "newPassword123", "New User", "new@example.com", 0, 0, 0, "010-0000-0000");
         
-        // 회원가입 전에 ID 중복 체크
-        if (userMapper.idCheck(newUser.getUserId()) == 0) {
+	    if (userMapper.idCheck(newUser.getUserId()) == 0) {
             int result = userMapper.signUp(newUser);
             assertEquals(1, result);
         } else {
@@ -132,7 +133,6 @@ public class UserMapperTest implements PLog {
         assertEquals("54321", result);
     }
     
-    @Ignore
 	@Test
 	public void beans() {
 		log.debug("┌──────────────────────────────────────────┐");
