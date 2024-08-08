@@ -132,7 +132,7 @@ public class UserMapperTest implements PLog {
         assertEquals("54321", result);
     }
     
-    @Ignore
+    //@Ignore
 	@Test
 	public void beans() {
 		log.debug("┌──────────────────────────────────────────┐");
