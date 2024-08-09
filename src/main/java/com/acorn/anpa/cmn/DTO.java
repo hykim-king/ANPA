@@ -13,6 +13,7 @@ public class DTO {
 	
 	private int pageSize;//페이지 사이즈
 	private int pageNo;//페이지 번호
+	public static final int BOTTOM_COUNT = 10; //바닥글
 	
 	private String regId;//등록자
 	private String modId;//수정자

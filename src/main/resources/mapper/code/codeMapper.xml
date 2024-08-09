@@ -6,6 +6,7 @@
         <result column="sub_code" property="subCode"/>
         <result column="big_list" property="bigList"/>
         <result column="mid_list" property="midList"/>
+        <result column="main_code" property="mainCode"/>
         <result column="use_yn" property="useYn"/>
         <result column="reg_id" property="regId"/>
         <result column="mod_id" property="modId"/>
@@ -18,6 +19,7 @@
                sub_code,
                big_list,
                mid_list,
+               main_code,               
                use_yn,
                reg_id,
                mod_id,

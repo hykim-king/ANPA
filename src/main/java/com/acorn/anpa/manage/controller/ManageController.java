@@ -47,7 +47,6 @@ public class ManageController implements PLog{
 		
 		Search search = new Search();	
 		
-		//검색구분		
 		//pageSize=10 (기본값)
 		String pageSize = StringUtil.nvl(req.getParameter("pageSize"), "10");		
 		//pageNo=1 (기본값)

@@ -84,9 +84,9 @@ public class ManageControllerTest implements PLog{
 	}
 
 	@Test
-	public void doRetrieve() throws Exception{
+	public void doRetrieveData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
-		log.debug("│ doRetrieve Test()");
+		log.debug("│ doRetrieveData Test()");
 		log.debug("└─────────────────────────────────────────────────────────");
 	
 		search.setPageNo(1);
