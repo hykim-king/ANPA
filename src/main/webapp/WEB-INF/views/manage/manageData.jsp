@@ -1,3 +1,5 @@
+<%@page import="com.acorn.anpa.cmn.StringUtil"%>
+<%@page import="com.acorn.anpa.cmn.Search"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
@@ -14,35 +16,62 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <!-- bootstrap icon -->
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
+<link rel="stylesheet" href="${CP}/resources/css/manage_style.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+	// 변수 선언
     const checkAll = document.querySelector('#checkAll');
 
-    // "전체 선택" 체크박스 클릭 시 처리
+	// 클릭 이벤트 시작
+    // 전체 체크박스 선택 클릭 이벤트
     checkAll.addEventListener('click', function() {
         const isChecked = checkAll.checked;
         const checkboxes = document.querySelectorAll('.chk');
 
-        for (const checkbox of checkboxes) {
+        checkboxes.forEach(function(checkbox) {
             checkbox.checked = isChecked;
-        }
+        });
     });
+	// 클릭 이벤트 끝
 
+	// 변화 감지 이벤트 시작
     // 개별 체크박스 클릭 시 처리
     document.addEventListener('change', function(event) {
         if (event.target.classList.contains('chk')) {
             const checkboxes = document.querySelectorAll('.chk');
-            const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            const allChecked = Array.from(checkboxes).every(function(checkbox) {
+                return checkbox.checked;
+            });
+
             checkAll.checked = allChecked;
 
             // 만약 모든 체크박스가 선택되지 않았다면, #checkAll 체크박스의 체크 상태를 해제합니다.
-            if (Array.from(checkboxes).some(checkbox => !checkbox.checked)) {
+            if (!allChecked) {
                 checkAll.checked = false;
             }
         }
     });
+	// 변화 감지 이벤트 끝
+	
+	// 함수 시작
+    function rowDbClick(){
+        const rows = document.querySelectorAll("#manageDataTable tbody tr");
+        rows.forEach(function(row){
+            row.addEventListener("dblclick",function(){
+                if(confirm('상세 조회 하시겠습니까?') === false)return;
+                let boardSeq = this.querySelector('#fireSeq').textContent.trim();
+                let boardModId = this.querySelector('td:nth-child(4)').textContent.trim();
+                console.log("시퀀스 값: ",boardSeq);
+                console.log("수정자 값: ",boardModId);
+                popUp.classList.toggle('popupHide');
+                popUp.classList.remove('popupDoSaveHide');
+                doSelectOne(boardSeq, boardModId);
+            });
+        });
+    }
+	// 함수 끝
 });
 </script>
 </head>
@@ -51,13 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <section class="board_con content content2 content3 align-items-center">
     <h3>    
-<%--         <c:choose>
-            <c:when test="${search.getDiv() == '10' }">관리자 페이지 - 화재 정보</c:when>
-            <c:when test="${search.getDiv() == '20' }">관리자 페이지 - 유저 정보</c:when>
-            <c:otherwise>
-                         관리자 페이지
-            </c:otherwise>            
-        </c:choose> --%>
+            관리자 페이지 - 화재 정보            
     </h3>
 
     <div class="row g-1 align-items-center mt-2">
@@ -69,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <form name="bRfrm_user" id="bRfrm_user" class="col-md-auto ms-auto">
             <div class="row g-1">
                 <input type="hidden" name="work_div" id="work_div">
-                <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
+                <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
                 <input type="hidden" name="seq" id="seq">
     
                 <div class="col-md-auto">
@@ -128,8 +151,9 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 
-    <div class="container ms-0 mt-3 p-0 text-center">
-        <table class="table table-bordered full-width-table">
+    <div class="container mt-3 p-0 text-center">
+        <div class="table-responsive">
+        <table id="manageDataTable" class="table table-bordered full-width-table">
             <thead>
                 <tr>
                     <th class="align-middle"><input id="checkAll" type="checkbox"></th>
@@ -176,12 +200,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 </c:choose>           
             </tbody>
         </table>
+        </div>
+        
+		<!-- pagenation -->
+		<div class="text-center">
+		  <div id="page-selection" class="text-center page">
+		    <%
+		//총글수 :
+		int maxNum = (int) request.getAttribute("totalCnt");
+		
+		Search search = (Search) request.getAttribute("search");
+		//페이지 번호:
+		int currentPageNo = search.getPageNo();
+		//페이지 사이즈:
+		int rowPerPage = search.getPageSize();
+		//바닥글 :
+		int bottomCount = search.BOTTOM_COUNT;
+		
+		String url = "/ehr/manage/doRetrieveData.do";
+		String scriptName = "pageRetrieve";
+		
+		out.print(StringUtil.renderingPaging(maxNum, currentPageNo, rowPerPage, bottomCount, url, scriptName));
+		%>		
+		  </div>
+		</div> 
+		<!--// pagenation -->
     </div>
     
 </section>
 
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
-<script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>     
+<script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>    
+<script>
+function pageRetrieve(url,pageNo){
+    const frm = document.querySelector("#bRfrm_user");
+    frm.pageNo.value = pageNo;
+    console.log("pageNo: "+pageNo);
+    
+    frm.action = url;    
+    frm.submit();
+}
+</script> 
 </body>
 </html>
