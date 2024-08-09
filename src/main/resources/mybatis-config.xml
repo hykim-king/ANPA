@@ -10,7 +10,7 @@
     <typeAliases>
         <typeAlias alias="Member" type="com.acorn.anpa.member.domain.Member"/>
         <!-- <typeAlias alias="Login" type="com.acorn.anpa.login.domain.Login"/> 추가시 주석 해제 -->
-        <!-- <typeAlias alias="Board" type="com.acorn.anpa.board.domain.Board"/> 추가시 주석 해제 -->
+        <typeAlias alias="Board" type="com.acorn.anpa.board.domain.Board"/>
         <typeAlias alias="Search" type="com.acorn.anpa.cmn.Search"/>
         <typeAlias alias="Code" type="com.acorn.anpa.code.domain.Code"/>
         <typeAlias alias="Firedata" type="com.acorn.anpa.firedata.domain.Firedata"/>
