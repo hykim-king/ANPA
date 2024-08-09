@@ -28,4 +28,10 @@ public interface PreventMapper extends WorkDiv<prevent> {
      * @throws SQLException
      */
     List<prevent> doRetrieve(Search search) throws SQLException;
+
+    /**
+     * 마지막 시퀀스 번호 가져오기
+     * @return 시퀀스 번호
+     */
+    int getSequence();
 }

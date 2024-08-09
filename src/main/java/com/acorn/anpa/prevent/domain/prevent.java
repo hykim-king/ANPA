@@ -9,8 +9,8 @@ public class prevent extends DTO {
     private String contents   ;
     private String imgSrc     ;
 
-  
-    
+  //((1, "제목01", 0, "내용01", 0,  "사용안함", "사용안함", "ADMIN01", "사용안함","ADMIN01")
+   
     public prevent() {}
     public prevent(String preventSeq, String title, int readCnt, String contents, String imgSrc, String modDt,
             String regId, String regDt, String modId) {
