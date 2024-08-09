@@ -19,6 +19,33 @@ public class MonthFireDataServiceImpl implements MonthFireDataService, PLog {
 	public MonthFireDataServiceImpl() {
 		
 	}
+	
+	@Override
+	public Firedata todayMonthData(Firedata date) throws SQLException {
+		log.debug("1. param : " + date);
+		return this.monthFireDataMapper.todayMonthData(date);
+	}
+
+	@Override
+	public List<Firedata> locBigData(Firedata date) throws SQLException {
+		log.debug("1. param : " + date);
+		return this.monthFireDataMapper.locBigData(date);
+	}
+
+	@Override
+	public List<Firedata> locMidData(Firedata date) throws SQLException {
+		log.debug("1. param : " + date);
+		return this.monthFireDataMapper.locMidData(date);
+	}
+
+	@Override
+	public List<Firedata> factorMidData(Firedata date) throws SQLException {
+		log.debug("1. param : " + date);
+		return this.monthFireDataMapper.factorMidData(date);
+	}
+
+	
+	//사용안함---------------------------------------------------------------------
 
 	@Override
 	public int doSave(Firedata inVO) throws SQLException {

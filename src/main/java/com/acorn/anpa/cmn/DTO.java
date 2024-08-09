@@ -20,6 +20,8 @@ public class DTO {
 	private String regDt;//등록일
 	private String modDt;//수정일
 	
+	
+	
 	public DTO() {	 
 		pageSize = 10;
 		pageNo = 1;

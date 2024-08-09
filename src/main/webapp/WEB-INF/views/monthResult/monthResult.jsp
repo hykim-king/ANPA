@@ -1,3 +1,5 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
@@ -21,10 +23,45 @@
 document.addEventListener('DOMContentLoaded', function() {
     // .nav 클래스의 두 번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(2) .nav-link');
-
+    const mRselectBtn = document.querySelector("#mRselect");
+    console.log("mRselectBtn"+mRselectBtn);
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
-});   
+    
+    // 서버에서 JSP로 현재 날짜를 가져옵니다.
+    const dateValue = '<%= new SimpleDateFormat("yyyy-MM").format(new Date()) %>';
+
+    // JavaScript를 통해 input 요소의 기본값을 현재 날짜로 설정
+    document.getElementById('mRselect').value = dateValue;
+   
+    
+    mRselectBtn.addEventListener("click",function(event){
+    	console.log("mRselectBtn click");
+    	event.stopPropagation();//이벤트 버블링 방지
+    	todayMonthData();
+    });
+    
+    //-------함수----------------------------------------------------------------
+    
+    function todayMonthData(regDt){
+    	console.log("todayMonthData(regDt):"+mRselectBtn.value);
+    	
+    	//비동기 통신
+/*     	let type = "GET";
+    	let url = "/ehr/monthFireData/monthFireData.do";
+    	let async = "true";
+    	let dataType = "html";
+        let params = {
+             "regDt" : regDt
+        };
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            console.log("data: ",data);
+        }); */
+    }
+    
+    
+});//--DOMContentLoaded end   
 </script>
 </head>
 <body>
@@ -38,12 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
         <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
         <input type = "hidden" name = "seq" id = "seq">
         <div class="col-md-2">            
-            <select class="form-select" name="mRselect" id="mRselect">
-                <option value="">2024년 07월</option>
-            </select>        
+            <input class = "form-control" type = "month" min="2021-01" id="mRselect" name="mRselect">      
         </div>
         <div class="col-md-10 d-flex justify-content-end mRsysdate">
-            <p>오늘은 SYSDATE 입니다</p>
+        <%
+           Date date = new Date();
+           SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+           String strDate = simpleDate.format(date);
+        
+        %>
+            <p style="margin-right : 5px;">오늘은 </p> <p style="color:#4169E1"> <%=strDate %><p> <p style="margin-left : 5px;"> 입니다</p>
         </div>
     </form>
 

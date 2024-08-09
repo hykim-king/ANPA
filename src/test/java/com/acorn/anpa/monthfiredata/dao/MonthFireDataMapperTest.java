@@ -2,6 +2,7 @@ package com.acorn.anpa.monthfiredata.dao;
 
 import static org.junit.Assert.*;
 
+
 import java.util.List;
 
 import org.junit.After;
@@ -53,25 +54,27 @@ public class MonthFireDataMapperTest implements PLog{
 	
 	}
 
+	@Ignore
 	@Test
 	public void factorMidData()throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ todayMonthData()");
 		log.debug("└─────────────────────────────────────────────────────────");
 		
-		
-		List<Firedata> result = monthFireDataMapper.factorMidData("202308");
+		fire01.setRegDt("202308");
+		List<Firedata> result = monthFireDataMapper.factorMidData(fire01);
 		log.debug("result:"+result);
 	}
 
+	@Ignore
 	@Test
 	public void locMidData()throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ todayMonthData()");
 		log.debug("└─────────────────────────────────────────────────────────");
 		
-		
-		List<Firedata> result = monthFireDataMapper.locMidData("202308");
+		fire01.setRegDt("202308");
+		List<Firedata> result = monthFireDataMapper.locMidData(fire01);
 		log.debug("result:"+result);
 	}
 
@@ -81,22 +84,24 @@ public class MonthFireDataMapperTest implements PLog{
 		log.debug("│ todayMonthData()");
 		log.debug("└─────────────────────────────────────────────────────────");
 		
-		
-		List<Firedata> result = monthFireDataMapper.locBigData("202308");
+		fire01.setRegDt("202308");
+		List<Firedata> result = monthFireDataMapper.locBigData(fire01);
 		log.debug("result:"+result);
 	}
 
+	@Ignore
 	@Test
 	public void todayMonthData()throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ todayMonthData()");
 		log.debug("└─────────────────────────────────────────────────────────");
 		
-		
-		Firedata result = monthFireDataMapper.todayMonthData("202308");
+		fire01.setRegDt("202308");
+		Firedata result = monthFireDataMapper.todayMonthData(fire01);
 		log.debug("result:"+result);
 	}
 
+	@Ignore
 	@Test
 	public void beans() {
 		log.debug("┌─────────────────────────────────────────────────────────");

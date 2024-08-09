@@ -17,28 +17,28 @@ public interface MonthFireDataMapper extends WorkDiv<Firedata> {
 	 * @return
 	 * @throws SQLException
 	 */
-	Firedata todayMonthData(String date) throws SQLException;
+	Firedata todayMonthData(Firedata date) throws SQLException;
 	
 	/**
 	 * 검색 월 화재장소 대분류 상위 3순위
 	 * @return
 	 * @throws SQLException
 	 */
-	List<Firedata> locBigData(String date) throws SQLException;
+	List<Firedata> locBigData(Firedata date) throws SQLException;
 	
 	/**
 	 * 검색 월 화재장소 소분류 상위 3순위
 	 * @return
 	 * @throws SQLException
 	 */
-	List<Firedata> locMidData(String date) throws SQLException;
+	List<Firedata> locMidData(Firedata date) throws SQLException;
 	
 	/**
 	 * 검색 월 발화원인 소분류 상위 3순위
 	 * @return
 	 * @throws SQLException
 	 */
-	List<Firedata> factorMidData(String date) throws SQLException;
+	List<Firedata> factorMidData(Firedata date) throws SQLException;
 	
 	
 }
