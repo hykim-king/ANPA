@@ -1,30 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.acorn.anpa.mapper.PreventMapper">
 
-<select id="doSelectOne" parameterType="prevent" resultType="prevent">
-    SELECT
-        prevent_seq as preventSeq,
-        title,
-        read_cnt as readCnt,
-        contents,
-        img_src as imgSrc,
-        TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedRegDt,  // 등록일
-        reg_dt as regDt,  // 등록일 원본
-        reg_id as regId,  // 등록자
-        mod_id as modId,
-        TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedModDt,  // 수정일
-        mod_dt as modDt   // 수정일 원본
-    FROM
-        prevent
-    WHERE
-        prevent_seq = #{preventSeq}
-</select>
+    <!-- 단건 조회 쿼리 -->
+    <select id="doSelectOne" parameterType="int" resultType="com.acorn.anpa.prevent.domain.prevent">
+        SELECT
+            prevent_seq AS preventSeq,
+            title,
+            read_cnt AS readCnt,
+            contents,
+            img_src AS imgSrc,
+            TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') AS formattedRegDt, -- 등록일
+            reg_dt AS regDt, -- 등록일
+            reg_id AS regId, -- 등록자
+            mod_id AS modId,
+            TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') AS formattedModDt, -- 수정일
+            mod_dt AS modDt -- 수정일 원본
+        FROM
+            prevent
+        WHERE
+            prevent_seq = #{preventSeq}
+    </select>
 
+    <!-- 목록 조회 쿼리 -->
+     <!-- <select id="doRetrieve" parameterType="Search" resultMap="preventResultMap">
+        SELECT A.*, B.totalCnt
+        FROM (
+            SELECT
+                TT1.RNUM AS no,
+                TT1.prevent_seq AS preventSeq,
+                TT1.title,
+                TT1.read_cnt AS readCnt,
+                TT1.mod_id AS modId,
+                DECODE(
+                    TO_CHAR(TT1.mod_dt, 'YYYYMMDD'),
+                    TO_CHAR(SYSDATE, 'YYYYMMDD'),
+                    TO_CHAR(TT1.mod_dt, 'HH24:MI'),
+                    TO_CHAR(TT1.mod_dt, 'YYYY/MM/DD')
+                ) AS modDt
+            FROM (
+                SELECT ROWNUM AS RNUM, T1.*
+                FROM (
+                    SELECT *
+                
+            SELECT COUNT(*) AS totalCnt
+            FROM prevent
+            <include refid="whereDoRetrieve"/>
+        ) B
+    </select>-->
 
-      
-      
-      
+    <!-- 검색 조건 쿼리 -->
+    <sql id="whereDoRetrieve">
+        <where>
+            <if test="searchDiv != null and searchDiv != ''">
+                AND
+                <choose>
+                    <when test="searchDiv == '10'">title LIKE '%' || #{searchWord} || '%'</when>
+                    <when test="searchDiv == '20'">contents LIKE '%' || #{searchWord} || '%'</when>
+                    <otherwise>(title LIKE '%' || #{searchWord} || '%' OR contents LIKE '%' || #{searchWord} || '%')</otherwise>
+                </choose>
+            </if>
+        </where>
+    </sql>
 
 </mapper>
