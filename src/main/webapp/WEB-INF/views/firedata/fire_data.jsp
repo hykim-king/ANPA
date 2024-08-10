@@ -24,6 +24,146 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
+    
+    //화재 요인 버튼
+    const factorBtn = document.querySelector('#factor');
+    //화재 장소 버튼
+    const locationBtn = document.querySelector('#location');
+    //대분류
+    const bigList = document.querySelector('#bigList');
+    //소분류
+    const midList = document.querySelector('#midList');
+    
+    let div = '';
+    let selectedText = '';
+    //검색조건
+    const searchConditions = document.querySelector('#searchConditions');
+    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
+    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
+    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
+    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
+    //이벤트
+    factorBtn.addEventListener("click",function(event){
+    	div = 'factor'
+    	let searchDiv = '10';
+    	
+    	searchConditions.textContent = factorBtn.textContent;
+    	
+    	categoryBigList(searchDiv,div);
+    });
+    
+    locationBtn.addEventListener("click",function(event){
+        div = 'location'
+        let searchDiv = '10';
+        
+        searchConditions.textContent = locationBtn.textContent;
+        
+        categoryBigList(searchDiv,div);
+    });
+    
+    bigList.addEventListener("change",function(event){
+        let searchDiv = '20';
+        let searchWord = bigList.value;
+        
+        selectedText = bigList.options[bigList.selectedIndex].textContent
+        
+        
+        if(div == 'factor'){
+        	searchConditions.textContent = factorBtn.textContent;
+        	searchConditions.textContent += ' - '+ selectedText;
+        }else{
+        	searchConditions.textContent = locationBtn.textContent;
+            searchConditions.textContent += ' - '+ selectedText;
+        }
+        
+        if(bigList.value = '') midList.value = ''
+        
+        categoryMidList(searchDiv,div,searchWord);
+    	
+        for (let i = 0; i < bigList.options.length; i++) {
+            if (bigList.options[i].value === searchWord) {
+                bigList.selectedIndex = i;
+                break;
+            }
+        }
+    });
+    
+    midList.addEventListener("change",function(event){
+        let midselectedText = midList.options[bigList.selectedIndex].textContent
+        
+        if(div == 'factor'){
+            searchConditions.textContent = factorBtn.textContent + ' - '+ selectedText;
+            searchConditions.textContent += ' - ' + midselectedText;
+        }else{
+            searchConditions.textContent = locationBtn.textContent + ' - '+ selectedText;
+            searchConditions.textContent += ' - ' + midselectedText;
+        }
+        
+    });
+    
+    function categoryMidList(searchDiv,div,searchWord){
+        $.ajax({
+            type: "GET", 
+            url:"/ehr/firedata/cityList.do",
+            asyn:"true",
+            dataType:"json",
+            data:{
+                "searchDiv": searchDiv,
+                "div" : div,
+                "searchWord" : searchWord
+                
+            },
+            success:function(response){//통신 성공
+                let data = response;
+                
+                if(data ==''){
+                    midList.innerHTML = '<option value="" disabled>전체</option>';
+                    midList.selectedIndex = 0;
+                }else{
+                	midList.innerHTML = '<option value="" >전체</option>';
+                }
+                
+                
+                data.forEach(function(item){
+                    
+                    let html = '<option value="'+item.subCode+'">'+item.midList+'</option>';
+                    midList.innerHTML += html;
+                    
+                });//forEach
+            },
+            error:function(response){//실패시 처리
+                    console.log("error:"+response);
+            }
+        });//ajax
+    }
+    
+    function categoryBigList(searchDiv,div){
+        $.ajax({
+            type: "GET", 
+            url:"/ehr/firedata/cityList.do",
+            asyn:"true",
+            dataType:"json",
+            data:{
+                "searchDiv": searchDiv,
+                "div" : div
+            },
+            success:function(response){//통신 성공
+                let data = response;
+                
+                bigList.innerHTML = '<option value="">전체</option>';
+                data.forEach(function(item){
+                    
+                    let html = '<option value="'+item.subCode+'">'+item.bigList+'</option>';
+                    bigList.innerHTML += html;
+                    
+                });//forEach
+            },
+            error:function(response){//실패시 처리
+                    console.log("error:"+response);
+            }
+        });//ajax
+    }
+    
 });   
 </script>
 </head>
@@ -32,23 +172,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <section class="content content2 align-items-center">
     <h3>화재통계</h3>
-
+    
+    <!-- 카테고리 버튼 -->
+    <div class="select_date row g-1 d-flex align-items-center">
+        <button type="button" class="btn btn-success me-1" id = "factor">화재요인</button> 
+        <button type="button" class="btn btn-secondary" id = "location">화재장소</button>
+    </div>
+    <!-- //카테고리 버튼 -->
+    
     <form name = "fRfrm" id = "fRfrm" class="row g-1">
-        <input type = "hidden" name = "work_div" id = "work_div">
-        <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
-        <input type = "hidden" name = "seq" id = "seq">
-        <select class="me-2 col form-select" name="fRselect" id="fRselect" style="width: 100px;">
-            <option value="">화재요인</option>
-            <option value="">화재장소</option>
+        <select class="me-2 col form-select" name="bigList" id="bigList">
+            <option value="">대분류</option>
         </select>
-        <select class="me-2 col form-select" name="fRselect" id="fRselect">
-            <option value="">화재원인</option>
-        </select>
-        <select class="col form-select" name="fRselect" id="fRselect">
-            <option value="">지역</option>
+        <select class="col form-select" name="midList" id="midList">
+            <option value="">소분류</option>
         </select>
     </form>
-    <p class="form-control work_div_result">검색 조건 : </p>
+        
+    <form name = "fRfrm" id = "fRfrm" class="row g-1">
+        
+    
+    </form>
+    <p class="form-control work_div_result">검색 조건 : <span id="searchConditions"></span> </p>
     <div class="select_date row g-1 d-flex align-items-center">
         <p class="col-2 m-0"><i class="bi bi-calendar"></i> 검색기간 : </p>
         <select class="col form-select" name="fRdateStart" id="fRdateStart">
