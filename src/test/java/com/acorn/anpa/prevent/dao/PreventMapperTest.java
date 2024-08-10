@@ -70,9 +70,9 @@ public class PreventMapperTest implements PLog {
     //@Ignore
 	@Test
 	public void doSave() throws SQLException{
-		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("┌────────────────────────────────────────────────────────");
 	    log.debug("│ doSave()                                              ");
-	    log.debug("└─────────────────────────────────────────────────────────");
+	    log.debug("└────────────────────────────────────────────────────────");
         
 		// 2. 데이터 1건 입력
     	int flag = preventMapper.doSave(prevent01);
