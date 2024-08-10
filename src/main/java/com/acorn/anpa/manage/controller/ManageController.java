@@ -35,12 +35,35 @@ public class ManageController implements PLog{
 	@Autowired
 	CodeService codeService;
 	
+	@RequestMapping(
+			value = "/doSelectCode.do",
+			method = RequestMethod.GET,
+			produces = "text/plain;charset=UTF-8"
+	)		// produces : 화면으로 전송할 때 encoding
+	@ResponseBody
+	public String doSelectCode(int cityCode) throws SQLException{
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ doSelectCode()");
+		log.debug("└──────────────────────────────────────────────");	
+		
+		String jsonString = "";
+	
+		Code code = new Code();
+		code.setMasterCode("city");
+		code.setMainCode(cityCode);
+		
+		List<Code> codeList = this.codeService.doSelectCode(code);			
+		
+		jsonString = new Gson().toJson(codeList);
+		
+		return jsonString;
+	}
+	
 	public ManageController() {
 		log.debug("┌──────────────────────────────────────────────");
 		log.debug("│ FireDataController()");
 		log.debug("└──────────────────────────────────────────────");
-	}
-	
+	}	
 	@GetMapping("/doRetrieveData.do")
 	public String doRetrieve(Model model, HttpServletRequest req) throws SQLException {
 		String viewName = "manage/manageData";

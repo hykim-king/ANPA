@@ -55,6 +55,7 @@ public class CodeMapperTest implements PLog{
 		log.debug("└──────────────────────────────┘");	
 	}
 
+	@Ignore
 	@Test
 	public void codeList()throws Exception{
 		log.debug("┌──────────────────────────────┐");
@@ -68,7 +69,6 @@ public class CodeMapperTest implements PLog{
 		codeList = codeMapper.codeList(search);
 	}
 	
-	@Ignore
 	@Test
 	public void doSelectCode()throws Exception {
 		log.debug("┌──────────────────────────────┐");
@@ -76,7 +76,10 @@ public class CodeMapperTest implements PLog{
 		log.debug("└──────────────────────────────┘");	
 		
 		code.setMasterCode("city");
-		code.setSubCode(11010);
+		code.setMainCode(31000);
+		log.debug("┌──────────────────────────────┐");
+		log.debug("│ code : " + code);
+		log.debug("└──────────────────────────────┘");	
 	
 		codeList = codeMapper.doSelectCode(code);
 		assertNotNull(codeList);

@@ -20,7 +20,6 @@ public interface CodeMapper extends WorkDiv<Code> {
 	 */
 	List<Code> doSelectCode(Code code) throws SQLException;
 	
-	
 	/**
 	 * 10 -> 대분류 , 20 -> 소분류
 	 * @param search

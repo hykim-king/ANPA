@@ -18,12 +18,20 @@
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 <link rel="stylesheet" href="${CP}/resources/css/manage_style.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="${CP}/resources/js/common.js"></script> 
 <title>ANPA</title>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {  
+    // 업데이트 버튼 클릭 실행
+	updateBtnsClick();
+	
 	// 변수 선언
     const checkAll = document.querySelector('#checkAll');
-
+    const doRetrieveBtn = document.querySelector("#doRetrieve");
+    console.log("doRetrieveBtn : "+doRetrieveBtn);
+    const cBselect = document.querySelector("#cBselect");
+    const cMselect = document.querySelector("#cMselect");
+	
 	// 클릭 이벤트 시작
     // 전체 체크박스 선택 클릭 이벤트
     checkAll.addEventListener('click', function() {
@@ -53,24 +61,129 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+	// 시도 change이벤트
+    cBselect.addEventListener("change",function(){
+        console.log("cBselect change : "+cBselect.value);
+        sigunguSet();        
+    });	
 	// 변화 감지 이벤트 끝
-	
+
 	// 함수 시작
-    function rowDbClick(){
-        const rows = document.querySelectorAll("#manageDataTable tbody tr");
-        rows.forEach(function(row){
-            row.addEventListener("dblclick",function(){
-                if(confirm('상세 조회 하시겠습니까?') === false)return;
-                let boardSeq = this.querySelector('#fireSeq').textContent.trim();
-                let boardModId = this.querySelector('td:nth-child(4)').textContent.trim();
-                console.log("시퀀스 값: ",boardSeq);
-                console.log("수정자 값: ",boardModId);
-                popUp.classList.toggle('popupHide');
-                popUp.classList.remove('popupDoSaveHide');
-                doSelectOne(boardSeq, boardModId);
-            });
-        });
-    }
+	// 단건 조회
+	function doSelectOne(fireSeq){            
+		console.log("doSelectOne(fireSeq) : " + fireSeq);
+		// 비동기 통신
+		let type = "GET";
+		let url = "/ehr/manage/doSelectOne.do";
+		let async = "true";
+		let dataType = "html";   
+		let params = {
+		   "fireSeq" : fireSeq    
+		};
+		
+		PClass.pAjax(url, params, dataType, type, async, function(data){
+		
+		// null, undefined
+		if(data){
+		  try{
+		    // JSON문자열을 Json object로 변환
+		    const jsonObj = JSON.parse(data)
+		    console.log("data : " + data);
+		    
+		    // 메시지
+		    const message = jsonObj.message;
+		    if(isEmpty(message) === false && 1 === message.messageId){
+		      alert(message.messageContents);		      
+		      
+		      const firedata = jsonObj.firedata;
+		      
+		      console.log("firedata : ", firedata);
+		      
+		      frmUpdate.injuredSum = firedata.injuredSum;
+		      frmUpdate.dead       = firedata.dead;
+		      frmUpdate.injured    = firedata.injured;
+		      frmUpdate.amount     = firedata.amount;
+		      
+		    }else{
+		      alert("조회 실패입니다.");
+		    }
+		    
+		    
+		  }catch(e){
+		    console.error("data가 null혹은 undefined입니다");
+		    alert("data가 null혹은 undefined입니다");
+		  }
+		}else{
+		    alert("seq 값을 확인해주세요");	    
+		}
+		
+		}); // PClass 끝
+	} // doSelectOne 끝
+	
+	// 수정버튼 함수
+	function updateBtnsClick() {
+	    const updateBtns = document.querySelectorAll("#manageDataTable tbody tr .btn");
+	    console.log("btn click");
+	
+	    updateBtns.forEach(function(updateBtn) {
+	        updateBtn.addEventListener("click", function() {
+	            if (!confirm('해당 정보를 수정 하시겠습니까?')) return;
+	
+	            // 클릭된 버튼이 속한 행을 찾습니다
+	            const row = this.closest('tr');
+	
+	            // 해당 행에서 .fireSeqTd 클래스의 td를 찾아서 그 내부의 input 요소의 value를 읽어옵니다
+	            const fireSeqInput = row.querySelector('.fireSeqTd input');
+	            let fireSeq = fireSeqInput.value.trim();
+	
+	            console.log(fireSeq);
+	            doSelectOne(fireSeq);
+	        });
+	    });
+	}
+	// 시도 선택 시 시군구 변경
+	function sigunguSet() {
+	    document.getElementById("cMselect").innerHTML = '<option value="">' + "시군구 전체" + '</option>';
+	
+	    const cityCode = cBselect.value;
+	    const url = "/ehr/manage/doSelectCode.do";
+	    const type = "GET";
+	    
+	    console.log("cBselect.value :" + cBselect.value);
+	    
+	    if (cBselect.value === "") {
+	        document.getElementById("cMselect").innerHTML = '<option value="">' + "시군구 전체" + '</option>';
+	    } else {
+	        const params = "cityCode=" + encodeURIComponent(cityCode);
+	        
+	        const xhr = new XMLHttpRequest();
+	        xhr.open(type, url + "?" + params, false); // `false` for synchronous requests
+	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	        
+	        xhr.onload = function() {
+	            if (xhr.status >= 200 && xhr.status < 300) {
+	                const optionSigunguData = JSON.parse(xhr.responseText);
+	                console.log(optionSigunguData);
+	                optionSigunguData.forEach(function(item) {
+	                    const option = document.createElement("option");
+	                    option.value = item.subCode;
+	                    option.text = item.midList;
+	                    console.log(item.subCode);
+	                    console.log(item.midList);
+	                    cMselect.appendChild(option);
+	                });
+	            } else {
+	                console.error("Request failed with status: " + xhr.status);
+	            }
+	        };
+	        
+	        xhr.onerror = function() {
+	            console.error("Request error");
+	        };
+	        
+	        xhr.send();
+	    }
+	}
 	// 함수 끝
 });
 </script>
@@ -89,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
         <div class="col-md-auto"></div>
         
-        <form name="bRfrm_user" id="bRfrm_user" class="col-md-auto ms-auto">
+        <form name="frmDataSearch" id="frmDataSearch" class="col-md-auto ms-auto">
             <div class="row g-1">
                 <input type="hidden" name="work_div" id="work_div">
                 <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
@@ -110,11 +223,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="col-md-auto">
                     <select class="form-select" name="cBselect" id="cBselect">
                         <option value="">시도 전체</option>
-                    <c:forEach var="item" items="${cityCode}">
-			            <c:if test="${item.mainCode == 0}">
-                            <option value="${item.subCode}">${item.bigList}</option>
-                        </c:if>
-			        </c:forEach>
+	                    <c:forEach var="item" items="${cityCode}">
+				            <c:if test="${item.mainCode == 0}">
+	                            <option value="${item.subCode}">${item.bigList}</option>
+	                        </c:if>
+				        </c:forEach>
                     </select>
                 </div>
                 <div class="col-md-auto">
@@ -145,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </form>
     
         <div class="col-md-auto d-flex">
-            <button type="button" class="btn btn-dark">
+            <button type="button" class="btn btn-dark" id="doRetrieve">
                 <i class="bi bi-search"></i>
             </button>
         </div>
@@ -177,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <c:forEach var="item" items="${list}">
 	                <tr>
 	                    <td class="align-middle"><input type="checkbox" class="chk"></td>
-	                    <td class="align-middle d-none" id="fireSeqTd"><input type="text" value="item.fireSeq"></td>
+	                    <td class="align-middle d-none fireSeqTd"><input type="password" value="${item.fireSeq}"></td>
 	                    <td class="align-middle">${item.injuredSum}</td>
 	                    <td class="align-middle">${item.dead}</td>
 	                    <td class="align-middle">${item.injured}</td>
@@ -229,12 +342,44 @@ document.addEventListener('DOMContentLoaded', function() {
     
 </section>
 
+<!-- form -->
+<form action="#" name = "frmDataUpdate" id="frmDataUpdate" class="form-horizontal">
+  <div class="row mb-2">
+      <label for="injuredSum" class="col-sm-2 col-form-label">사상자</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" name="injuredSum" id="injuredSum"   required="required">
+      </div> 
+  </div>
+  
+  <div class="row mb-2">
+      <label for="dead" class="col-sm-2 col-form-label">사망자</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" name="dead" id="dead" required="required">
+      </div>  
+  </div>  
+  
+  <div class="row mb-2">
+      <label for="injured" class="col-sm-2 col-form-label">부상자</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" name="injured" id="injured" required="required">
+      </div> 
+  </div>
+  
+  <div class="row mb-2">
+      <label for="amount" class="col-sm-2 col-form-label">피해금액 (단위 : 천원)</label>
+      <div class="col-sm-10">
+        <input type="number" class="form-control" name="amount" id="amount" required="required">
+      </div> 
+  </div>    
+ </form>
+<!--// form -->
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>    
 <script>
 function pageRetrieve(url,pageNo){
-    const frm = document.querySelector("#bRfrm_user");
+    const frm = document.querySelector("#frmData");
+    const frmUpdate = document.querySelector("#frmDataUpdate");
     frm.pageNo.value = pageNo;
     console.log("pageNo: "+pageNo);
     

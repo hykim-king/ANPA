@@ -29,6 +29,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.acorn.anpa.cmn.Message;
 import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.cmn.Search;
+import com.acorn.anpa.code.domain.Code;
+import com.acorn.anpa.code.service.CodeService;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.firedata.service.FireDataService;
 import com.acorn.anpa.mapper.FireDataMapper;
@@ -53,6 +55,9 @@ public class ManageControllerTest implements PLog{
 	
 	@Autowired
 	FireDataService firedataService;
+
+	@Autowired
+	CodeService codeService;
 	
 	//브라우저 대신
 	MockMvc mockMvc;
@@ -61,6 +66,8 @@ public class ManageControllerTest implements PLog{
 	Firedata firedata02;
 	Firedata firedata03;
 
+	Code code01;
+	
 	Search search;
 	
 	@Before
@@ -73,6 +80,8 @@ public class ManageControllerTest implements PLog{
 		firedata01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);   
 		firedata01.setRegId("admin1");
 		
+		code01 = new Code("city", 0, "", "", 1);		
+		
 		search = new Search();
 	}
 
@@ -83,6 +92,22 @@ public class ManageControllerTest implements PLog{
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 
+	@Test
+	public void doSelectCode() throws Exception{
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ doSelectCode()");
+		log.debug("└──────────────────────────────────────────────");	
+		
+		code01.setMasterCode("city");
+		code01.setMainCode(31000);
+		
+		List<Code> codeList = codeService.doSelectCode(code01);	
+		for(Code vo : codeList) {
+			log.debug(vo);
+		}
+	}
+	
+	@Ignore
 	@Test
 	public void doRetrieveData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");

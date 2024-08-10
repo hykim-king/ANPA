@@ -72,10 +72,17 @@
                mod_id,
                reg_dt,
                mod_dt
-        FROM CODE
+        FROM   CODE
         WHERE use_yn = 1
         AND master_code = #{masterCode}
-        AND sub_code = #{subCode}
+        <choose>
+            <when test="mainCode != null">
+                AND main_code = #{mainCode}
+            </when>
+            <when test="subCode != null">
+                AND sub_code = #{subCode}
+            </when>        
+        </choose>
     </select>
 
 </mapper>
