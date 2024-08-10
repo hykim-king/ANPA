@@ -34,4 +34,13 @@ public interface PreventMapper extends WorkDiv<prevent> {
      * @return 시퀀스 번호
      */
     int getSequence();
+    
+    /**
+     * 리스트 조회
+     * @param search 검색 조건
+     * @return prevent 객체 리스트
+     * @throws SQLException
+     */
+    List<prevent> doSelectpre(Search search) throws SQLException;
+
 }

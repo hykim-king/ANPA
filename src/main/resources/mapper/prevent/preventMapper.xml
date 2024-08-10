@@ -2,48 +2,94 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.acorn.anpa.mapper.PreventMapper">
 
-<insert id="doSave" parameterType="prevent" >
-      INSERT INTO prevent (
-   
-    title,
-    read_cnt,
-    contents,
-    img_src,
-    mod_dt,
-    reg_id,
-    reg_dt,
-    mod_id
-) VALUES (
-    
-    #{title},
-    0,
-    #{contents},
-    #{imgSrc},
-    SYSDATE,
-    #{regId},
-    SYSDATE,
-    #{regId}
-)
-    </insert>
-    
-<!-- 단건 조회 쿼리 -->
-    <select id="doSelectOne" parameterType="prevent" resultType="prevent">
-        SELECT
-            prevent_seq as preventSeq,
-            title,
-            read_cnt as readCnt,
-            contents,
-            img_src as imgSrc,
-            TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedRegDt, -- 등록일
-            reg_dt as regDt, -- 등록일
-            reg_id as regId, -- 등록자
-            mod_id as modId,
-            TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedModDt, -- 수정일
-            mod_dt as modDt -- 수정일 원본
-        FROM
-            prevent
-        WHERE
-            prevent_seq = #{preventSeq}
-    </select>
+	<insert id="doSave" parameterType="prevent">
+		INSERT INTO prevent (
 
+		title,
+		read_cnt,
+		contents,
+		img_src,
+		mod_dt,
+		reg_id,
+		reg_dt,
+		mod_id
+		) VALUES (
+
+		#{title},
+		0,
+		#{contents},
+		#{imgSrc},
+		SYSDATE,
+		#{regId},
+		SYSDATE,
+		#{regId}
+		)
+	</insert>
+
+	<!-- 단건 조회 쿼리 -->
+	<select id="doSelectOne" parameterType="prevent"
+		resultType="prevent">
+		SELECT
+		prevent_seq as preventSeq,
+		title,
+		read_cnt as readCnt,
+		contents,
+		img_src as imgSrc,
+		TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedRegDt, -- 등록일
+		reg_dt as regDt, -- 등록일
+		reg_id as regId, -- 등록자
+		mod_id as modId,
+		TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedModDt, -- 수정일
+		mod_dt as modDt -- 수정일 원본
+		FROM
+		prevent
+		WHERE
+		prevent_seq = #{preventSeq}
+	</select>
+	
+	
+<!-- 조회수 -->
+	<select id="doRetrieve" parameterType="Search" resultType="prevent">
+		SELECT A.*, B.*                                                                                                                                     
+    FROM( 
+        SELECT  TT1.RNUM AS NO,
+                TT1.PREVENT_SEQ,
+                TT1.title,
+                TT1.contents,
+                TT1.read_cnt as readCnt,
+                TT1.mod_id as modId,
+                DECODE(
+                TO_CHAR(TT1.mod_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
+                TO_CHAR(TT1.mod_dt, 'HH24:MI'), TO_CHAR(TT1.mod_dt,'YYYY/MM/DD')
+                ) AS modDt
+        FROM    (
+            SELECT ROWNUM AS RNUM, T1.*
+            FROM(
+                SELECT  *
+                FROM    prevent
+                --WHERE title(10), contents(20), title+contents(30)
+                WHERE 1=1
+                AND title LIKE #{searchWord} || '%'
+                AND contents LIKE #{searchWord} || '%'
+                AND (title LIKE #{searchWord} || '%'
+                OR contents LIKE #{searchWord} || '%')
+                ORDER BY mod_dt DESC
+            ) T1
+            WHERE ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
+        ) TT1
+        WHERE TT1.RNUM <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]> 
+    )A
+    CROSS JOIN                                                                                                                                           
+        (                                                                                                                                                    
+        SELECT COUNT(*) totalCnt                                                                                                                             
+        FROM prevent     
+        --WHERE title(10), contents(20), title+contents(30)                 
+        WHERE 1=1
+        AND title LIKE #{searchWord} || '%'
+        AND contents LIKE #{searchWord} || '%'
+        AND (title LIKE #{searchWord} || '%'
+        OR contents LIKE #{searchWord} || '%')
+        ORDER BY mod_dt DESC                                                                                                           
+        )B 
+	</select>
 </mapper>

@@ -23,4 +23,13 @@ public interface PreventService {
      * @throws SQLException
      */
     List<prevent> doRetrieve(Search search) throws SQLException;
+    
+    /**
+     * Prevent 리스트 조회
+     * @param search 검색 조건
+     * @return Prevent 객체 리스트
+     * @throws SQLException
+     */
+    List<prevent> doRetrieve(Search search) throws SQLException;
+
 }

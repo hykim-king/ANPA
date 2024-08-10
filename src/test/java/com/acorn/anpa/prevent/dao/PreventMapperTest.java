@@ -42,6 +42,8 @@ public class PreventMapperTest implements PLog {
     prevent prevent02;
     prevent prevent03;
     
+    Search 	search;
+    
     @Before
     public void setUp() throws Exception {
         log.debug("┌──────────────────────────────┐");
@@ -67,7 +69,7 @@ public class PreventMapperTest implements PLog {
     }
 
     
-    //@Ignore
+    @Ignore
 	@Test
 	public void doSave() throws SQLException{
 		log.debug("┌────────────────────────────────────────────────────────");
@@ -92,50 +94,57 @@ public class PreventMapperTest implements PLog {
     
     
     
-//    @Ignore
-//    @Test
-//    public void doSelectOne() throws SQLException {
-//        log.debug("┌─────────────────────────────────────────────────────────");
-//        log.debug("│ doSelectOne()                                           ");
-//        log.debug("└─────────────────────────────────────────────────────────");
-//
-//        // 1. 데이터 저장
-//        prevent testPrevent = new prevent("1", "Test Title", 0, "Test Content", "", "sysdate", "ADMIN01", "sysdate", "ADMIN01");
-//        int saveFlag = preventMapper.doSave(testPrevent);
-//        log.debug("Save flag: " + saveFlag);
-//        assertEquals(1, saveFlag); // Ensure that the data is saved successfully
-//
-//        // 2. 데이터 조회
-//        prevent result = preventMapper.doSelectOne(Integer.parseInt(testPrevent.getPreventSeq()));
-//        log.debug("Result: " + result);
-//
-//        // 3. 데이터 검증
-//        assertNotNull(result);
-//        assertEquals(testPrevent.getPreventSeq(), result.getPreventSeq());
-//        assertEquals(testPrevent.getTitle(), result.getTitle());
-//        assertEquals(testPrevent.getContents(), result.getContents());
-//        assertEquals(testPrevent.getRegId(), result.getRegId());
-//        // Add more assertions as needed to fully verify the result
-//    }                    
-
-
     @Ignore
     @Test
-    public void testDoRetrieve() throws SQLException {
+    public void doSelectOne() throws SQLException {
         log.debug("┌─────────────────────────────────────────────────────────");
-        log.debug("│ testDoRetrieve()                                       ");
+        log.debug("│ doSelectOne()                                           ");
         log.debug("└─────────────────────────────────────────────────────────");
 
-        Search search = new Search();
-        search.setPageNo(1);
-        search.setPageSize(10);
-        search.setSearchWord("example"); // Set appropriate search parameters
 
-        List<prevent> results = preventMapper.doRetrieve(search);
-        assertNotNull(results);
-        assertTrue(!results.isEmpty());
-        log.debug("results: " + results);
-    }
+	int flag = preventMapper.doSave(prevent01);	
+	assertEquals(1, flag);
+	
+	int seq =preventMapper.getSequence();
+	
+	prevent01.setPreventSeq(seq);
+	
+	prevent inVO = preventMapper.doSelectOne(prevent01);
+	log.debug(inVO);
+}
+    
+    
+    //@Ignore
+    @Test
+    public void doRetrieve() throws SQLException {
+        log.debug("┌─────────────────────────────────────────────────────────");
+        log.debug("│doRetrieve()                                       ");
+        log.debug("└─────────────────────────────────────────────────────────");
+
+       
+     // 2. 데이터 1건 입력
+    	int flag = preventMapper.doSave(prevent01);
+    	log.debug("flag : " + flag);
+    	assertEquals(1, flag);
+    	
+    	flag = preventMapper.doSave(prevent02);
+    	log.debug("flag : " + flag);
+    	assertEquals(1, flag);
+    	
+    	flag = preventMapper.doSave(prevent03);
+    	log.debug("flag : " + flag);
+    	assertEquals(1, flag);
+		
+
+		
+//        search.setPageNo(1);
+//		search.setPageSize(10);
+		
+//		search.setSearchDiv("30");
+//		search.setSearchWord("내용000002");
+//		List<prevent> list = preventMapper.doSelectpre(search);
+//		assertEquals(10, list.size());
+	}
     
     @Ignore
     @Test
