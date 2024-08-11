@@ -34,6 +34,8 @@ import com.acorn.anpa.code.service.CodeService;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.firedata.service.FireDataService;
 import com.acorn.anpa.mapper.FireDataMapper;
+import com.acorn.anpa.member.domain.Member;
+import com.acorn.anpa.member.service.MemberService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -57,6 +59,9 @@ public class ManageControllerTest implements PLog{
 	FireDataService firedataService;
 
 	@Autowired
+	MemberService memberService;
+
+	@Autowired
 	CodeService codeService;
 	
 	//브라우저 대신
@@ -66,6 +71,8 @@ public class ManageControllerTest implements PLog{
 	Firedata firedata02;
 	Firedata firedata03;
 
+	Member memberVO01;
+	
 	Code code01;
 	
 	Search search;
@@ -80,6 +87,8 @@ public class ManageControllerTest implements PLog{
 		firedata01 = new Firedata(1, 0, 0, 0, 10, 1000, 100, 11010);   
 		firedata01.setRegId("admin1");
 		
+		memberVO01 = new Member("james01", "4321", "이상무01", "bagsa1515@naver.com", 0, 0, 11010, "01012345678");
+		
 		code01 = new Code("city", 0, "", "", 1);		
 		
 		search = new Search();
@@ -92,6 +101,7 @@ public class ManageControllerTest implements PLog{
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 
+	@Ignore
 	@Test
 	public void doSelectCode() throws Exception{
 		log.debug("┌──────────────────────────────────────────────");
@@ -106,6 +116,83 @@ public class ManageControllerTest implements PLog{
 			log.debug(vo);
 		}
 	}
+	
+	@Ignore
+	@Test
+	public void doDeleteMember() throws Exception {
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doDeleteMember Test()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		int flag = memberService.doSave(memberVO01);
+		log.debug("flag : " + flag);
+		assertEquals(1, flag);
+		
+		//요청 매핑
+		MockHttpServletRequestBuilder requestBuilder =
+			MockMvcRequestBuilders.get("/manage/doDeleteMember.do")
+			.param("userId", memberVO01.getUserId());
+		
+		//호출 및 결과
+		ResultActions resultActions = 
+				mockMvc.perform(requestBuilder)
+				// Controller produces = "text/plain;charset=UTF-8"
+				.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+				// Web상태
+				.andExpect(status().is2xxSuccessful());
+		
+		String jsonResult = resultActions.andDo(print())
+		.andReturn().getResponse().getContentAsString();
+		
+		log.debug("┌────────────────────────────────────────────────────────");
+		log.debug("│ jsonResult() : " + jsonResult);
+		log.debug("└────────────────────────────────────────────────────────");
+		
+		// json 문자열을 Message로 변환
+		Message resultMessage = new Gson().fromJson(jsonResult, Message.class);
+		
+		// 3. 비교
+		assertEquals(1, resultMessage.getMessageId());
+		assertEquals(memberVO01.getUserId() + "회원정보가 삭제되었습니다.", resultMessage.getMessageContents());
+		
+	}	
+	
+	@Test
+	public void doRetrieveMember() throws Exception{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ doRetrieveMember Test()");
+		log.debug("└─────────────────────────────────────────────────────────");
+	
+		search.setPageNo(1);
+		search.setPageSize(10);
+		
+		//요청 매핑
+		MockHttpServletRequestBuilder requestBuilder =
+			MockMvcRequestBuilders.get("/manage/doRetrieveMember.do")
+			.param("pageSize", search.getPageSize()+"")
+			.param("pageNo", search.getPageNo()+"");
+		
+		//호출 및 결과
+		ResultActions resultActions = 
+				mockMvc.perform(requestBuilder)
+				// Web상태
+				.andExpect(status().is2xxSuccessful());
+		
+		//Model
+		MvcResult mvcResult = resultActions.andDo(print()).andReturn();
+		
+		Map<String, Object> modelMap = mvcResult.getModelAndView().getModel();
+		
+		List<Member> list = (List<Member>) modelMap.get("list");
+		assertNotNull(list);
+		for (Member vo : list) log.debug(vo);		
+		
+		String viewName = mvcResult.getModelAndView().getViewName();
+		
+		int totalCnt = (int) modelMap.get("totalCnt");
+		log.debug("totalCnt: "+totalCnt);	
+	}
+	
 	
 	@Ignore
 	@Test

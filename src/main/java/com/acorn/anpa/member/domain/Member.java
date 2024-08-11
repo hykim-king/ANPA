@@ -8,7 +8,10 @@ public class Member extends DTO {
     private String email    ;//이메일
     private int    emailYn  ;//이메일수신여부
     private int    adminYn  ;//관리자여부
-    private int    subCity  ;//CODE 참조
+    private String adminYnNm;//관리자여부 한글
+    private int    subCity  ;//거주지 코드
+    private String subCityBnm;//거주지 시도 한글
+    private String subCityMnm;//거주지 시군구 한글
     private String tel      ;//전화번호
     
     public Member() {
@@ -75,12 +78,36 @@ public class Member extends DTO {
 		this.adminYn = adminYn;
 	}
 
+	public String getAdminYnNm() {
+		return adminYnNm;
+	}
+
+	public void setAdminYnNm(String adminYnNm) {
+		this.adminYnNm = adminYnNm;
+	}
+
 	public int getSubCity() {
 		return subCity;
 	}
 
 	public void setSubCity(int subCity) {
 		this.subCity = subCity;
+	}
+
+	public String getSubCityBnm() {
+		return subCityBnm;
+	}
+
+	public void setSubCityBnm(String subCityBnm) {
+		this.subCityBnm = subCityBnm;
+	}
+
+	public String getSubCityMnm() {
+		return subCityMnm;
+	}
+
+	public void setSubCityMnm(String subCityMnm) {
+		this.subCityMnm = subCityMnm;
 	}
 
 	public String getTel() {
@@ -94,7 +121,8 @@ public class Member extends DTO {
 	@Override
 	public String toString() {
 		return "Member [userId=" + userId + ", password=" + password + ", userName=" + userName + ", email=" + email
-				+ ", emailYn=" + emailYn + ", adminYn=" + adminYn + ", subCity=" + subCity + ", tel=" + tel + "]";
+				+ ", emailYn=" + emailYn + ", adminYn=" + adminYn + ", adminYnNm=" + adminYnNm + ", subCity=" + subCity
+				+ ", subCityBnm=" + subCityBnm + ", subCityMnm=" + subCityMnm + ", tel=" + tel + ", toString()="
+				+ super.toString() + "]";
 	}
-    
 }

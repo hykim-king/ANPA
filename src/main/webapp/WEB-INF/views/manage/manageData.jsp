@@ -26,45 +26,37 @@ document.addEventListener('DOMContentLoaded', function() {
 	updateBtnsClick();
 	
 	// 변수 선언
+    const frmUpdate = document.querySelector("#frmDataUpdate");
     const checkAll = document.querySelector('#checkAll');
     const doRetrieveBtn = document.querySelector("#doRetrieve");
-    console.log("doRetrieveBtn : "+doRetrieveBtn);
+    const frmUpCloseBtn = document.querySelector("#frmUpCloseBtn");
     const cBselect = document.querySelector("#cBselect");
     const cMselect = document.querySelector("#cMselect");
+    const lBselect = document.querySelector("#lBselect");
+    const lMselect = document.querySelector("#lMselect");
+    const fBselect = document.querySelector("#fBselect");
+    const fMselect = document.querySelector("#fMselect");
 	
 	// 클릭 이벤트 시작
-    // 전체 체크박스 선택 클릭 이벤트
-    checkAll.addEventListener('click', function() {
-        const isChecked = checkAll.checked;
-        const checkboxes = document.querySelectorAll('.chk');
-
-        checkboxes.forEach(function(checkbox) {
-            checkbox.checked = isChecked;
-        });
+	// 정보 수정 닫기버튼
+    frmUpCloseBtn.addEventListener('click', function() {
+    	frmUpdate.classList.add('d-none');
     });
 	// 클릭 이벤트 끝
 
 	// 변화 감지 이벤트 시작
-    // 개별 체크박스 클릭 시 처리
-    document.addEventListener('change', function(event) {
-        if (event.target.classList.contains('chk')) {
-            const checkboxes = document.querySelectorAll('.chk');
-            const allChecked = Array.from(checkboxes).every(function(checkbox) {
-                return checkbox.checked;
-            });
-
-            checkAll.checked = allChecked;
-
-            // 만약 모든 체크박스가 선택되지 않았다면, #checkAll 체크박스의 체크 상태를 해제합니다.
-            if (!allChecked) {
-                checkAll.checked = false;
-            }
-        }
-    });
 	// 시도 change이벤트
     cBselect.addEventListener("change",function(){
         console.log("cBselect change : "+cBselect.value);
-        sigunguSet();        
+        cityCodeSet();        
+    });	
+	// 화재요인 change이벤트
+    fBselect.addEventListener("change",function(){
+        factorCodeSet();        
+    });	
+	// 화재장소 change이벤트
+    lBselect.addEventListener("change",function(){
+        locCodeSet();        
     });	
 	// 변화 감지 이벤트 끝
 
@@ -92,17 +84,22 @@ document.addEventListener('DOMContentLoaded', function() {
 		    
 		    // 메시지
 		    const message = jsonObj.message;
+		    console.log("message.messageId: ",message.messageId);
+            console.log("message.messageContents: ",message.messageContents);
+            console.log("isEmpty(message) : ",isEmpty(message));
 		    if(isEmpty(message) === false && 1 === message.messageId){
 		      alert(message.messageContents);		      
 		      
 		      const firedata = jsonObj.firedata;
 		      
 		      console.log("firedata : ", firedata);
+		      console.log("frmUpdate : ", frmUpdate);
+		      console.log("frmUpdate.injuredSum : ", frmUpdate.injuredSum);
 		      
-		      frmUpdate.injuredSum = firedata.injuredSum;
-		      frmUpdate.dead       = firedata.dead;
-		      frmUpdate.injured    = firedata.injured;
-		      frmUpdate.amount     = firedata.amount;
+		      frmUpdate.injuredSum.value = firedata.injuredSum;
+		      frmUpdate.dead.value       = firedata.dead;
+		      frmUpdate.injured.value    = firedata.injured;
+		      frmUpdate.amount.value     = firedata.amount;
 		      
 		    }else{
 		      alert("조회 실패입니다.");
@@ -128,23 +125,22 @@ document.addEventListener('DOMContentLoaded', function() {
 	    updateBtns.forEach(function(updateBtn) {
 	        updateBtn.addEventListener("click", function() {
 	            if (!confirm('해당 정보를 수정 하시겠습니까?')) return;
-	
+	            
 	            // 클릭된 버튼이 속한 행을 찾습니다
 	            const row = this.closest('tr');
 	
 	            // 해당 행에서 .fireSeqTd 클래스의 td를 찾아서 그 내부의 input 요소의 value를 읽어옵니다
 	            const fireSeqInput = row.querySelector('.fireSeqTd input');
 	            let fireSeq = fireSeqInput.value.trim();
-	
+	            
 	            console.log(fireSeq);
 	            doSelectOne(fireSeq);
+	            frmUpdate.classList.remove('d-none');
 	        });
 	    });
 	}
 	// 시도 선택 시 시군구 변경
-	function sigunguSet() {
-	    document.getElementById("cMselect").innerHTML = '<option value="">' + "시군구 전체" + '</option>';
-	
+	function cityCodeSet() {	
 	    const cityCode = cBselect.value;
 	    const url = "/ehr/manage/doSelectCode.do";
 	    const type = "GET";
@@ -152,19 +148,20 @@ document.addEventListener('DOMContentLoaded', function() {
 	    console.log("cBselect.value :" + cBselect.value);
 	    
 	    if (cBselect.value === "") {
-	        document.getElementById("cMselect").innerHTML = '<option value="">' + "시군구 전체" + '</option>';
+	        cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
 	    } else {
-	        const params = "cityCode=" + encodeURIComponent(cityCode);
+	        const param1 = "masterCode=city"
+	        const param2 = "&subCode=" + encodeURIComponent(cityCode);
 	        
 	        const xhr = new XMLHttpRequest();
-	        xhr.open(type, url + "?" + params, false); // `false` for synchronous requests
+	        xhr.open(type, url + "?" + param1 + param2, false); // `false` for synchronous requests
 	        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 	        
 	        xhr.onload = function() {
 	            if (xhr.status >= 200 && xhr.status < 300) {
-	                const optionSigunguData = JSON.parse(xhr.responseText);
-	                console.log(optionSigunguData);
-	                optionSigunguData.forEach(function(item) {
+	                const optionCodeData = JSON.parse(xhr.responseText);
+	                console.log(optionCodeData);
+	                optionCodeData.forEach(function(item) {
 	                    const option = document.createElement("option");
 	                    option.value = item.subCode;
 	                    option.text = item.midList;
@@ -184,6 +181,88 @@ document.addEventListener('DOMContentLoaded', function() {
 	        xhr.send();
 	    }
 	}
+	function factorCodeSet() {    
+        const factorCode = fBselect.value;
+        const url = "/ehr/manage/doSelectCode.do";
+        const type = "GET";
+        
+        console.log("함수fBselect.value :" + fBselect.value);
+        
+        if (fBselect.value === "") {
+            fMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
+        } else {
+            const param1 = "masterCode=factor"
+            const param2 = "&subCode=" + encodeURIComponent(factorCode);
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open(type, url + "?" + param1 + param2, false); // `false` for synchronous requests
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const optionCodeData = JSON.parse(xhr.responseText);
+                    console.log(optionCodeData);
+                    optionCodeData.forEach(function(item) {
+                        const option = document.createElement("option");
+                        option.value = item.subCode;
+                        option.text = item.midList;
+                        console.log(item.subCode);
+                        console.log(item.midList);
+                        fMselect.appendChild(option);
+                    });
+                } else {
+                    console.error("Request failed with status: " + xhr.status);
+                }
+            };
+            
+            xhr.onerror = function() {
+                console.error("Request error");
+            };
+            
+            xhr.send();
+        }
+    }
+	function locCodeSet() {    
+        const locCode = lBselect.value;
+        const url = "/ehr/manage/doSelectCode.do";
+        const type = "GET";
+        
+        console.log("함수lBselect.value :" + lBselect.value);
+        
+        if (lBselect.value === "") {
+            lMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
+        } else {
+            const param1 = "masterCode=location"
+            const param2 = "&subCode=" + encodeURIComponent(locCode);
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open(type, url + "?" + param1 + param2, false); // `false` for synchronous requests
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const optionCodeData = JSON.parse(xhr.responseText);
+                    console.log(optionCodeData);
+                    optionCodeData.forEach(function(item) {
+                        const option = document.createElement("option");
+                        option.value = item.subCode;
+                        option.text = item.midList;
+                        console.log(item.subCode);
+                        console.log(item.midList);
+                        lMselect.appendChild(option);
+                    });
+                } else {
+                    console.error("Request failed with status: " + xhr.status);
+                }
+            };
+            
+            xhr.onerror = function() {
+                console.error("Request error");
+            };
+            
+            xhr.send();
+        }
+    }
 	// 함수 끝
 });
 </script>
@@ -191,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
 
-<section class="board_con content content2 content3 align-items-center">
+<section class="content content2 content3 align-items-center">
     <h3>    
             관리자 페이지 - 화재 정보            
     </h3>
@@ -237,12 +316,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="col-md-auto">
                     <select class="form-select" name="fBselect" id="fBselect">
-                        <option value="10">화재요인</option>
+                        <option value="">화재요인 전체</option>
+                        <c:forEach var="item" items="${factorCode}">
+                            <c:if test="${item.mainCode == 0}">
+                                <option value="${item.subCode}">${item.bigList}</option>
+                            </c:if>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-md-auto">
+                    <select class="form-select" name="fMselect" id="fMselect">
+                        <option value="">화재요인 미선택</option>
                     </select>
                 </div>
                 <div class="col-md-auto">
                     <select class="form-select" name="lBselect" id="lBselect">
-                        <option value="10">화재장소</option>
+                        <option value="">화재장소 전체</option>
+                        <c:forEach var="item" items="${LocCode}">
+                            <c:if test="${item.mainCode == 0}">
+                                <option value="${item.subCode}">${item.bigList}</option>
+                            </c:if>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-md-auto">
+                    <select class="form-select" name="lMselect" id="lMselect">
+                        <option value="">화재장소 미선택</option>
                     </select>
                 </div>
                 <div class="col-md-auto">
@@ -271,16 +370,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr>
                     <th class="align-middle"><input id="checkAll" type="checkbox"></th>
                     <th class="align-middle d-none" id="fireSeq"></th>
+                    <th class="align-middle">날짜</th>
                     <th class="align-middle">총 사상자</th>
                     <th class="align-middle">사망</th>
                     <th class="align-middle">부상</th>
                     <th class="align-middle">화재요인</th>
                     <th class="align-middle">화재장소</th>
                     <th class="align-middle">화재지역</th>
-                    <th class="align-middle">날짜</th>
                     <th class="align-middle">등록자</th>
-                    <th class="align-middle">수정일</th>
-                    <th class="align-middle">수정자</th>
+                    <th class="align-middle d-none">수정일</th>
+                    <th class="align-middle d-none">수정자</th>
                     <th class="align-middle">수정</th>
                 </tr>
             </thead>
@@ -290,6 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <c:forEach var="item" items="${list}">
 	                <tr>
 	                    <td class="align-middle"><input type="checkbox" class="chk"></td>
+                        <td class="align-middle">${item.regDt}</td>
 	                    <td class="align-middle d-none fireSeqTd"><input type="password" value="${item.fireSeq}"></td>
 	                    <td class="align-middle">${item.injuredSum}</td>
 	                    <td class="align-middle">${item.dead}</td>
@@ -297,10 +397,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	                    <td class="align-middle">${item.subFactorBigNm}</td>
 	                    <td class="align-middle">${item.subFactorMidNm}</td>
 	                    <td class="align-middle">${item.subCityBigNm} ${item.subCityMidNm}</td>
-	                    <td class="align-middle">${item.regDt}</td>
 	                    <td class="align-middle">${item.regId}</td>
-	                    <td class="align-middle">${item.modDt}</td>
-	                    <td class="align-middle">${item.modId}</td>
+	                    <td class="align-middle d-none">${item.modDt}</td>
+	                    <td class="align-middle d-none">${item.modId}</td>
 	                    <td class="align-middle"><button class="btn btn-secondary">수정</button></td>
 	                </tr>     
 	                </c:forEach>
@@ -343,35 +442,42 @@ document.addEventListener('DOMContentLoaded', function() {
 </section>
 
 <!-- form -->
-<form action="#" name = "frmDataUpdate" id="frmDataUpdate" class="form-horizontal">
-  <div class="row mb-2">
-      <label for="injuredSum" class="col-sm-2 col-form-label">사상자</label>
-      <div class="col-sm-10">
+<form action="#" name="frmDataUpdate" id="frmDataUpdate" class="form-horizontal d-none">
+  <div class="row m-0 mb-2">
+      <div class="col-sm-10"></div>
+      <div class="col-sm-2">
+        <button class="btn btn-danger" id="frmUpCloseBtn">X</button>
+      </div>
+  </div>
+
+  <div class="row m-0 mb-2">
+      <label for="injuredSum" class="col-sm-3 col-form-label">사상자</label>
+      <div class="col-sm-auto">
         <input type="number" class="form-control" name="injuredSum" id="injuredSum"   required="required">
       </div> 
   </div>
   
-  <div class="row mb-2">
-      <label for="dead" class="col-sm-2 col-form-label">사망자</label>
-      <div class="col-sm-10">
+  <div class="row m-0 mb-2">
+      <label for="dead" class="col-sm-3 col-form-label">사망자</label>
+      <div class="col-sm-auto">
         <input type="number" class="form-control" name="dead" id="dead" required="required">
       </div>  
   </div>  
   
-  <div class="row mb-2">
-      <label for="injured" class="col-sm-2 col-form-label">부상자</label>
-      <div class="col-sm-10">
+  <div class="row m-0 mb-2">
+      <label for="injured" class="col-sm-3 col-form-label">부상자</label>
+      <div class="col-sm-auto">
         <input type="number" class="form-control" name="injured" id="injured" required="required">
       </div> 
   </div>
   
-  <div class="row mb-2">
-      <label for="amount" class="col-sm-2 col-form-label">피해금액 (단위 : 천원)</label>
-      <div class="col-sm-10">
+  <div class="row m-0 mb-2">
+      <label for="amount" class="col-sm-3 col-form-label">피해금액 (단위 : 천원)</label>
+      <div class="col-sm-auto">
         <input type="number" class="form-control" name="amount" id="amount" required="required">
       </div> 
   </div>    
- </form>
+</form>
 <!--// form -->
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
@@ -379,7 +485,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 function pageRetrieve(url,pageNo){
     const frm = document.querySelector("#frmData");
-    const frmUpdate = document.querySelector("#frmDataUpdate");
     frm.pageNo.value = pageNo;
     console.log("pageNo: "+pageNo);
     
@@ -387,5 +492,6 @@ function pageRetrieve(url,pageNo){
     frm.submit();
 }
 </script> 
+<script src="${CP}/resources/js/checkbox.js"></script> 
 </body>
 </html>

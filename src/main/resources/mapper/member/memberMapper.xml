@@ -18,4 +18,99 @@
         AND     sub_city = #{subCity}
     </select>
     
+    <select id="doRetrieve" parameterType="Search" resultType="Member">      
+		SELECT A.*, B.totalCnt, C.BIG_LIST as "subCityBnm", C.MID_LIST as "subCityMnm"
+		FROM (
+		    SELECT TT1.rnum AS no,
+		           TT1.user_id AS "userId",
+		           TT1.user_name AS "userName",
+		           TT1.email,
+		           DECODE(TT1.admin_yn, 0, '회원', 1, '관리자') AS "adminYnNm",
+		           TT1.sub_city,
+		           TT1.tel,
+		           TT1.reg_dt AS regDt
+		    FROM (
+		        SELECT ROWNUM AS rnum, T1.*
+		        FROM (
+		            SELECT *
+		            FROM member
+		            WHERE 1=1
+		            -- 검색 자바 변수 : searchDiv, searchWord
+		            -- WHERE : user_id(10), user_name(20), email(30), sub_city(40), tel(50)
+		            <include refid="doRetrieveWhere"></include>
+		            ORDER BY reg_dt DESC
+		        ) T1
+		        WHERE ROWNUM <![CDATA[<=(#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]>
+		    ) TT1
+		    WHERE TT1.rnum <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]>
+		) A
+		CROSS JOIN (
+		    SELECT COUNT(*) AS totalCnt
+		    FROM member
+		    WHERE 1=1
+		    -- 검색 자바 변수 : searchDiv, searchWord
+		    -- WHERE : user_id(10), name(20), email(30), sub_city(40), tel(50)
+		    <include refid="doRetrieveWhere"></include>
+		) B
+		LEFT JOIN CODE C ON A.sub_city = C.SUB_CODE
+		AND C.MASTER_CODE = 'city'
+    </select>
+                                                                                                                           
+    <sql id="doRetrieveWhere">
+       <choose>
+          <when test="searchDiv != null and searchDiv == '10'">
+            AND user_id LIKE #{searchWord} || '%'
+          </when>                                                                                                                                                     
+          <when test="searchDiv != null and searchDiv == '20'">
+            AND user_name LIKE #{searchWord} || '%'
+          </when>                                                                                                                                   
+          <when test="searchDiv != null and searchDiv == '30'">
+            AND email LIKE #{searchWord} || '%'
+          </when>                                                                                                                                   
+          <when test="searchDiv != null and searchDiv == '40'">
+            AND sub_city LIKE #{searchWord} || '%'
+          </when>                                                                                                                                   
+          <when test="searchDiv != null and searchDiv == '50'">
+            AND tel LIKE #{searchWord} || '%'
+          </when>                                                                                                                                   
+       </choose>       
+    </sql>
+    
+    <delete id="doDelete" parameterType="Member">
+        DELETE  FROM member
+        WHERE   user_id = #{userId}
+    </delete>
+    
+    <!-- 테스트용 DAO 시작 -->
+    <insert id="doSave" parameterType="Member">
+    INSERT INTO MEMBER (
+	    user_id,
+	    user_name,
+	    password,
+	    email,
+	    email_yn,
+	    admin_yn,
+	    sub_city,
+	    tel,
+	    mod_id,
+	    mod_dt,
+	    reg_id,
+	    reg_dt
+	) VALUES (
+	    #{userId},
+	    #{userName}, 
+	    #{password},  
+	    #{email},     
+	    #{emailYn},  
+	    #{adminYn},  
+	    #{subCity},  
+	    #{tel},       
+	    #{userId},    
+	    SYSDATE,    
+	    #{userId},    
+	    SYSDATE     
+	)
+    </insert>
+    <!-- 테스트용 DAO 끝 -->
+    
 </mapper>
