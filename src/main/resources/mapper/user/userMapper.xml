@@ -56,6 +56,14 @@
         AND user_name = #{userName} 
         AND email = #{email}
     </select>
+
+    <!-- 비밀번호 재설정 -->
+    <update id="resetPassword" parameterType="Member">
+        UPDATE member
+        SET password = #{password}
+        WHERE user_id = #{userId}
+    </update>
+
     
     <!-- 모든 데이터 삭제 (테스트 용도) -->
     <delete id="deleteAll">

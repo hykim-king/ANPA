@@ -1,9 +1,6 @@
 package com.acorn.anpa.user.service;
 
 import java.sql.SQLException;
-import java.util.List;
-
-import com.acorn.anpa.cmn.DTO;
 import com.acorn.anpa.member.domain.Member;
 
 public interface UserService {
@@ -32,7 +29,7 @@ public interface UserService {
      * @return boolean true(중복됨)/false(사용 가능)
      * @throws SQLException
      */
-    boolean isUserIdAvailable(String userId) throws SQLException;
+    boolean idCheck(String userId) throws SQLException;
 
     /**
      * 아이디 찾기
@@ -54,6 +51,28 @@ public interface UserService {
      * @throws SQLException
      */
     String findPassword(String userId, String userName, String email) throws SQLException;
+
+    /**
+     * 비밀번호 재설정 요청 처리
+     * - 임시 비밀번호를 생성하고 사용자의 이메일로 전송함
+     * @param userId
+     * @param userName
+     * @param email
+     * @return String 생성된 임시 비밀번호
+     * @throws SQLException
+     */
+    String generateTemporaryPassword(String userId, String userName, String email) throws SQLException;
+
+    /**
+     * 비밀번호 재설정
+     * - 토큰을 기반으로 사용자의 비밀번호를 재설정함
+     * @param token 비밀번호 재설정 토큰
+     * @param newPassword 새 비밀번호
+     * @return boolean 성공 여부
+     * @throws SQLException
+     */
+    boolean resetPassword(String token, String newPassword) throws SQLException;
+
 
     /**
      * 모든 회원 삭제 (테스트 용도)

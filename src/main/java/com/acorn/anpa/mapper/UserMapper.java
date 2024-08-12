@@ -1,12 +1,10 @@
 package com.acorn.anpa.mapper;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.acorn.anpa.cmn.DTO;
 import com.acorn.anpa.cmn.WorkDiv;
 import com.acorn.anpa.member.domain.Member;
 
@@ -32,7 +30,7 @@ public interface UserMapper extends WorkDiv<Member> {
     
     /**
      * id중복 체크 
-     * @param inVO
+     * @param userId
      * @return 1(사용불가)/0(사용가능)
      * @throws SQLException
      */
@@ -57,6 +55,19 @@ public interface UserMapper extends WorkDiv<Member> {
      */
     String findPassword(@Param("userId") String userId, @Param("userName") String userName, @Param("email") String email) throws SQLException;
 
+    /**
+     * 비밀번호 재설정
+     * @param userId
+     * @param newPassword
+     * @return int (업데이트된 행 수)
+     * @throws SQLException
+     */
+    String resetPassword(@Param("userId") String userId, @Param("newPassword") String newPassword) throws SQLException;
+
+
+    /**
+     * 모든 회원 정보 삭제 (테스트용)
+     * @throws SQLException
+     */
     void deleteAll() throws SQLException;
-    
 }

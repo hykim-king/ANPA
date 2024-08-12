@@ -33,6 +33,7 @@ public class UserMapperTest implements PLog {
     UserMapper userMapper;
     
     Member user01;
+    Member newUser;
 
     @Before
     public void setUp() throws Exception {
@@ -42,15 +43,19 @@ public class UserMapperTest implements PLog {
 
         // 기본 필드를 모두 포함하여 Member 객체 생성
         user01 = new Member("dao", "54321", "김다오", "dao@test.com", 1, 0, 11010, "010-1234-6789");
-        
-        // 회원가입
-        //userMapper.signUp(user01);
-        
+        newUser = new Member("newUser", "newPassword123", "New User", "new@example.com", 0, 0, 0, "010-0000-0000");
+
         // 회원가입 전에 ID 중복 체크
         if (userMapper.idCheck(user01.getUserId()) == 0) {
             userMapper.signUp(user01);
         } else {
             log.debug("User ID already exists: " + user01.getUserId());
+        }
+
+        if (userMapper.idCheck(newUser.getUserId()) == 0) {
+            userMapper.signUp(newUser);
+        } else {
+            log.debug("New User ID already exists: " + newUser.getUserId());
         }
     }
     
@@ -64,7 +69,6 @@ public class UserMapperTest implements PLog {
         //userMapper.deleteAll();
     }
 
-    @Ignore
     @Test
     public void login() throws SQLException {
         log.debug("┌─────────────────────────────────────┐");
@@ -77,25 +81,22 @@ public class UserMapperTest implements PLog {
         assertEquals("dao", result.getUserId());
     }
 
-    @Ignore
     @Test
     public void signUp() throws SQLException {
         log.debug("┌─────────────────────────────────────┐");
         log.debug("│ signUp()                            │");
         log.debug("└─────────────────────────────────────┘");
 
-        Member newUser = new Member("newUser", "newPassword123", "New User", "new@example.com", 0, 0, 0, "010-0000-0000");
-        
-	    if (userMapper.idCheck(newUser.getUserId()) == 0) {
+        if (userMapper.idCheck(newUser.getUserId()) == 0) {
             int result = userMapper.signUp(newUser);
             assertEquals(1, result);
         } else {
-            log.debug("User ID already exists: " + newUser.getUserId());
+            log.debug("New User ID already exists: " + newUser.getUserId());
         }
         
-        Member fetchedUser = userMapper.login("newUser", "newPassword123");
+        Member fetchedUser = userMapper.login(newUser.getUserId(), newUser.getPassword());
         assertNotNull(fetchedUser);
-        assertEquals("newUser", fetchedUser.getUserId());
+        assertEquals(newUser.getUserId(), fetchedUser.getUserId());
     }
     
     @Test
@@ -112,15 +113,14 @@ public class UserMapperTest implements PLog {
         assertEquals(0, result);
     }
 
-
     @Test
     public void findUserId() throws SQLException {
         log.debug("┌──────────────────────────────────────┐");
         log.debug("│ findUserId()                         │");
         log.debug("└──────────────────────────────────────┘");
 
-        String result = userMapper.findUserId("김다오", "dao@test.com");
-        assertEquals("dao", result);
+        String result = userMapper.findUserId(user01.getUserName(), user01.getEmail());
+        assertEquals(user01.getUserId(), result);
     }
 
     @Test
@@ -129,19 +129,35 @@ public class UserMapperTest implements PLog {
         log.debug("│ findPassword()                      │");
         log.debug("└─────────────────────────────────────┘");
 
-        String result = userMapper.findPassword("dao", "김다오", "dao@test.com");
-        assertEquals("54321", result);
+        String result = userMapper.findPassword(user01.getUserId(), user01.getUserName(), user01.getEmail());
+        assertEquals(user01.getPassword(), result);
     }
+
+    @Test
+    public void resetPassword() throws SQLException {
+        log.debug("┌──────────────────────────────────────┐");
+        log.debug("│ resetPassword()                     │");
+        log.debug("└──────────────────────────────────────┘");
+
+        String newPassword = "newPassword456";
+        String result = userMapper.resetPassword(user01.getUserId(), newPassword);
+        assertEquals(1, result);
+
+        Member updatedUser = userMapper.login(user01.getUserId(), newPassword);
+        assertNotNull(updatedUser);
+        assertEquals(newPassword, updatedUser.getPassword());
+    }
+
     
-	@Test
-	public void beans() {
-		log.debug("┌──────────────────────────────────────────┐");
-		log.debug("│ beans()                                  │");
-		log.debug("└──────────────────────────────────────────┘");
-		log.debug("context:" + context);
-		log.debug("userMapper:" + userMapper);
-		
-		assertNotNull(context);
-		assertNotNull(userMapper);
-	}
+    @Test
+    public void beans() {
+        log.debug("┌──────────────────────────────────────────┐");
+        log.debug("│ beans()                                  │");
+        log.debug("└──────────────────────────────────────────┘");
+        log.debug("context:" + context);
+        log.debug("userMapper:" + userMapper);
+        
+        assertNotNull(context);
+        assertNotNull(userMapper);
+    }
 }

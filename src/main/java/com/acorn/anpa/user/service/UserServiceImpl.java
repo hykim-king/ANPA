@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 import com.acorn.anpa.mapper.UserMapper;
 import com.acorn.anpa.member.domain.Member;
 import com.acorn.anpa.user.service.UserService;
+import com.acorn.anpa.cmn.PLog;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements PLog, UserService {
 
     private final UserMapper userMapper;
 
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Member or User ID must not be null or empty");
         }
         // 중복 체크
-        if (!isUserIdAvailable(member.getUserId())) {
+        if (!idCheck(member.getUserId())) {
             throw new IllegalStateException("User ID is already taken");
         }
         // 회원가입 처리
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserIdAvailable(String userId) throws SQLException {
+    public boolean idCheck(String userId) throws SQLException {
         // 유효성 검사
         if (userId == null || userId.isEmpty()) {
             throw new IllegalArgumentException("User ID must not be null or empty");
@@ -72,9 +73,45 @@ public class UserServiceImpl implements UserService {
         return userMapper.findPassword(userId, userName, email);
     }
 
+
+    @Override
+    public String generateTemporaryPassword(String userId, String userName, String email) throws SQLException {
+        //비밀번호 재설정
+    	if (userId == null || userId.isEmpty() || userName == null || userName.isEmpty() || email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("User ID, name, and email must not be null or empty");
+        }
+        String tempPassword = generateRandomPassword();
+        userMapper.resetPassword(userId, tempPassword);
+        sendTemporaryPasswordEmail(email, tempPassword);
+        return tempPassword;
+    }
+
+    @Override
+    public boolean resetPassword(String token, String newPassword) throws SQLException {
+        //비밀번호 재설정
+    	if (token == null || token.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+            throw new IllegalArgumentException("Token and new password must not be null or empty");
+        }
+		/*
+		 * boolean isTokenValid = userMapper.findPassword(token); if (!isTokenValid) {
+		 * return false; }
+		 */
+        userMapper.resetPassword(token, newPassword);
+        return true;
+    }
+
+    private String generateRandomPassword() {
+        return "temporaryPassword123"; // 예시
+    }
+
+    private void sendTemporaryPasswordEmail(String email, String tempPassword) {
+        // 이메일 전송 로직
+    }
+    
     @Override
     public void deleteAll() throws SQLException {
         // 모든 회원 삭제
         userMapper.deleteAll();
     }
+    
 }
