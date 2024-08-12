@@ -48,4 +48,12 @@ public interface FireDataMapper extends WorkDiv<Firedata> {
 	 * @throws SQLException
 	 */
 	Firedata totalData(Search search) throws SQLException;
+
+	/**
+	 * 메인 화재통계
+	 * @param 
+	 * @return Firedata
+	 * @throws SQLException
+	 */
+	Firedata doMainData() throws SQLException;
 }

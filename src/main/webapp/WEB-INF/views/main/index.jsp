@@ -1,6 +1,6 @@
-      <%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <c:set var="CP"  value="${pageContext.request.contextPath}"  />
 <!DOCTYPE html>
 <html lang="kor">
@@ -75,8 +75,9 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
     <div class="graph">
-
+    
     </div>
+    ${firedata}
 </section>
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />

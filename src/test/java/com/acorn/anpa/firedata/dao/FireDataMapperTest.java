@@ -73,6 +73,19 @@ public class FireDataMapperTest implements PLog {
 	}
 	
 	@Test
+	public void mainData() throws SQLException{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ mainData()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		Firedata inVO = fireMapper.doMainData();
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ inVO() : " + inVO);
+		log.debug("└─────────────────────────────────────────────────────────");
+	}
+	
+	@Ignore
+	@Test
 	public void doRetrieve() throws SQLException {
 		search.setPageNo(1);
 		search.setPageSize(10);

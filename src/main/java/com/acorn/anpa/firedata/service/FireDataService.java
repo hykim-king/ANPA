@@ -12,4 +12,6 @@ public interface FireDataService extends WorkDiv<Firedata>{
 	int doSaveData(Firedata inVO) throws SQLException;
 	
 	Firedata totalData(Search search) throws SQLException;
+	
+	Firedata doMainData() throws SQLException;
 }

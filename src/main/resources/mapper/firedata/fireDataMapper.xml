@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.acorn.anpa.mapper.FireDataMapper">
     
-    <select id="mainData" resultType="Firedata">
+    <select id="doMainData" resultType="Firedata">
 	    SELECT 
-		    today.fireCount AS fireCount,
-		    today.injuredSum AS injuredSum,
-		    today.totalAmount AS totalAmount,
+		    today.fireCount AS todayFireCount,
+		    today.injuredSum AS todayInjured,
+		    today.totalAmount AS todayAmount,
 		    lastMonth.monthFireCount AS monthFireCount,
 		    lastMonth.monthInjured AS monthInjured,
 		    lastMonth.monthAmount AS monthAmount
@@ -51,7 +51,8 @@
              </when>
         </choose>
         <choose>
-             <when test="subCityBigNm != null and subCityMidNm == null or subCityMidNm == ''">
+             <when test="subCityBigNm != '' and subCityBigNm != null 
+             and subCityMidNm == null or subCityMidNm == ''">
                  AND t4.big_list = #{subCityBigNm}
              </when>
              <otherwise>

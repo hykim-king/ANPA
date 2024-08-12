@@ -160,5 +160,11 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 	public Firedata totalData(Search search) throws SQLException {
 		log.debug("1. param : " + search);
 		return fireDataMapper.totalData(search);
+	}
+
+	@Override
+	public Firedata doMainData() throws SQLException {
+		// TODO Auto-generated method stub
+		return fireDataMapper.doMainData();
 	}    
 }
