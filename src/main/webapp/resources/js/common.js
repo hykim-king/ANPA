@@ -1,25 +1,5 @@
 PClass = {
     pAjax : function(url, params,dataType="html",type="GET",async = true, _callback){
-        //code
-        console.log("┌──────────────────┐"); 
-        console.log("│ ajaxCall()       │");   
-        console.log("└──────────────────┘");        
-        
-        console.log("1. url:"+url);
-        console.log("2. dataType:"+dataType);
-        console.log("3. type:"+type);  
-        
-        params.url = url;
-        
-        let paramArray = Object.keys(params);
-        if(paramArray.length > 0){
-            console.log("4. param -----");  
-            for(let i =0; i<paramArray.length;i++){
-                console.log(paramArray[i]+": "+params[paramArray[i]]);
-            }
-            console.log("param end-----");  
-        }
-        
         
         return  $.ajax({
                     type: type, 
@@ -28,7 +8,6 @@ PClass = {
                     dataType:dataType,
                     data: params,
                     success:function(response){//통신 성공
-                        console.log("success response:"+response);
                         _callback(response)
                         
                     },

@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 <link rel="stylesheet" href="${CP}/resources/css/fRstyle.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="${CP}/resources/js/common.js"></script> 
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -38,11 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedText = '';
     //검색조건
     const searchConditions = document.querySelector('#searchConditions');
-    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
-    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
-    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
-    /* ----------------------------검색 조건 오류 잡아라 소분류 안떠 */
+    
     //이벤트
+    
+    //화재요인버튼
     factorBtn.addEventListener("click",function(event){
     	div = 'factor'
     	let searchDiv = '10';
@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
     	categoryBigList(searchDiv,div);
     });
     
+    //화재장소버튼
     locationBtn.addEventListener("click",function(event){
         div = 'location'
         let searchDiv = '10';
@@ -61,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
         categoryBigList(searchDiv,div);
     });
     
+    //대분류 선택시
     bigList.addEventListener("change",function(event){
         let searchDiv = '20';
         let searchWord = bigList.value;
@@ -88,8 +90,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    //소분류 선택시
     midList.addEventListener("change",function(event){
-        let midselectedText = midList.options[bigList.selectedIndex].textContent
+        let midselectedText = midList.options[midList.selectedIndex].textContent
         
         if(div == 'factor'){
             searchConditions.textContent = factorBtn.textContent + ' - '+ selectedText;
@@ -101,67 +104,86 @@ document.addEventListener('DOMContentLoaded', function() {
         
     });
     
+    //코드 리스트 대+소분류 
     function categoryMidList(searchDiv,div,searchWord){
-        $.ajax({
-            type: "GET", 
-            url:"/ehr/firedata/cityList.do",
-            asyn:"true",
-            dataType:"json",
-            data:{
-                "searchDiv": searchDiv,
-                "div" : div,
-                "searchWord" : searchWord
-                
-            },
-            success:function(response){//통신 성공
-                let data = response;
-                
-                if(data ==''){
-                    midList.innerHTML = '<option value="" disabled>전체</option>';
-                    midList.selectedIndex = 0;
-                }else{
-                	midList.innerHTML = '<option value="" >전체</option>';
-                }
-                
-                
-                data.forEach(function(item){
+    	let url = '/ehr/firedata/cityList.do';
+    	let params = {
+   			"searchDiv": searchDiv,
+            "div" : div,
+            "searchWord" : searchWord
+    	};
+    	dataType = 'json';
+    	type = 'GET';
+    	async = 'true';
+    	
+    	PClass.pAjax(url, params,dataType,type,async,function(response){
+    		if(response){
+    			try{
+    				let data = response;
                     
-                    let html = '<option value="'+item.subCode+'">'+item.midList+'</option>';
-                    midList.innerHTML += html;
+                    if(data ==''){
+                        midList.innerHTML = '<option value="" disabled>전체</option>';
+                        midList.selectedIndex = 0;
+                    }else{
+                        midList.innerHTML = '<option value="" >전체</option>';
+                    }
                     
-                });//forEach
-            },
-            error:function(response){//실패시 처리
-                    console.log("error:"+response);
-            }
-        });//ajax
+                    data.forEach(function(item){
+                        
+                        let html = '<option value="'+item.subCode+'">'+item.midList+'</option>';
+                        midList.innerHTML += html;
+                        
+                    });
+    				
+    			}catch(e){
+    				console.error("data가 null혹은, undefined 입니다.",e);
+   				    alert("data가 null혹은, undefined 입니다.");  
+    			}
+    			
+    		}else{
+    			console.error("통신실패!");
+                alert("통신실패!");
+    		}
+    		
+    	});
+    	
     }
     
+    //코드리스트 대분류-전체 검색
     function categoryBigList(searchDiv,div){
-        $.ajax({
-            type: "GET", 
-            url:"/ehr/firedata/cityList.do",
-            asyn:"true",
-            dataType:"json",
-            data:{
-                "searchDiv": searchDiv,
-                "div" : div
-            },
-            success:function(response){//통신 성공
-                let data = response;
+    	let url = '/ehr/firedata/cityList.do';
+        let params = {
+      		"searchDiv": searchDiv,
+            "div" : div
+        };
+        dataType = 'json';
+        type = 'GET';
+        async = 'true';
+        
+        PClass.pAjax(url, params,dataType,type,async,function(response){
+            if(response){
+                try{
+                	let data = response;
+                    
+                    bigList.innerHTML = '<option value="">전체</option>';
+                    
+                    data.forEach(function(item){
+                        let html = '<option value="'+item.subCode+'">'+item.bigList+'</option>';
+                        bigList.innerHTML += html;
+                    });//forEach
+                    
+                }catch(e){
+                    console.error("data가 null혹은, undefined 입니다.",e);
+                    alert("data가 null혹은, undefined 입니다.");  
+                }
                 
-                bigList.innerHTML = '<option value="">전체</option>';
-                data.forEach(function(item){
-                    
-                    let html = '<option value="'+item.subCode+'">'+item.bigList+'</option>';
-                    bigList.innerHTML += html;
-                    
-                });//forEach
-            },
-            error:function(response){//실패시 처리
-                    console.log("error:"+response);
+            }else{
+                console.error("통신실패!");
+                alert("통신실패!");
             }
-        });//ajax
+            
+        });
+    	
     }
     
 });   
@@ -188,26 +210,21 @@ document.addEventListener('DOMContentLoaded', function() {
             <option value="">소분류</option>
         </select>
     </form>
-        
-    <form name = "fRfrm" id = "fRfrm" class="row g-1">
-        
-    
-    </form>
     <p class="form-control work_div_result">검색 조건 : <span id="searchConditions"></span> </p>
-    <div class="select_date row g-1 d-flex align-items-center">
+    
+    <div class="input_date row g-1 d-flex align-items-center">
         <p class="col-2 m-0"><i class="bi bi-calendar"></i> 검색기간 : </p>
-        <select class="col form-select" name="fRdateStart" id="fRdateStart">
-            <option value="">시작 날짜</option>
-        </select>
-        <p class="col-auto m-0">-</p>
-        <select class="col form-select" name="fRdateEnd" id="fRdateEnd">
-            <option value="">종료 날짜</option>
-        </select>
+        <input type="date" class="col form-input" name="fRdateStart" id="fRdateStart">
+        <p class="col-auto m-0"> - </p>
+        <input type="date" class="col form-input" name="fRdateStart" id="fRdateStart">
     </div>
     <div class="mt-2 col-auto d-flex justify-content-end">
         <button type="button" class="btn btn-success me-1" id = "doRetrieve">조회</button> 
-        <button type="button" class="btn btn-secondary" id = "doRetrieve">초기화</button> 
     </div>
+    <form name = "fRfrm" id = "fRfrm" class="row g-1">
+            
+    
+    </form>
 </section>
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
