@@ -78,7 +78,7 @@ public class PreventMapperTest implements PLog {
         flag = preventMapper.doSave(prevent02);
         log.debug("flag : " + flag);
         assertEquals(1, flag);
-        
+        //저장
         flag = preventMapper.doSave(prevent03);
         log.debug("flag : " + flag);
         assertEquals(1, flag);
