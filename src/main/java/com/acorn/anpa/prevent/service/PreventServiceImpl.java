@@ -32,5 +32,11 @@ public class PreventServiceImpl implements PreventService,PLog{
     public List<prevent> doRetrieve(Search search) throws SQLException {
         return preventMapper.doRetrieve(search);
     }
+
+	@Override
+	public int getTotalCount(Search search) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
 
