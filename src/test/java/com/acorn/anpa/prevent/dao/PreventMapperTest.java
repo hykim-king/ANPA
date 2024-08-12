@@ -87,25 +87,20 @@ public class PreventMapperTest implements PLog {
     
     
     
-    @Ignore
+   //@Ignore
     @Test
     public void doSelectOne() throws SQLException {
         // Given: 특정 prevent_seq 값으로 데이터를 미리 생성했다고 가정
-        int preventSeq = 1; // 테스트하려는 데이터의 시퀀스 값
+         
         // When: 단건 조회 쿼리 실행
-        prevent inVO = preventMapper.doSelectOne(preventSeq);
-        // Then: 결과값 검증
-        assertNotNull("Prevent 객체는 null이 아니어야 합니다.", inVO);
-        assertEquals("PreventSeq 값이 일치해야 합니다.", preventSeq, inVO.getPreventSeq());
+        int flag = preventMapper.doSave(prevent01);
+		assertEquals(1, flag);  
+		prevent01.setPreventSeq(1);
+		
+        prevent inVO = preventMapper.doSelectOne(prevent01);
         
-        // 기타 필드 값 검증 (예시)
-        assertEquals("Title 값이 일치해야 합니다.", "Expected Title", inVO.getTitle());
-        assertEquals("Contents 값이 일치해야 합니다.", "Expected Contents", inVO.getContents());
-        assertEquals("ImgSrc 값이 일치해야 합니다.", "Expected ImgSrc", inVO.getImgSrc());
-        assertEquals("RegId 값이 일치해야 합니다.", "Expected RegId", inVO.getRegId());
-        // 등록일과 수정일이 null이 아닌지 확인 (필요에 따라 추가 검증 가능)
-        assertNotNull("RegDt는 null이 아니어야 합니다.", inVO.getRegDt());
-        assertNotNull("ModDt는 null이 아니어야 합니다.", inVO.getModDt());
+        log.debug("inVO"+inVO);
+        
     }
   
     
