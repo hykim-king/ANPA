@@ -14,6 +14,7 @@ import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.code.service.CodeService;
+import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.firedata.service.FireDataService;
 import com.google.gson.Gson;
 
@@ -39,6 +40,23 @@ public class FireDataController implements PLog {
 		
 		return "firedata/fire_data";
 	}
+	
+	@RequestMapping(value = "/totalData.do"
+			, method = RequestMethod.GET
+			, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String totalData(Search search) throws SQLException{
+		String jsonString = "";
+		log.debug("param: " + search);
+		
+		Firedata outVO = fireDataService.totalData(search);
+		
+		jsonString = new Gson().toJson(outVO);
+		log.debug("jsonString: "+jsonString);
+		
+		return jsonString;
+	}
+	
 	
 	@RequestMapping(value = "/cityList.do"
 			, method = RequestMethod.GET

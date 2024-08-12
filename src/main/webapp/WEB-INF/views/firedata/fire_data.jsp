@@ -34,18 +34,79 @@ document.addEventListener('DOMContentLoaded', function() {
     const bigList = document.querySelector('#bigList');
     //소분류
     const midList = document.querySelector('#midList');
+    //날짜시작
+    const fRdateStart = document.querySelector('#fRdateStart');
+    //날짜끝
+    const fRdateEnd = document.querySelector('#fRdateEnd');
+    //조회버튼
+    const doRetrieveBtn = document.querySelector('#doRetrieve');
     
     let div = '';
     let selectedText = '';
     //검색조건
     const searchConditions = document.querySelector('#searchConditions');
     
+    // 시작, 끝 날짜 디폴트 값
+    let now = new Date();
+	let year = now.getFullYear();
+	let month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+	let lastmonth = String(now.getMonth()).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+	let day = String(now.getDate()).padStart(2, '0'); // 날짜는 1부터 시작
+	
+    let currentDate = year+'-'+month+'-'+day;
+	let lastMonthDate = year+'-'+lastmonth+'-'+day;
+    fRdateEnd.value = currentDate;
+    fRdateStart.value = lastMonthDate;
     //이벤트
+    
+    //조회버튼
+    doRetrieveBtn.addEventListener("click",function(event){
+    	console.log('fRdateStart: '+fRdateStart.value);
+    	console.log('fRdateEnd: '+fRdateEnd.value);
+    	console.log('bigList: '+bigList.value);
+    	console.log('midList: '+midList.value);
+    	
+    	let url = '/ehr/firedata/totalData.do';
+        let params = {
+            "searchDateStart": fRdateStart.value,
+            "searchDateEnd" : fRdateEnd.value,
+            "BigNm" : '',
+            "MidNm" : '',
+            "subCityBigNm" : '',
+            "subCityMidNm" : '',
+            "searchDiv" : ""
+        };
+        dataType = 'json';
+        type = 'GET';
+        async = 'true';
+    	
+        PClass.pAjax(url, params,dataType,type,async,function(response){
+        	if(response){
+        		try{
+        			let data = response;
+        			console.log('data: '+data);
+        			
+        			
+        		}catch(e){
+                    console.error("data가 null혹은, undefined 입니다.",e);
+                    alert("data가 null혹은, undefined 입니다.");  
+                }
+        		
+        	}else{
+                console.error("통신실패!");
+                alert("통신실패!");
+            }
+        	
+        	
+        });//아작스
+    	
+    });
     
     //화재요인버튼
     factorBtn.addEventListener("click",function(event){
     	div = 'factor'
     	let searchDiv = '10';
+    	midList.value = '';
     	
     	searchConditions.textContent = factorBtn.textContent;
     	
@@ -56,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
     locationBtn.addEventListener("click",function(event){
         div = 'location'
         let searchDiv = '10';
+        midList.value = '';
         
         searchConditions.textContent = locationBtn.textContent;
         
@@ -214,9 +276,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="input_date row g-1 d-flex align-items-center">
         <p class="col-2 m-0"><i class="bi bi-calendar"></i> 검색기간 : </p>
-        <input type="date" class="col form-input" name="fRdateStart" id="fRdateStart">
+        <input type="date" class="col form-input" name="fRdateStart" id="fRdateStart" value="${currentDate }">
         <p class="col-auto m-0"> - </p>
-        <input type="date" class="col form-input" name="fRdateStart" id="fRdateStart">
+        <input type="date" class="col form-input" name="fRdateEnd" id="fRdateEnd">
     </div>
     <div class="mt-2 col-auto d-flex justify-content-end">
         <button type="button" class="btn btn-success me-1" id = "doRetrieve">조회</button> 

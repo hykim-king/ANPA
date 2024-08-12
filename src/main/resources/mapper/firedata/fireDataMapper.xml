@@ -51,14 +51,15 @@
              </when>
         </choose>
         <choose>
-             <when test="subCityBigNm != '' and subCityBigNm != null 
-             and subCityMidNm == null or subCityMidNm == ''">
+             <when test="(subCityBigNm != '' and subCityBigNm != null) 
+             and (subCityMidNm == null or subCityMidNm == '')">
                  AND t4.big_list = #{subCityBigNm}
              </when>
-             <otherwise>
+             <when test="(subCityBigNm != '' and subCityBigNm != null) 
+             and (subCityMidNm != null or subCityMidNm != '')">
                  AND t4.big_list = #{subCityBigNm}
                  AND t4.mid_list = #{subCityMidNm}
-             </otherwise>
+             </when>
         </choose>
     </sql>
     
