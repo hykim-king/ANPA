@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	            if (xhr.status >= 200 && xhr.status < 300) {
 	                const optionCodeData = JSON.parse(xhr.responseText);
 	                console.log(optionCodeData);
+	                cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
 	                optionCodeData.forEach(function(item) {
 	                    const option = document.createElement("option");
 	                    option.value = item.subCode;
@@ -202,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     const optionCodeData = JSON.parse(xhr.responseText);
                     console.log(optionCodeData);
+                    fMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
                     optionCodeData.forEach(function(item) {
                         const option = document.createElement("option");
                         option.value = item.subCode;
@@ -243,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     const optionCodeData = JSON.parse(xhr.responseText);
                     console.log(optionCodeData);
+                    lMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
                     optionCodeData.forEach(function(item) {
                         const option = document.createElement("option");
                         option.value = item.subCode;
@@ -284,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <form name="frmDataSearch" id="frmDataSearch" class="col-md-auto ms-auto">
             <div class="row g-1">
                 <input type="hidden" name="work_div" id="work_div">
-                <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
+                <input type="hidden" name="pageNo" id="pageNo" value="${search.pageNo}" placeholder="페이지 번호">
                 <input type="hidden" name="seq" id="seq">
     
                 <div class="col-md-auto">
@@ -484,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>    
 <script>
 function pageRetrieve(url,pageNo){
-    const frm = document.querySelector("#frmData");
+    const frm = document.querySelector("#frmDataSearch");
     frm.pageNo.value = pageNo;
     console.log("pageNo: "+pageNo);
     

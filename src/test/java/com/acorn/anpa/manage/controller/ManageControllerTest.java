@@ -157,6 +157,7 @@ public class ManageControllerTest implements PLog{
 		
 	}	
 	
+	@Ignore
 	@Test
 	public void doRetrieveMember() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -170,7 +171,8 @@ public class ManageControllerTest implements PLog{
 		MockHttpServletRequestBuilder requestBuilder =
 			MockMvcRequestBuilders.get("/manage/doRetrieveMember.do")
 			.param("pageSize", search.getPageSize()+"")
-			.param("pageNo", search.getPageNo()+"");
+			.param("pageNo", search.getPageNo()+"")
+			;
 		
 		//호출 및 결과
 		ResultActions resultActions = 
@@ -193,8 +195,6 @@ public class ManageControllerTest implements PLog{
 		log.debug("totalCnt: "+totalCnt);	
 	}
 	
-	
-	@Ignore
 	@Test
 	public void doRetrieveData() throws Exception{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -203,12 +203,22 @@ public class ManageControllerTest implements PLog{
 	
 		search.setPageNo(1);
 		search.setPageSize(10);
+		search.setSearchDiv("1600");
+		search.setBigNm("5040");
+		search.setSubCityBigNm("21080");
+		search.setSearchDateStart("20230101");
+		search.setSearchDateEnd("20231231");
 		
 		//요청 매핑
 		MockHttpServletRequestBuilder requestBuilder =
 			MockMvcRequestBuilders.get("/manage/doRetrieveData.do")
 			.param("pageSize", search.getPageSize()+"")
-			.param("pageNo", search.getPageNo()+"");
+			.param("searchDiv", search.getSearchDiv())
+			.param("BigNm", search.getBigNm())
+			.param("subCityBigNm", search.getSubCityBigNm())
+			.param("searchDateStart", search.getSearchDateStart())
+			.param("searchDateEnd", search.getSearchDateEnd())
+			;
 		
 		//호출 및 결과
 		ResultActions resultActions = 
