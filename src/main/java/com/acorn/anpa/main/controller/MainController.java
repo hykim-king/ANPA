@@ -35,6 +35,7 @@ public class MainController implements PLog {
 		String viewName = "main/index";
 		
 		Firedata firedata = fireDataService.doMainData();
+		model.addAttribute("firedata", firedata);
 		
 		return viewName;		
 	}

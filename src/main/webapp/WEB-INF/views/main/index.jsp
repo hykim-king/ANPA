@@ -28,26 +28,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // header end
 
     function updateMainTitleBox() {
+    	const todayFireCount = ${firedata.todayFireCount}
+    	const todayInjured = ${firedata.todayInjured}
+    	const todayAmount = ${firedata.todayAmount}
+    	const formattedTodayAmount = todayAmount.toLocaleString();
+    	
         const mainTitleBox = document.querySelector('.main_title_box');
 
         const contentHTML =
         '<p class="main_title">' + '대한민국의 미래 ANPA가 함께합니다' + '</p>' +
         '<p class="main_sub_title">' + 'ANPA 시스템을 소개합니다' + '</p>' +
-        '<p class="main_fd1">화재건수 : ' + '${}' + '</p>' +
-        '<p class="main_fd2">인명피해 : ' + '${}' + '</p>' +
-        '<p class="main_fd3">재산피해 : ' + '${}' + '</p>'
+        '<p class="main_fd1">화재건수 : ' + todayFireCount + '</p>' +
+        '<p class="main_fd2">인명피해 : ' + todayInjured + '</p>' +
+        '<p class="main_fd3">재산피해 : ' + formattedTodayAmount + ' (단위 : 천원)' + '</p>'
         ;
 
         mainTitleBox.innerHTML = contentHTML;
     }
 
     function updateGraph() {
+        const monthFireCount = ${firedata.monthFireCount}
+        const monthInjured = ${firedata.monthInjured}
+        const monthAmount = ${firedata.monthAmount}
+        
         const mainGraph = document.querySelector('.content .graph');
 
         const contentHTML =
-        '<p class="main_fd1">화재건수 : ' + '${}' + '</p>' +
-        '<p class="main_fd2">인명피해 : ' + '${}' + '</p>' +
-        '<p class="main_fd3">재산피해 : ' + '${}' + '</p>'
+        '<p class="main_fd1">화재건수 : ' + monthFireCount + '</p>' +
+        '<p class="main_fd2">인명피해 : ' + monthInjured + '</p>' +
+        '<p class="main_fd3">재산피해 : ' + monthAmount + '</p>'
         ;
 
         mainGraph.innerHTML = contentHTML;
@@ -77,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="graph">
     
     </div>
-    ${firedata}
 </section>
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
