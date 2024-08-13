@@ -195,7 +195,7 @@ public class ManageController implements PLog{
 		String searchWord = StringUtil.nvl(req.getParameter("fMselect"), "");
 
 		//BigNm = "" (화재장소 대분류)
-		String bigNm = StringUtil.nvl(req.getParameter("lBselect"), "");
+		String bigNm = StringUtil.nvl(req.getParameter("lBselect"), "");	
 		//MidNm = "" (화재장소 중분류)
 		String midNm = StringUtil.nvl(req.getParameter("lMselect"), "");
 
@@ -212,7 +212,7 @@ public class ManageController implements PLog{
 		search.setSearchDiv(searchDiv);
 		search.setSearchWord(searchWord);
 		search.setBigNm(bigNm);
-		search.setBigNm(midNm);
+		search.setMidNm(midNm);
 		search.setSubCityBigNm(subCityBigNm);
 		search.setSubCityMidNm(subCityMidNm);
 		search.setPageSize(Integer.parseInt(pageSize));

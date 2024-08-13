@@ -144,26 +144,26 @@
     
     <sql id="doRetrieveWhere">
 	    <choose>
-	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord == null or searchWord == '')">
+	        <when test="(searchDiv != '' and searchDiv != null and searchDiv != 0) and (searchWord == null or searchWord == '' or searchWord == 0)">
 	            AND FIRE_DATA.sub_loc = #{searchDiv}
 	        </when>
-	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord != null and searchWord != '')">
+	        <when test="(searchDiv != '' and searchDiv != null and searchDiv != 0) and (searchWord != null and searchWord != '' and searchWord != 0)">
 	            AND FIRE_DATA.sub_loc = #{searchWord}
 	        </when>
 	    </choose>
 	    <choose>
-	        <when test="(BigNm != '' and BigNm != null) and (MidNm == null or MidNm == '')">
+	        <when test="(BigNm != '' and BigNm != null and BigNm != 0) and (MidNm == null or MidNm == '' or MidNm == 0)">
 	            AND FIRE_DATA.sub_factor = #{BigNm}
 	        </when>
-	        <when test="(BigNm != '' and BigNm != null) and (MidNm != null and MidNm != '')">
+	        <when test="(BigNm != '' and BigNm != null and BigNm != 0) and (MidNm != null and MidNm != '' and MidNm != 0)">
 	            AND FIRE_DATA.sub_factor = #{MidNm}
 	        </when>
 	    </choose>
 	    <choose>
-	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm == null or subCityMidNm == '')">
+	        <when test="(subCityBigNm != '' and subCityBigNm != null and subCityBigNm != '0') and (subCityMidNm == null or subCityMidNm == '' or subCityMidNm == 0)">
 	            AND FIRE_DATA.sub_city = #{subCityBigNm}
 	        </when>
-	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm != null and subCityMidNm != '')">
+	        <when test="(subCityBigNm != '' and subCityBigNm != null and subCityBigNm != '0') and (subCityMidNm != null and subCityMidNm != '' and subCityMidNm != 0)">
 	            AND FIRE_DATA.sub_city = #{subCityMidNm}
 	        </when>
 	    </choose>

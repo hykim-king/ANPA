@@ -21,9 +21,7 @@
 <script src="${CP}/resources/js/common.js"></script> 
 <title>ANPA</title>
 <script>
-document.addEventListener('DOMContentLoaded', function() {  
-    // 업데이트 버튼 클릭 실행
-	updateBtnsClick();
+document.addEventListener('DOMContentLoaded', function() { 
 	
 	// 변수 선언
     const frmUpdate = document.querySelector("#frmDataUpdate");
@@ -36,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const lMselect = document.querySelector("#lMselect");
     const fBselect = document.querySelector("#fBselect");
     const fMselect = document.querySelector("#fMselect");
+    
+	// 업데이트 버튼 클릭 실행
+	updateBtnsClick();
+    cityCodeSet();
 	
 	// 클릭 이벤트 시작
 	// 검색 버튼
@@ -157,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	    const cityCode = cBselect.value;
 	    const url = "/ehr/manage/doSelectCode.do";
 	    const type = "GET";
+        const subCityMidNm = ${search.subCityMidNm}
 	    
 	    console.log("cBselect.value :" + cBselect.value);
 	    
@@ -178,6 +181,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	                optionCodeData.forEach(function(item) {
 	                    const option = document.createElement("option");
 	                    option.value = item.subCode;
+                        if (subCityMidNm == item.subCode) {
+                            option.selected = true;
+                        }else{
+                            option.selected = false;                            
+                        }
 	                    option.text = item.midList;
 	                    console.log(item.subCode);
 	                    console.log(item.midList);
@@ -220,6 +228,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     optionCodeData.forEach(function(item) {
                         const option = document.createElement("option");
                         option.value = item.subCode;
+/*                         if (searchWord == item.subCode) {
+                            option.selected = true;
+                        }else{
+                            option.selected = false;                            
+                        } */
                         option.text = item.midList;
                         console.log(item.subCode);
                         console.log(item.midList);
@@ -237,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
             xhr.send();
         }
     }
+	
 	function locCodeSet() {    
         const locCode = lBselect.value;
         const url = "/ehr/manage/doSelectCode.do";
@@ -245,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("함수lBselect.value :" + lBselect.value);
         
         if (lBselect.value === "") {
-            lMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
+            lMselect.innerHTML = '<option value="">' + "화재장소 미선택" + '</option>';
         } else {
             const param1 = "masterCode=location"
             const param2 = "&subCode=" + encodeURIComponent(locCode);
@@ -258,10 +272,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     const optionCodeData = JSON.parse(xhr.responseText);
                     console.log(optionCodeData);
-                    lMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
+                    lMselect.innerHTML = '<option value="" >' + "화재장소 미선택" + '</option>';
                     optionCodeData.forEach(function(item) {
                         const option = document.createElement("option");
                         option.value = item.subCode;
+/*                         if (MidNm == item.subCode) {
+                        	option.selected = true;
+                        }else{
+                        	option.selected = false;                        	
+                        } */
                         option.text = item.midList;
                         console.log(item.subCode);
                         console.log(item.midList);
@@ -288,7 +307,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <section class="content content2 content3 align-items-center">
     <h3>    
-            관리자 페이지 - 화재 정보            
+            관리자 페이지 - 화재 정보    
+            ${search}        
+            ${search.subCityMidNm}        
     </h3>
 
     <div class="row g-1 align-items-center mt-2">
@@ -320,15 +341,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         <option value="">시도 전체</option>
 	                    <c:forEach var="item" items="${cityCode}">
 				            <c:if test="${item.mainCode == 0}">
-	                            <option value="${item.subCode}" <c:if test="${search.subCityBigNm == item.subCode }">selected</c:if>>${item.bigList}</option>
+	                            <option value="${item.subCode}" <c:if test="${search.subCityBigNm == item.subCode}">selected</c:if>>${item.bigList}</option>
 	                        </c:if>
 				        </c:forEach>
-				        
-				        <c:forEach var="item" items="${COM_PAGE_SIZE}">
-                            <option value="${item.subCode}"
-                            <c:if test="${search.pageSize == item.subCode }">selected</c:if> >
-                            ${item.midList}</option>
-                        </c:forEach>
                     </select>
                 </div>
                 <div class="col-md-auto">
@@ -341,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <option value="">화재요인 전체</option>
                         <c:forEach var="item" items="${factorCode}">
                             <c:if test="${item.mainCode == 0}">
-                                <option value="${item.subCode}">${item.bigList}</option>
+                                <option value="${item.subCode}" <c:if test="${search.searchDiv == item.subCode}">selected</c:if>>${item.bigList}</option>
                             </c:if>
                         </c:forEach>
                     </select>
@@ -356,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <option value="">화재장소 전체</option>
                         <c:forEach var="item" items="${LocCode}">
                             <c:if test="${item.mainCode == 0}">
-                                <option value="${item.subCode}">${item.bigList}</option>
+                                <option value="${item.subCode}" <c:if test="${search.bigNm == item.subCode}">selected</c:if>>${item.bigList}</option>
                             </c:if>
                         </c:forEach>
                     </select>
