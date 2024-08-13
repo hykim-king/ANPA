@@ -110,13 +110,13 @@ public class UserController implements PLog{
     }
 
     // ID 찾기 페이지 이동
-    @RequestMapping(value = "/findID.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/findId.do", method = RequestMethod.GET)
     public String findIDPage() {
-        return "user/findID"; // findID.jsp로 이동
+        return "user/findId"; // findId.jsp로 이동
     }
 
     // ID 찾기 처리
-    @RequestMapping(value = "/findID.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/findId.do", method = RequestMethod.POST)
     public String findID(HttpServletRequest request, Model model) {
         String userName = request.getParameter("userName");
         String email = request.getParameter("email");
@@ -137,14 +137,14 @@ public class UserController implements PLog{
     }
 
     // 비밀번호 찾기 페이지 이동
-    @RequestMapping(value = "/findPW.do", method = RequestMethod.GET)
-    public String findPWPage() {
-        return "user/findPW"; // findPW.jsp로 이동
+    @RequestMapping(value = "/findPw.do", method = RequestMethod.GET)
+    public String findPwPage() {
+        return "user/findPw"; // findPw.jsp로 이동
     }
 
     // 비밀번호 찾기 처리
-    @RequestMapping(value = "/findPW.do", method = RequestMethod.POST)
-    public String findPW(HttpServletRequest request, Model model) {
+    @RequestMapping(value = "/findPw.do", method = RequestMethod.POST)
+    public String findPw(HttpServletRequest request, Model model) {
         String userId = request.getParameter("userId");
         String userName = request.getParameter("userName");
         String email = request.getParameter("email");
@@ -153,25 +153,25 @@ public class UserController implements PLog{
             String password = userService.findPassword(userId, userName, email);
             if (password != null) {
                 model.addAttribute("password", password);
-                return "user/findPW_result"; // 비밀번호 찾기 결과 페이지로 이동
+                return "user/findPw_result"; // 비밀번호 찾기 결과 페이지로 이동
             } else {
                 model.addAttribute("errorMsg", "No matching user found.");
-                return "user/findPW"; // 실패 시 다시 비밀번호 찾기 페이지로
+                return "user/findPw"; // 실패 시 다시 비밀번호 찾기 페이지로
             }
         } catch (SQLException e) {
             model.addAttribute("errorMsg", "Error during password search. Please try again.");
-            return "user/findPW"; // 에러 시 다시 비밀번호 찾기 페이지로
+            return "user/findPw"; // 에러 시 다시 비밀번호 찾기 페이지로
         }
     }
     
     // 비밀번호 재설정 페이지 이동
-    @RequestMapping(value = "/resetPW.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/resetPw.do", method = RequestMethod.GET)
     public String resetPWPage() {
-        return "user/resetPW"; // resetPW.jsp로 이동
+        return "user/resetPw"; // resetPW.jsp로 이동
     }
 
     // 비밀번호 재설정 처리
-    @RequestMapping(value = "/resetPW.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/resetPw.do", method = RequestMethod.POST)
     public String resetPW(HttpServletRequest request, Model model) {
         String userId = request.getParameter("userId");
         String newPassword = request.getParameter("newPassword");

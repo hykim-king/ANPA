@@ -63,6 +63,26 @@ body *{
 @media screen and (max-width: 600px){
     .top_header_il .top_header_il_obj img{height: 50px;}
 }
+
+/* 로고 위치 및 크기 수정 */
+.top_logo {
+    height: auto;
+    margin-right: 30px; /* 로고와 네비게이션 첫 항목 사이 여백 조정 */
+}
+
+.top_logo img {
+    height: 90px; /* 로고 크기 설정 */
+}
+
+/* 네비게이션 바 스타일 수정 */
+.nav {
+    flex-grow: 1;
+    font-size: 1.2rem; /* 네비게이션 글씨 크기 증가 */
+}
+
+.nav-item {
+    margin: 0 15px; /* 네비게이션 항목 간격 조정 */
+}
 /* 헤더 끝 */
 
 /* 영역 시작 */
