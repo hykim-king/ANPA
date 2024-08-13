@@ -2,11 +2,11 @@ package com.acorn.anpa.cmn;
 
 public class Search extends DTO{
 	
-	private String searchDiv; //검색구분
-	private String searchWord;//검색어
+	private String searchDiv; //검색구분 & 화재요인 대분류
+	private String searchWord;//검색어 & 화재요인 중분류
 	
-	private String BigNm; // 카테고리 대분류 이름
-	private String MidNm; // 카테고리 소분류 이름
+	private String BigNm; // 카테고리 대분류 이름 & 화재장소 대분류
+	private String MidNm; // 카테고리 소분류 이름 & 화재장소 중분류
 	
 	private String subCityBigNm;   // 시도 이름
 	private String subCityMidNm;   // 시군구 이름

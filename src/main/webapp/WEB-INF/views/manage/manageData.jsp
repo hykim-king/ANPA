@@ -38,6 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const fMselect = document.querySelector("#fMselect");
 	
 	// 클릭 이벤트 시작
+	// 검색 버튼
+	doRetrieveBtn.addEventListener('click', function() {
+		doRetrieve(1);
+	});
 	// 정보 수정 닫기버튼
     frmUpCloseBtn.addEventListener('click', function() {
     	frmUpdate.classList.add('d-none');
@@ -61,6 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	// 변화 감지 이벤트 끝
 
 	// 함수 시작
+    // 전체 조회
+	function doRetrieve(pageNo){
+        frm.pageNo.value = pageNo;
+        console.log("pageNo: "+pageNo);     
+        
+        frm.action = "/ehr/board/doRetrieve.do";    
+        frm.submit();
+    }
 	// 단건 조회
 	function doSelectOne(fireSeq){            
 		console.log("doSelectOne(fireSeq) : " + fireSeq);

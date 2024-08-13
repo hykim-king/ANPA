@@ -24,6 +24,11 @@
     height: auto;
 }
 
+.mainGraphBox{
+    display : inline-block;
+    width : 100%;
+    height: auto;
+}
 .main_title_box{
     position: absolute;
     left : 30px;
@@ -53,6 +58,7 @@
 .main_fd3{margin-left: 40px;}
 
 .graph{
+	text-align: center;
     width: calc(100% - 680px);
     height: 352px;
     margin: 0 20px 0 0;
@@ -63,7 +69,7 @@
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
-    padding: 10px 20px;
+    padding: 20px;
 
     -webkit-user-drag: none; /* Safari 및 구형 브라우저 대응 */
     -webkit-user-select: none; /* Safari 및 구형 브라우저 대응 */
@@ -74,6 +80,62 @@
 .graph .main_fd1,
 .graph .main_fd2,
 .graph .main_fd3{color : #7e7c7c;}
+.graphTitle{
+	padding: 15px 0;
+    width: 95%;
+    height: 20%;
+    display: inline-block;
+}
+.graphTitle h3,
+.graphTitle .graphDate{display: inline-block;}
+.graphTitle h3{
+	float : left;
+}
+.graphTitle .graphDate{
+	background-color : #48b0f7;
+	border-radius : 20px;
+	box-sizing: border-box;
+	padding : 5px 55px;
+	float : right;
+	color : white;
+}
+#graphBox{
+    width: 95%;
+    height: 80%;
+    min-height : 264px;
+    display: inline-block;
+}
+.preventBox{
+	padding : 0 20px;
+	width : auto;
+    height : 250px;	
+}
+.preventBox > div{
+    width : auto;	
+	height: 100%;
+}
+.preventBox > div > div{
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
+    background-repeat : no-repeat;
+    background-position: right 5px bottom 15px;
+}
+.preventBox > div > div:nth-child(1){
+	background-image : url("https://nfds.go.kr/images/common/link_comp_01.png");
+    background-size: 96%;
+}
+.preventBox > div > div:nth-child(2){
+	background-image : url("https://nfds.go.kr/images/common/link_comp_02.png");
+	background-size: 60%;
+}
+.preventBox > div > div:nth-child(3){
+	background-image : url("https://nfds.go.kr/images/common/link_comp_03.png");
+	background-size: 90%;
+}
+.preventBox > div > div:nth-child(4){
+	background-image : url("https://nfds.go.kr/images/common/link_comp_04.png");
+	background-size: 50%;
+}
 
 @media screen and (max-width: 1000px) {
     .content .main,
@@ -89,7 +151,7 @@
     }
     .graph{
         margin: 20px auto 0 auto;
-        height: 150px;
+        height: auto;
         background-color: white;
         border: 1px solid #e2e2e2;
     }
