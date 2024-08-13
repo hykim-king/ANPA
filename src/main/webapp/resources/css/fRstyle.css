@@ -3,3 +3,20 @@
 /* 영역 시작 */
 .work_div_result{margin-top: 10px;}
 /* 영역 끝 */
+
+.land {
+    fill: #CCCCCC;
+    transition : all .6s ease-in-out;
+    fill-opacity: 1;
+    stroke:white;
+    stroke-opacity: 1;
+    stroke-width:0.5;
+}
+.land:hover{fill : skyblue;}
+.map{
+	top : 0;
+	left: 0;
+    width : 80%;
+    max-width : 500px;
+    height: auto;
+}
