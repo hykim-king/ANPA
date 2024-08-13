@@ -10,11 +10,11 @@ public interface PreventService {
 
     /**
      * Prevent 단건 조회
-     * @param preventSeq 조회할 Prevent의 시퀀스 번호
+     * @param inVO 조회할 Prevent의 시퀀스 번호
      * @return Prevent 객체
      * @throws SQLException
      */
-    prevent doSelectOne(int preventSeq) throws SQLException;
+    prevent doSelectOne(prevent inVO) throws SQLException;
 
     /**
      * Prevent 리스트 조회
@@ -24,5 +24,9 @@ public interface PreventService {
      */
     List<prevent> doRetrieve(Search search) throws SQLException;
 
+    
+    
 	int getTotalCount(Search search);
+
+	int doSave(prevent inVO) throws SQLException;
 }

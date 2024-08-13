@@ -11,29 +11,6 @@
         <result column="mod_dt" property="modDt" />
     </resultMap>
     
-    <sql id="doRetrieveWhere">
-       <choose> <!-- when에 and 사용 금지 -->
-             <when test="searchDiv != null and searchDiv == '10'">
-               AND title LIKE #{searchWord} || '%'
-             </when>                                                                                                                                                     
-             <when test="searchDiv != null and searchDiv == '20'">
-               AND contents LIKE #{searchWord} || '%'
-             </when>                                                                                                                                   
-             <when test="searchDiv != null and searchDiv == '30'">
-               AND title LIKE #{searchWord} || '%'
-               OR contents LIKE #{searchWord} || '%'
-             </when>                                                                                                                                    
-       </choose>                                                                                                                                   
-    </sql>
-    
-    <sql id="divWhere">
-        <choose>
-            <when test="div != null and div !='' ">
-                AND div = #{div}
-            </when>
-        </choose>
-    </sql>
-    
     <select id="doSelectOne" parameterType="Board" resultMap="boardMap">
         SELECT  board_seq,
 		        title,
@@ -86,6 +63,29 @@
 		    <include refid="divWhere"></include>
 		)B           
     </select>
+    
+    <sql id="doRetrieveWhere">
+       <choose> <!-- when에 and 사용 금지 -->
+             <when test="searchDiv != null and searchDiv == '10'">
+               AND title LIKE #{searchWord} || '%'
+             </when>                                                                                                                                                     
+             <when test="searchDiv != null and searchDiv == '20'">
+               AND contents LIKE #{searchWord} || '%'
+             </when>                                                                                                                                   
+             <when test="searchDiv != null and searchDiv == '30'">
+               AND title LIKE #{searchWord} || '%'
+               OR contents LIKE #{searchWord} || '%'
+             </when>                                                                                                                                    
+       </choose>                                                                                                                                   
+    </sql>
+    
+    <sql id="divWhere">
+        <choose>
+            <when test="div != null and div !='' ">
+                AND div = #{div}
+            </when>
+        </choose>
+    </sql>
     
     <insert id="doSave" parameterType="Board">
         INSERT INTO board (

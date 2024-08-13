@@ -43,4 +43,6 @@ public interface PreventMapper extends WorkDiv<prevent> {
      */
     List<prevent> doSelectpre(Search search) throws SQLException;
 
+	int getTotalCount(Search search);
+
 }

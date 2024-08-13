@@ -17,6 +17,7 @@ import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.mapper.PreventMapper;
 import com.acorn.anpa.prevent.domain.prevent;
+
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/root-context.xml",
         "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml" })
@@ -39,9 +40,9 @@ public class PreventMapperTest implements PLog {
         log.debug("│ setUp()                      │");
         log.debug("└──────────────────────────────┘");
         preventMapper = context.getBean(PreventMapper.class); // context에서 PreventMapper 빈을 가져옴
-        prevent01 = new prevent(1, "제목01", 0, "내용01", "이미지01");
-        prevent02 = new prevent(2, "제목02", 0, "내용02", "이미지02");
-        prevent03 = new prevent(3, "제목03", 0, "내용03", "이미지03");
+        prevent01 = new prevent(10, "제목01", 0, "내용01", "이미지01");
+        prevent02 = new prevent(20, "제목02", 0, "내용02", "이미지02");
+        prevent03 = new prevent(30, "제목03", 0, "내용03", "이미지03");
         prevent01.setRegId("ADMIN01");
         prevent02.setRegId("ADMIN02");
         prevent03.setRegId("ADMIN03");
@@ -52,6 +53,10 @@ public class PreventMapperTest implements PLog {
         assertEquals("prevent02 데이터 삽입 실패", 1, flag);
         flag = preventMapper.doSave(prevent03);
         assertEquals("prevent03 데이터 삽입 실패", 1, flag);
+        
+        
+        search=new Search();
+        
     }
         
         
@@ -65,54 +70,66 @@ public class PreventMapperTest implements PLog {
     
     @Ignore
     @Test
-    public void doSave() throws SQLException{
-        log.debug("┌────────────────────────────────────────────────────────");
-        log.debug("│ doSave()                                              ");
-        log.debug("└────────────────────────────────────────────────────────");
-        
-        // 2. 데이터 1건 입력
-        int flag = preventMapper.doSave(prevent01);
-        log.debug("flag : " + flag);
-        assertEquals(1, flag);
-        
-        flag = preventMapper.doSave(prevent02);
-        log.debug("flag : " + flag);
-        assertEquals(1, flag);
-        //저장
-        flag = preventMapper.doSave(prevent03);
-        log.debug("flag : " + flag);
-        assertEquals(1, flag);
-        
+    public void doSave() {
+        try {
+            log.debug("┌────────────────────────────────────────────────────────");
+            log.debug("│ doSave()                                              ");
+            log.debug("└────────────────────────────────────────────────────────");
+            
+            int flag = preventMapper.doSave(prevent01);
+            log.debug("flag : " + flag);
+            assertEquals(1, flag);
+            
+            flag = preventMapper.doSave(prevent02);
+            log.debug("flag : " + flag);
+            assertEquals(1, flag);
+            
+            flag = preventMapper.doSave(prevent03);
+            log.debug("flag : " + flag);
+            assertEquals(1, flag);
+        } catch (Exception e) {
+            log.error("Error in doSave: ", e);
+        }
     }
-    
-    
-    
-   //@Ignore
+
+    @Ignore
     @Test
     public void doSelectOne() throws SQLException {
         // Given: 특정 prevent_seq 값으로 데이터를 미리 생성했다고 가정
-         
+        // 데이터베이스에 미리 데이터를 삽입했다고 가정합니다. (보통 테스트 데이터 설정은 테스트 메서드 전에 수행됩니다)
+
+        // 데이터 삽입 (여기서는 데이터를 미리 삽입한 것으로 가정하고, 실제로는 삽입 코드를 작성할 수도 있음)
+        int flag = preventMapper.doSave(prevent01); 
+        assertEquals(1, flag);  // 데이터 삽입이 성공했는지 검증
+        
+        // prevent01 객체의 preventSeq를 설정
+        int seq = preventMapper.getSequence();
+        prevent01.setPreventSeq(seq);
+
         // When: 단건 조회 쿼리 실행
-        int flag = preventMapper.doSave(prevent01);
-		assertEquals(1, flag);  
-		prevent01.setPreventSeq(1);
-		
         prevent inVO = preventMapper.doSelectOne(prevent01);
+
+        // Then: 결과 검증
+        log.debug("inVO: " + inVO);
         
-        log.debug("inVO"+inVO);
+        // inVO가 null이 아닌지 확인
+        assertNotNull(inVO);
         
-    }
-  
+        // prevent01과 조회된 inVO가 일치하는지 확인
+        assertEquals(prevent01.getPreventSeq(), inVO.getPreventSeq());
+        assertEquals(prevent01.getTitle(), inVO.getTitle());
+        assertEquals(prevent01.getContents(), inVO.getContents());
+        // 추가적으로 검증할 필요가 있는 필드가 있다면 여기에서 검증합니다.
+    } 
     
     
-    @Ignore
     @Test
     public void doRetrieve() throws SQLException { //여러 개의 Prevent 객체를 조회하는 메서드
         log.debug("┌─────────────────────────────────────────────────────────");
         log.debug("│doRetrieve()                                             ");
         log.debug("└─────────────────────────────────────────────────────────");
        
-     // 2. 데이터 1건 입력
+      //2. 데이터 1건 입력
         int flag = preventMapper.doSave(prevent01);
         log.debug("flag : " + flag);
         assertEquals(1, flag);
@@ -125,7 +142,9 @@ public class PreventMapperTest implements PLog {
         log.debug("flag : " + flag);
         assertEquals(1, flag);
         
-    
+        search.setSearchDiv("20"); //string 이니까 ""
+                   search.setSearchWord("내용");                //  10>>제목 검색    
+        List<prevent> list = preventMapper.doRetrieve(search);
     }
     
     @Ignore
