@@ -67,10 +67,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	// 함수 시작
     // 전체 조회
 	function doRetrieve(pageNo){
+		const frm = document.querySelector("#frmDataSearch");
         frm.pageNo.value = pageNo;
         console.log("pageNo: "+pageNo);     
         
-        frm.action = "/ehr/board/doRetrieve.do";    
+        frm.action = "/ehr/manage/doRetrieveData.do";    
         frm.submit();
     }
 	// 단건 조회

@@ -189,11 +189,32 @@ public class ManageController implements PLog{
 		
 		Search search = new Search();	
 		
+		//searchDiv = "" (화재요인 대분류)
+		String searchDiv = StringUtil.nvl(req.getParameter("fBselect"), "");
+		//searchWord = "" (화재요인 중분류)
+		String searchWord = StringUtil.nvl(req.getParameter("fMselect"), "");
+
+		//BigNm = "" (화재장소 대분류)
+		String bigNm = StringUtil.nvl(req.getParameter("lBselect"), "");
+		//MidNm = "" (화재장소 중분류)
+		String midNm = StringUtil.nvl(req.getParameter("lMselect"), "");
+
+		//subCityBigNm = "" (시도)
+		String subCityBigNm = StringUtil.nvl(req.getParameter("cBselect"), "");
+		//subCityMidNm = "" (시군구)
+		String subCityMidNm = StringUtil.nvl(req.getParameter("cMselect"), "");
+		
 		//pageSize=10 (기본값)
 		String pageSize = StringUtil.nvl(req.getParameter("pageSize"), "10");		
 		//pageNo=1 (기본값)
 		String pageNo = StringUtil.nvl(req.getParameter("pageNo"), "1");
 		
+		search.setSearchDiv(searchDiv);
+		search.setSearchWord(searchWord);
+		search.setBigNm(bigNm);
+		search.setBigNm(midNm);
+		search.setSubCityBigNm(subCityBigNm);
+		search.setSubCityMidNm(subCityMidNm);
 		search.setPageSize(Integer.parseInt(pageSize));
 		search.setPageNo(Integer.parseInt(pageNo));
 		

@@ -143,32 +143,37 @@
     </select>
     
     <sql id="doRetrieveWhere">
-        <choose>
-            <when test="searchDiv != null">
-                AND   FIRE_DATA.sub_loc = #{searchDiv}
-            </when>
-        </choose>
-        <choose>
-            <when test="BigNm != null">
-                AND   FIRE_DATA.sub_factor = #{BigNm}
-            </when>
-        </choose>
-        <choose>
-            <when test="subCityBigNm != null">
-                AND   FIRE_DATA.sub_city = #{subCityBigNm}
-            </when>
-        </choose>
-        <choose>
-            <when
-                test="searchDateStart != null and searchDateEnd != null ">
-                AND   TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD')
-                <![CDATA[>=]]>
-                #{searchDateStart} AND   TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD')
-                <![CDATA[<=]]>
-                #{searchDateEnd}
-            </when>
-        </choose>
-    </sql>
+	    <choose>
+	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord == null or searchWord == '')">
+	            AND FIRE_DATA.sub_loc = #{searchDiv}
+	        </when>
+	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord != null and searchWord != '')">
+	            AND FIRE_DATA.sub_loc = #{searchWord}
+	        </when>
+	    </choose>
+	    <choose>
+	        <when test="(BigNm != '' and BigNm != null) and (MidNm == null or MidNm == '')">
+	            AND FIRE_DATA.sub_factor = #{BigNm}
+	        </when>
+	        <when test="(BigNm != '' and BigNm != null) and (MidNm != null and MidNm != '')">
+	            AND FIRE_DATA.sub_factor = #{MidNm}
+	        </when>
+	    </choose>
+	    <choose>
+	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm == null or subCityMidNm == '')">
+	            AND FIRE_DATA.sub_city = #{subCityBigNm}
+	        </when>
+	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm != null and subCityMidNm != '')">
+	            AND FIRE_DATA.sub_city = #{subCityMidNm}
+	        </when>
+	    </choose>
+	    <choose>
+	        <when test="(searchDateStart != null and searchDateStart != '') and (searchDateEnd != null and searchDateEnd != '')">
+	            AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[>=]]> #{searchDateStart} 
+	            AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[<=]]> #{searchDateEnd}
+	        </when>
+	    </choose>
+	</sql>
 
     <insert id="doSave" parameterType="Firedata">
         INSERT INTO FIRE_DATA (
