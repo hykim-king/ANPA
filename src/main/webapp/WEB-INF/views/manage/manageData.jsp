@@ -320,9 +320,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         <option value="">시도 전체</option>
 	                    <c:forEach var="item" items="${cityCode}">
 				            <c:if test="${item.mainCode == 0}">
-	                            <option value="${item.subCode}">${item.bigList}</option>
+	                            <option value="${item.subCode}" <c:if test="${search.subCityBigNm == item.subCode }">selected</c:if>>${item.bigList}</option>
 	                        </c:if>
 				        </c:forEach>
+				        
+				        <c:forEach var="item" items="${COM_PAGE_SIZE}">
+                            <option value="${item.subCode}"
+                            <c:if test="${search.pageSize == item.subCode }">selected</c:if> >
+                            ${item.midList}</option>
+                        </c:forEach>
                     </select>
                 </div>
                 <div class="col-md-auto">
