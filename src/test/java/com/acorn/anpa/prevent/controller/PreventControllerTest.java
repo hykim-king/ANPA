@@ -4,12 +4,43 @@ import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.acorn.anpa.cmn.PLog;
+import com.acorn.anpa.mapper.PreventMapper;
+import com.acorn.anpa.prevent.domain.prevent;
+
+@RunWith(SpringRunner.class)
+@ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/root-context.xml",
+                                   "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+
 
 public class PreventControllerTest implements PLog{
-
+	     
+	@Autowired
+	WebApplicationContext webApplicationContext;
+	
+	@Autowired
+	PreventMapper boardMapper;
+	
+    prevent prevent01;
+    prevent prevent02;
+    prevent prevent03;
+    
+	com.acorn.anpa.cmn.Search search;
+	
+	
+	//브라우저 대신 Mock
+		MockMvc mockMvc;
 	@Before
 	public void setUp() throws Exception {
 		log.debug("┌─────────────────────────────────────────────────────────");

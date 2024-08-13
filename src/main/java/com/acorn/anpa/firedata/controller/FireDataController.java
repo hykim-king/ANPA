@@ -1,10 +1,12 @@
 package com.acorn.anpa.firedata.controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,7 +38,15 @@ public class FireDataController implements PLog {
 	
 	//http://localhost:8080/ehr/firedata/firedata.do
 	@GetMapping("/firedata.do")
-	public String fireData() throws SQLException{
+	public String fireData(Model model) throws SQLException{
+		Search search = new Search();
+		
+		search.setSearchDiv("10");
+		search.setDiv("city");
+		
+		List<Code> cityList = codeService.codeList(search);
+		
+		model.addAttribute("cityList",cityList);
 		
 		return "firedata/fire_data";
 	}
@@ -49,11 +59,22 @@ public class FireDataController implements PLog {
 		String jsonString = "";
 		log.debug("param: " + search);
 		
+		//조건 데이터
 		Firedata outVO = fireDataService.totalData(search);
 		
-		jsonString = new Gson().toJson(outVO);
-		log.debug("jsonString: "+jsonString);
+		//전국 데이터
+		Search searchnull = new Search();
+		searchnull.setSearchDateStart(search.getSearchDateStart());
+		searchnull.setSearchDateEnd(search.getSearchDateEnd());
+		Firedata total = fireDataService.totalData(searchnull);
 		
+		List<Firedata> allData = new ArrayList<Firedata>();
+		
+		allData.add(total);
+		allData.add(outVO);
+		
+		jsonString = new Gson().toJson(allData);
+		log.debug("jsonString: "+jsonString);
 		return jsonString;
 	}
 	
