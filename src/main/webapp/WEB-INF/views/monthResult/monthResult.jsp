@@ -18,13 +18,20 @@
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 <link rel="stylesheet" href="${CP}/resources/css/mRstyle.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="${CP}/resources/js/common.js"></script>
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // .nav 클래스의 두 번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(2) .nav-link');
-    const mRselectBtn = document.querySelector("#mRselect");
-    console.log("mRselectBtn"+mRselectBtn);
+    const selectBtn = document.querySelector("#selectBtn");
+    console.log("selectBtn"+selectBtn);
+    const yearSelectInput = document.querySelector("#yearSelect");
+    console.log("yearSelectInput"+yearSelectInput);
+    const monthSelectInput = document.querySelector("#monthSelect");
+    console.log("monthSelectInput"+monthSelectInput);
+
+    
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
     
@@ -32,33 +39,113 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateValue = '<%= new SimpleDateFormat("yyyy-MM").format(new Date()) %>';
 
     // JavaScript를 통해 input 요소의 기본값을 현재 날짜로 설정
-    document.getElementById('mRselect').value = dateValue;
+/*     document.getElementById('mRselect').value = dateValue; */
    
     
-    mRselectBtn.addEventListener("click",function(event){
-    	console.log("mRselectBtn click");
+    selectBtn.addEventListener("click",function(event){
+    	console.log("selectBtn click");
     	event.stopPropagation();//이벤트 버블링 방지
     	todayMonthData();
     });
+   
+   
+    // 연도 선택 박스의 값이 변경될 때 호출되는 함수
+    yearSelectInput.addEventListener("change", function(event) {
+    	console.log("yearSelectInput 연도 선택 : "+yearSelectInput.value);
+        const selectedYear = this.value;
+
+        // 월 선택 박스 초기화
+        monthSelectInput.innerHTML = '<option value="">월 선택</option>';
+
+        // 연도가 선택된 경우 1월부터 12월까지 추가
+        if (selectedYear) {
+        	 for (let i = 1; i <= 12; i++) {
+                 const option = document.createElement('option');
+
+                 // 1~9월에는 0을 붙이고, 10~12월에는 그대로 설정
+                 if (i < 10) {
+                     option.value = '0' + i; // 01, 02, ..., 09
+                     option.textContent = '0' + i + '월'; // 1~9월에는 0 붙임
+                 } else {
+                     option.value = i; // 10, 11, 12
+                     option.textContent = i + '월'; // 10, 11, 12월에는 그대로 출력
+                 }
+
+                 monthSelectInput.appendChild(option);
+             }
+        }
+        
+    });
     
-    //-------함수----------------------------------------------------------------
+    monthSelectInput.addEventListener("click",function(event){
+        console.log("monthSelectInput 월 선택 : "+monthSelectInput.value);
+        event.stopPropagation();//이벤트 버블링 방지
+    });
+    
+    //--------------------------------------------------------------------------
+    function firstJs() {
+    //--쿼리 데이터 값
+    const todayFireCount = ${data.tmData.todayFireCount}
+    const lastYearDayFireCount = ${data.tmData.lastYearDayFireCount}
+    
+    //--<p>태그
+    const FireCountP = document.querySelector('#FireCount');
+
+    const contentHTML =
+    '오늘 ' + todayFireCount + ' 건 / 월 n 건'
+    ;
+
+    fireCountP.innerHTML = contentHTML;
+    }
     
     function todayMonthData(regDt){
-    	console.log("todayMonthData(regDt):"+mRselectBtn.value);
+    	console.log("todayMonthData(regDt):"+selectBtn);
+    	
+    	if(isEmpty(yearSelectInput.value)) {
+            alert("연도를 선택하세요.");
+            yearSelectInput.focus();
+            return;
+        }
+    	if(isEmpty(monthSelectInput.value) == true) {
+            alert("월을 선택하세요.");
+            monthSelectInput.focus();
+            return;
+        }
     	
     	//비동기 통신
-/*     	let type = "GET";
-    	let url = "/ehr/monthFireData/monthFireData.do";
+     	let type = "GET";
+    	let url = "/ehr/monthfiredata/todayMonthData.do";
     	let async = "true";
     	let dataType = "html";
         let params = {
-             "regDt" : regDt
+             "regDt" : yearSelectInput.value+monthSelectInput.value
         };
         
         PClass.pAjax(url,params,dataType,type,async,function(data){
             console.log("data: ",data);
-        }); */
-    }
+            
+            if(data){
+                try{
+                    const jsonData = JSON.parse(data);
+                    const allMessage = jsonData.message;
+                    console.log(jsonData);
+                    console.log(allMessage.messageId);
+                    if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
+                        alert(allMessage.messageContents);
+              
+                    }else{
+                        alert("에러야"+allMessage.messageContents);
+                    }
+                }catch(e){
+                    alert("화재데이터가 없습니다.");
+                }
+                
+            }
+            
+        });//--pAjax end 
+    }//--todayMonthData() end
+    
+    
     
     
 });//--DOMContentLoaded end   
@@ -74,10 +161,21 @@ document.addEventListener('DOMContentLoaded', function() {
         <input type = "hidden" name = "work_div" id = "work_div">
         <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
         <input type = "hidden" name = "seq" id = "seq">
-        <div class="col-md-2">            
-            <input class = "form-control" type = "month" min="2021-01" id="mRselect" name="mRselect">      
+        <div class="col-md-4 d-grid gap-2 d-md-flex">                   
+            <!-- 연 / 월  -->
+            <select class="form-control" id="yearSelect">
+                <option value="">연도 선택</option>
+                <option value="2023">2023년</option>
+                <option value="2024">2024년</option>
+                <option value="2025">2025년</option>
+            </select>  
+            <select class="form-control" id="monthSelect">
+                <option value="월 선택">월 선택</option>
+            </select>    
+            
+            <input class = "form-control" type = "button" id="selectBtn" name="selectBtn" value="조회">      
         </div>
-        <div class="col-md-10 d-flex justify-content-end mRsysdate">
+        <div class="col-md-7 d-flex justify-content-end mRsysdate">
         <%
            Date date = new Date();
            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -94,10 +192,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <b class="card-icon"><i class="bi bi-fire"></i></b>
                     <h5 class="card-title">화재 건수</h5>
-                    <p class="card-text">오늘 n 건 / 월 n 건</p>
+                    <p class="card-text" id="FireCount">오늘  0 건 / 월 0 건</p>
                     <hr>
                     <b>전년 동기</b>
-                    <p class="card-text">오늘 n 건 / 월 n 건</p>
+                    <p class="card-text">오늘 0 건 / 월 0 건</p>
                 </div>
             </div>
         </div>
@@ -107,10 +205,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <b class="card-icon"><i class="bi bi-person-x-fill"></i></b>
                     <h5 class="card-title">사망자 수</h5>
-                    <p class="card-text">오늘 n 명 / 월 n 명</p>
+                    <p class="card-text">오늘 0 명 / 월 0 명</p>
                     <hr>
                     <b>전년 동기</b>
-                    <p class="card-text">오늘 n 명 / 월 n 명</p>
+                    <p class="card-text">오늘 0 명 / 월 0 명</p>
                 </div>
             </div>
         </div>
@@ -120,23 +218,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <b class="card-icon"><i class="bi bi-lungs-fill"></i></b>
                     <h5 class="card-title">부상자 수</h5>
-                    <p class="card-text">오늘 n 명 / 월 n 명</p>
+                    <p class="card-text">오늘 0 명 / 월 0 명</p>
                     <hr>
                     <b>전년 동기</b>
-                    <p class="card-text">오늘 n 명 / 월 n 명</p>
+                    <p class="card-text">오늘 0 명 / 월 0 명</p>
                 </div>
             </div>
         </div>
+        
+        ${data}
         
         <div class="col-md-3 mb-2">
             <div class="card text-center">
                 <div class="card-body">
                     <b class="card-icon"><i class="bi bi-database-fill-x"></i></b>
                     <h5 class="card-title">재산피해</h5>
-                    <p class="card-text">오늘 n 천원 / 월 n 천원</p>
+                    <p class="card-text">오늘 0 천원 / 월 0 천원</p>
                     <hr>
                     <b>전년 동기</b>
-                    <p class="card-text">오늘 n 천원 / 월 n 천원</p>
+                    <p class="card-text">오늘 0 천원 / 월 0 천원</p>
                 </div>
             </div>
         </div>
@@ -148,12 +248,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <h5 class="card-title">화재 장소</h5>
                     <hr>
-                    <b><i class="bi bi-1-square-fill"></i> 비주거 n건</b>
-                    <p class="card-text">평균 n 건</p>
-                    <b><i class="bi bi-2-square-fill"></i> 주거 n건</b>
-                    <p class="card-text">평균 n 건</p>
-                    <b><i class="bi bi-3-square-fill"></i> 차량 n건</b>
-                    <p class="card-text">평균 n 건</p>
+                    <b><i class="bi bi-1-square-fill"></i> 비주거 0건</b>
+                    <p class="card-text">평균 0 건</p>
+                    <b><i class="bi bi-2-square-fill"></i> 주거 0건</b>
+                    <p class="card-text">평균 0 건</p>
+                    <b><i class="bi bi-3-square-fill"></i> 차량 0건</b>
+                    <p class="card-text">평균 0 건</p>
                 </div>
             </div>
         </div>
@@ -163,12 +263,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <h5 class="card-title">화재 장소 소분류</h5>
                     <hr>
-                    <b><i class="bi bi-1-square-fill"></i> 상점가 n건</b>
-                    <p class="card-text">평균 n 건</p>
-                    <b><i class="bi bi-2-square-fill"></i> 아파트 n건</b>
-                    <p class="card-text">평균 n 건</p>
-                    <b><i class="bi bi-3-square-fill"></i> 공터 n건</b>
-                    <p class="card-text">평균 n 건</p>
+                    <b><i class="bi bi-1-square-fill"></i> 상점가 0건</b>
+                    <p class="card-text">평균 0 건</p>
+                    <b><i class="bi bi-2-square-fill"></i> 아파트 0건</b>
+                    <p class="card-text">평균 0 건</p>
+                    <b><i class="bi bi-3-square-fill"></i> 공터 0건</b>
+                    <p class="card-text">평균 0 건</p>
                 </div>
             </div>
         </div>
@@ -178,15 +278,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <h5 class="card-title">발화 원인</h5>
                     <hr>
-                    <b><i class="bi bi-1-square-fill"></i> 전기적 요인 n건</b>
-                    <p class="card-text">평균 n 건</p>
-                    <b><i class="bi bi-2-square-fill"></i> 부주의 n건</b>
-                    <p class="card-text">평균 n 건</p>
-                    <b><i class="bi bi-3-square-fill"></i> 기계적 n건</b>
-                    <p class="card-text">평균 n 건</p>
+                    <b><i class="bi bi-1-square-fill"></i> 전기적 요인 0건</b>
+                    <p class="card-text">평균 0 건</p>
+                    <b><i class="bi bi-2-square-fill"></i> 부주의 0건</b>
+                    <p class="card-text">평균 0 건</p>
+                    <b><i class="bi bi-3-square-fill"></i> 기계적 0건</b>
+                    <p class="card-text">평균 0 건</p>
                 </div>
             </div>
         </div>
+       
     </div>
 </section>
 

@@ -100,10 +100,80 @@ public class MonthFireDataController implements PLog {
 		jsonString = new Gson().toJson(new Message(flag, message));
 		log.debug("2. jsonString : " + jsonString);
 		
-		String jsonlbData = new Gson().toJson(outVO); 
+		String jsonlbData = new Gson().toJson(outVO);
+		String allMessage = "{\"lbData\" : "+jsonlbData + ",\"message\": "+jsonString+"}";
 		
-		return "";
+		return allMessage;
 		
 	}
+	
+	@RequestMapping(
+			value = "/locMidData.do",
+			method = RequestMethod.GET,
+			produces = "text/plain;charset=UTF-8"
+			)
+	@ResponseBody
+	public String locMidData(Firedata inVO) throws SQLException {
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ locMidData()");
+		log.debug("└──────────────────────────────────────────────");	
+		
+		String jsonString = "";
+		
+		log.debug("1. param : " + inVO);
+		List<Firedata> outVO = monthFireDataService.locMidData(inVO);
+		
+		String message = "";
+		int flag = 0;
+		if(null != outVO) {
+			message = inVO.getRegDt() +"날짜의 화재데이터가 조회되었습니다.";
+			flag = 1;
+		}else{
+			message = inVO.getRegDt() +"날짜의 화재데이터 조회에 실패했습니다.";			
+		}
+		
+		jsonString = new Gson().toJson(new Message(flag, message));
+		log.debug("2. jsonString : " + jsonString);
+		
+		String jsonlmData = new Gson().toJson(outVO); 
+		String allMessage = "{\"lmData\" : "+jsonlmData + ",\"message\": "+jsonString+"}";
+		return allMessage;
+		
+	}
+	
+	@RequestMapping(
+			value = "/factorMidData.do",
+			method = RequestMethod.GET,
+			produces = "text/plain;charset=UTF-8"
+			)
+	@ResponseBody
+	public String factorMidData(Firedata inVO) throws SQLException {
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ factorMidData()");
+		log.debug("└──────────────────────────────────────────────");	
+		
+		String jsonString = "";
+		
+		log.debug("1. param : " + inVO);
+		List<Firedata> outVO = monthFireDataService.factorMidData(inVO);
+		
+		String message = "";
+		int flag = 0;
+		if(null != outVO) {
+			message = inVO.getRegDt() +"날짜의 화재데이터가 조회되었습니다.";
+			flag = 1;
+		}else{
+			message = inVO.getRegDt() +"날짜의 화재데이터 조회에 실패했습니다.";			
+		}
+		
+		jsonString = new Gson().toJson(new Message(flag, message));
+		log.debug("2. jsonString : " + jsonString);
+		
+		String jsonfmData = new Gson().toJson(outVO); 
+		String allMessage = "{\"fmData\" : "+jsonfmData + ",\"message\": "+jsonString+"}";
+		return allMessage;
+		
+	}
+	
 
 }

@@ -116,11 +116,135 @@ public class MonthFireDataControllerTest implements PLog{
 			
 	}
 	
+	@Ignore
 	@Test
 	public void locBigData() throws Exception {
+		log.debug("┌────────────────────────────────────────────────────────");
+		log.debug("│ locBigData() : ");
+		log.debug("└────────────────────────────────────────────────────────");
 		
+		// 1. url, param 설정
+		MockHttpServletRequestBuilder requestBuilder =
+				MockMvcRequestBuilders.get("/monthfiredata/locBigData.do")
+				.param("regDt", "202308");
+				
+		// 2. 호출
+		ResultActions resultActions = mockMvc.perform(requestBuilder)
+		// return encoding
+		.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+		// Web 상태
+		.andExpect(status().is2xxSuccessful());		
+		
+		String jsonResult = resultActions.andDo(print())
+				.andReturn()
+				.getResponse().getContentAsString();
+		log.debug("┌────────────────────────────────────────");
+		log.debug("│ jsonResult : " + jsonResult);
+		log.debug("└────────────────────────────────────────");
+		
+		
+		// JSON 문자열을 JsonObject로 파싱
+        JsonObject jsonObject = JsonParser.parseString(jsonResult).getAsJsonObject();
+
+        // "firedata" "message" 노드를 추출
+        String firedataJson = jsonObject.get("lbData").toString();
+		
+        String messageJson = jsonObject.get("message").toString();
+        
+        // "message" 노드를 Message로 변환
+        Type messageType = new TypeToken<Message>() {}.getType();
+        Message resultMessage = new Gson().fromJson(messageJson, messageType);
+		assertEquals(1, resultMessage.getMessageId());
+		assertEquals("202308"+"날짜의 화재데이터가 조회되었습니다.", resultMessage.getMessageContents());
+			
 	}
 
+	@Ignore
+	@Test
+	public void locMidData() throws Exception {
+		log.debug("┌────────────────────────────────────────────────────────");
+		log.debug("│ locMidData() : ");
+		log.debug("└────────────────────────────────────────────────────────");
+		
+		// 1. url, param 설정
+		MockHttpServletRequestBuilder requestBuilder =
+				MockMvcRequestBuilders.get("/monthfiredata/locMidData.do")
+				.param("regDt", "202308");
+				
+		// 2. 호출
+		ResultActions resultActions = mockMvc.perform(requestBuilder)
+		// return encoding
+		.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+		// Web 상태
+		.andExpect(status().is2xxSuccessful());		
+		
+		String jsonResult = resultActions.andDo(print())
+				.andReturn()
+				.getResponse().getContentAsString();
+		log.debug("┌────────────────────────────────────────");
+		log.debug("│ jsonResult : " + jsonResult);
+		log.debug("└────────────────────────────────────────");
+		
+		
+		// JSON 문자열을 JsonObject로 파싱
+        JsonObject jsonObject = JsonParser.parseString(jsonResult).getAsJsonObject();
+
+        // "firedata" "message" 노드를 추출
+        String firedataJson = jsonObject.get("lmData").toString();
+		
+        String messageJson = jsonObject.get("message").toString();
+        
+        // "message" 노드를 Message로 변환
+        Type messageType = new TypeToken<Message>() {}.getType();
+        Message resultMessage = new Gson().fromJson(messageJson, messageType);
+		assertEquals(1, resultMessage.getMessageId());
+		assertEquals("202308"+"날짜의 화재데이터가 조회되었습니다.", resultMessage.getMessageContents());
+			
+	}
+	
+	@Test
+	public void factorMidData() throws Exception {
+		log.debug("┌────────────────────────────────────────────────────────");
+		log.debug("│ factorMidData() : ");
+		log.debug("└────────────────────────────────────────────────────────");
+		
+		// 1. url, param 설정
+		MockHttpServletRequestBuilder requestBuilder =
+				MockMvcRequestBuilders.get("/monthfiredata/factorMidData.do")
+				.param("regDt", "202308");
+				
+		// 2. 호출
+		ResultActions resultActions = mockMvc.perform(requestBuilder)
+		// return encoding
+		.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+		// Web 상태
+		.andExpect(status().is2xxSuccessful());		
+		
+		String jsonResult = resultActions.andDo(print())
+				.andReturn()
+				.getResponse().getContentAsString();
+		log.debug("┌────────────────────────────────────────");
+		log.debug("│ jsonResult : " + jsonResult);
+		log.debug("└────────────────────────────────────────");
+		
+		
+		// JSON 문자열을 JsonObject로 파싱
+        JsonObject jsonObject = JsonParser.parseString(jsonResult).getAsJsonObject();
+
+        // "firedata" "message" 노드를 추출
+        String firedataJson = jsonObject.get("fmData").toString();
+		
+        String messageJson = jsonObject.get("message").toString();
+        
+        // "message" 노드를 Message로 변환
+        Type messageType = new TypeToken<Message>() {}.getType();
+        Message resultMessage = new Gson().fromJson(messageJson, messageType);
+		assertEquals(1, resultMessage.getMessageId());
+		assertEquals("202308"+"날짜의 화재데이터가 조회되었습니다.", resultMessage.getMessageContents());
+			
+	}
+	
+	
 	@Ignore
 	@Test
 	public void beans() {
