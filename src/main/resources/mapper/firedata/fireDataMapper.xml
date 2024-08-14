@@ -80,90 +80,96 @@
     </select>
     
     <select id="doRetrieve" parameterType="Search" resultType="Firedata">
-        SELECT
-		    A.*,
-		    B.totalCnt
-		FROM (
-		    SELECT
-		        TT1.RNUM AS NO,
-		        TT1.fire_seq AS fireSeq,
-		        TT1.injured_sum AS injuredSum,
-		        TT1.dead,
-		        TT1.injured,
-		        TT1.amount,
-		        TT1.sub_factor AS subFactor,
-		        subFactorBigNm,
-		        subFactorMidNm,
-		        TT1.sub_loc AS subLoc,
-		        subLocBigNm,
-		        subLocMidNm,
-		        TT1.sub_city AS subCity,
-		        subCityBigNm,
-		        subCityMidNm,
-		        TT1.reg_id AS regId,
-		        TO_CHAR(TT1.reg_dt, 'YYYY/MM/DD HH24:MI:SS') AS regDt,
-		        TT1.mod_id AS modId,
-		        TO_CHAR(TT1.mod_dt, 'YYYY/MM/DD HH24:MI:SS') AS modDt
-		    FROM (
-		        SELECT
-		            ROWNUM AS RNUM,
-		            T1.*
-		        FROM (
-		            SELECT
-		                FIRE_DATA.*,
-		                fac_big.big_list AS subFactorBigNm,
-		                fac_mid.mid_list AS subFactorMidNm,
-		                loc_big.big_list AS subLocBigNm,
-		                loc_mid.mid_list AS subLocMidNm,
-		                city_big.big_list AS subCityBigNm,
-		                city_mid.mid_list AS subCityMidNm
-		            FROM
-		                FIRE_DATA FIRE_DATA
-		                LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = FIRE_DATA.sub_factor AND fac_big.use_yn = 1
-		                LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = FIRE_DATA.sub_factor AND fac_mid.use_yn = 1
-		                LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = FIRE_DATA.sub_loc AND loc_big.use_yn = 1
-		                LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = FIRE_DATA.sub_loc AND loc_mid.use_yn = 1
-		                LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = FIRE_DATA.sub_city AND city_big.use_yn = 1
-		                LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = FIRE_DATA.sub_city AND city_mid.use_yn = 1
-		            WHERE 1=1
-		            <include refid="doRetrieveWhere"/>
-		        ) T1
-		        WHERE
-		            ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
-		    ) TT1
-		    WHERE
-		        TT1.RNUM <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]>
-		) A
-		CROSS JOIN (
-		    SELECT COUNT(*) AS totalCnt
-		    FROM FIRE_DATA
-		    WHERE 1=1
+		SELECT
+            A.*,
+            B.totalCnt
+        FROM (
+            SELECT
+                TT1.RNUM AS NO,
+                TT1.fire_seq AS fireSeq,
+                TT1.injured_sum AS injuredSum,
+                TT1.dead,
+                TT1.injured,
+                TT1.amount,
+                TT1.sub_factor AS subFactor,
+                subFactorBigNm,
+                subFactorMidNm,
+                TT1.sub_loc AS subLoc,
+                subLocBigNm,
+                subLocMidNm,
+                TT1.sub_city AS subCity,
+                subCityBigNm,
+                subCityMidNm,
+                TT1.reg_id AS regId,
+                TO_CHAR(TT1.reg_dt, 'YYYY/MM/DD HH24:MI:SS') AS regDt,
+                TT1.mod_id AS modId,
+                TO_CHAR(TT1.mod_dt, 'YYYY/MM/DD HH24:MI:SS') AS modDt
+            FROM (
+                SELECT
+                    ROWNUM AS RNUM,
+                    T1.*
+                FROM (
+                    SELECT
+                        FIRE_DATA.*,
+                        fac_big.big_list AS subFactorBigNm,
+                        fac_mid.mid_list AS subFactorMidNm,
+                        loc_big.big_list AS subLocBigNm,
+                        loc_mid.mid_list AS subLocMidNm,
+                        city_big.big_list AS subCityBigNm,
+                        city_mid.mid_list AS subCityMidNm
+                    FROM
+                        FIRE_DATA FIRE_DATA
+                        LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = FIRE_DATA.sub_factor AND fac_big.use_yn = 1
+                        LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = FIRE_DATA.sub_factor AND fac_mid.use_yn = 1
+                        LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = FIRE_DATA.sub_loc AND loc_big.use_yn = 1
+                        LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = FIRE_DATA.sub_loc AND loc_mid.use_yn = 1
+                        LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = FIRE_DATA.sub_city AND city_big.use_yn = 1
+                        LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = FIRE_DATA.sub_city AND city_mid.use_yn = 1
+                    WHERE 1=1
+                    <include refid="doRetrieveWhere"/>
+                ) T1
+                WHERE
+                    ROWNUM <![CDATA[<=]]> 10
+            ) TT1
+            WHERE
+                TT1.RNUM <![CDATA[>=]]> 1
+        ) A
+        CROSS JOIN (
+            SELECT COUNT(*) AS totalCnt
+            FROM FIRE_DATA
+            LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = FIRE_DATA.sub_factor AND fac_big.use_yn = 1
+            LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = FIRE_DATA.sub_factor AND fac_mid.use_yn = 1
+            LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = FIRE_DATA.sub_loc AND loc_big.use_yn = 1
+            LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = FIRE_DATA.sub_loc AND loc_mid.use_yn = 1
+            LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = FIRE_DATA.sub_city AND city_big.use_yn = 1
+            LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = FIRE_DATA.sub_city AND city_mid.use_yn = 1
+            WHERE 1=1
 		    <include refid="doRetrieveWhere"/>
-		) B
+        ) B
     </select>
     
     <sql id="doRetrieveWhere">
 	    <choose>
-	        <when test="(searchDiv != '' and searchDiv != null and searchDiv != 0) and (searchWord == null or searchWord == '' or searchWord == 0)">
-	            AND FIRE_DATA.sub_loc = #{searchDiv}
+	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord == null or searchWord == '')">
+	            AND FAC_BIG.main_code = #{searchDiv}
 	        </when>
-	        <when test="(searchDiv != '' and searchDiv != null and searchDiv != 0) and (searchWord != null and searchWord != '' and searchWord != 0)">
-	            AND FIRE_DATA.sub_loc = #{searchWord}
-	        </when>
-	    </choose>
-	    <choose>
-	        <when test="(BigNm != '' and BigNm != null and BigNm != 0) and (MidNm == null or MidNm == '' or MidNm == 0)">
-	            AND FIRE_DATA.sub_factor = #{BigNm}
-	        </when>
-	        <when test="(BigNm != '' and BigNm != null and BigNm != 0) and (MidNm != null and MidNm != '' and MidNm != 0)">
-	            AND FIRE_DATA.sub_factor = #{MidNm}
+	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord != null and searchWord != '')">
+	            AND FIRE_DATA.sub_factor = #{searchWord}
 	        </when>
 	    </choose>
 	    <choose>
-	        <when test="(subCityBigNm != '' and subCityBigNm != null and subCityBigNm != '0') and (subCityMidNm == null or subCityMidNm == '' or subCityMidNm == 0)">
-	            AND FIRE_DATA.sub_city = #{subCityBigNm}
+	        <when test="(BigNm != '' and BigNm != null) and (MidNm == null or MidNm == '')">
+	            AND LOC_BIG.main_code = #{BigNm}
 	        </when>
-	        <when test="(subCityBigNm != '' and subCityBigNm != null and subCityBigNm != '0') and (subCityMidNm != null and subCityMidNm != '' and subCityMidNm != 0)">
+	        <when test="(BigNm != '' and BigNm != null) and (MidNm != null and MidNm != '')">
+	            AND FIRE_DATA.sub_loc = #{MidNm}
+	        </when>
+	    </choose>
+	    <choose>
+	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm == null or subCityMidNm == '')">
+	            AND CITY_BIG.main_code = #{subCityBigNm}
+	        </when>
+	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm != null and subCityMidNm != '')">
 	            AND FIRE_DATA.sub_city = #{subCityMidNm}
 	        </when>
 	    </choose>

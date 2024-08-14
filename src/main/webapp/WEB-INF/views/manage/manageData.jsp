@@ -22,6 +22,13 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() { 
+    
+    console.log(sessionStorage.getItem("fBselectValue"));
+    console.log(sessionStorage.getItem("fMselectValue"));
+    console.log(sessionStorage.getItem("lBselectValue"));
+    console.log(sessionStorage.getItem("lMselectValue"));
+    console.log(sessionStorage.getItem("cBselectValue"));
+    console.log(sessionStorage.getItem("cMselectValue"));
 	
 	// 변수 선언
     const frmUpdate = document.querySelector("#frmDataUpdate");
@@ -72,6 +79,20 @@ document.addEventListener('DOMContentLoaded', function() {
 		const frm = document.querySelector("#frmDataSearch");
         frm.pageNo.value = pageNo;
         console.log("pageNo: "+pageNo);     
+        
+        const fBselectValue = frm.fBselect.value; 
+        const fMselectValue = frm.fMselect.value; 
+        const lBselectValue = frm.lBselect.value; 
+        const lMselectValue = frm.lMselect.value; 
+        const cBselectValue = frm.cBselect.value; 
+        const cMselectValue = frm.cMselect.value; 
+        
+        sessionStorage.setItem("fBselectValue", fBselectValue); // 세션에 저장
+        sessionStorage.setItem("fMselectValue", fMselectValue); // 세션에 저장
+        sessionStorage.setItem("lBselectValue", lBselectValue); // 세션에 저장
+        sessionStorage.setItem("lMselectValue", lMselectValue); // 세션에 저장
+        sessionStorage.setItem("cBselectValue", cBselectValue); // 세션에 저장
+        sessionStorage.setItem("cMselectValue", cMselectValue); // 세션에 저장
         
         frm.action = "/ehr/manage/doRetrieveData.do";    
         frm.submit();
@@ -159,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	    const cityCode = cBselect.value;
 	    const url = "/ehr/manage/doSelectCode.do";
 	    const type = "GET";
-        const subCityMidNm = ${search.subCityMidNm}
+/*         const subCityMidNm = ${search.subCityMidNm} */
 	    
 	    console.log("cBselect.value :" + cBselect.value);
 	    
@@ -181,11 +202,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	                optionCodeData.forEach(function(item) {
 	                    const option = document.createElement("option");
 	                    option.value = item.subCode;
-                        if (subCityMidNm == item.subCode) {
+/*                         if (subCityMidNm == item.subCode) {
                             option.selected = true;
                         }else{
                             option.selected = false;                            
-                        }
+                        } */
 	                    option.text = item.midList;
 	                    console.log(item.subCode);
 	                    console.log(item.midList);
