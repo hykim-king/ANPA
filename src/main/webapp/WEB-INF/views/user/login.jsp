@@ -27,17 +27,17 @@
         }
         .login-container {
             background-color: #f9f9f9;
-            padding: 40px;
+            padding: 50px;
             border-radius: 15px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
             text-align: center;
-            margin: 60px auto;
-            min-height: 630px;
+            margin: 100px auto 60px auto;
+            min-height: 640px;
         }
         .login-container h2 {
-            font-size: 2rem;
+            font-size: 2.3rem;
             margin-bottom: 30px;
             color: black;
             text-transform: uppercase;
@@ -70,6 +70,21 @@
         font-weight: bold;
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); 
         }
+        
+        .info-message {
+		    margin-top: 50px; 
+		    margin-bottom: 20px; 
+		    font-size: 1rem; 
+		    color: #555; 
+		    line-height: 1.5; 
+		}
+		.info-message strong {
+		    font-weight: bold; 
+		    font-size: 1.3rem; 
+		}
+		.info-message p {
+		    margin: 0;
+		}
          .btn-success {
             border-radius: 30px;
             padding: 10px;
@@ -129,12 +144,17 @@
             </div>
         </form>
         <div class="text-center mt-3">
-            <a href="${CP}/findID" class="me-2">아이디 찾기</a> |
-            <a href="${CP}/findPW" class="ms-2">비밀번호 찾기</a>
+            <a href="${CP}/user/findId.do" class="me-2">아이디 찾기</a> |
+            <a href="${CP}/user/findPw.do" class="ms-2">비밀번호 찾기</a>
         </div>
         <hr>
+        <div class="info-message text-center">
+            <p><strong>아직 회원이 아니신가요?</strong> <br>
+               안전파수꾼 회원이 되셔서 다양한 정보와 <br> 
+               커뮤니티 이용을 해보세요!</p>
+        </div>
         <div class="text-center">
-            <a href="${CP}/signup" class="btn btn-success w-100" id="signup">회원가입</a>
+            <a href="${CP}/user/signup.do" class="btn btn-success w-100" id="signup">회원가입</a>
         </div>
     </div>
 

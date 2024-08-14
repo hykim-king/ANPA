@@ -16,15 +16,15 @@
 
     .top_logo {
         height: auto;
-        margin-right: 10px; /* 로고와 첫 네비게이션 항목 사이의 여백 조정 */
+        margin-right: 20px; /* 로고와 첫 네비게이션 항목 사이의 여백 조정 */
     }
 
     .top_logo img {
-        height: 60px; /* 로고 크기 설정 */
+        height: 75px; /* 로고 크기 설정 */
     }
 
     .nav-item {
-        margin: 0 15px; /* 네비게이션 항목 간격 조정 */
+        margin: 0 20px; /* 네비게이션 항목 간격 조정 */
     }
 </style>
 </head>
@@ -39,10 +39,10 @@
                 <img src="${CP}/resources/img/logo_x.png" alt="#logo">
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-                <a class="nav-link" aria-current="page" href="#">화재통계</a>
+                <a class="nav-link" aria-current="page" href="#">화재 통계</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-                <a class="nav-link" href="#">1달 화재현황</a>
+                <a class="nav-link" href="#">화재 현황</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
                 <a class="nav-link" href="#">화재 예방법</a>
