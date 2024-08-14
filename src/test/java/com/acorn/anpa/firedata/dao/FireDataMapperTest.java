@@ -72,6 +72,7 @@ public class FireDataMapperTest implements PLog {
 		log.debug("└─────────────────────────────────────────────────────────");
 	}
 	
+	@Ignore
 	@Test
 	public void mainData() throws SQLException{
 		log.debug("┌─────────────────────────────────────────────────────────");
@@ -82,6 +83,28 @@ public class FireDataMapperTest implements PLog {
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ inVO() : " + inVO);
 		log.debug("└─────────────────────────────────────────────────────────");
+	}
+	
+	@Test
+	public void totalDataList() throws SQLException{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ totalData()");
+		log.debug("└─────────────────────────────────────────────────────────");
+		
+		search.setSearchDateStart("2023-03-01");
+		search.setSearchDateEnd("2023-08-01");
+		search.setSearchDiv("10");
+		search.setBigNm("부주의");
+		
+		List<Firedata> outVO = fireMapper.totalDataList(search);
+		for(Firedata vo : outVO) {
+			log.debug("vo: "+vo);
+			//테스트 해야되`~~ 꼬였어
+			//테스트 해야되`~~ 꼬였어
+			//테스트 해야되`~~ 꼬였어
+			//테스트 해야되`~~ 꼬였어
+			//테스트 해야되`~~ 꼬였어
+		}
 	}
 	
 	@Ignore

@@ -63,6 +63,40 @@
         </choose>
     </sql>
     
+    <sql id="sumWhenGroup">
+        <choose>
+             <when test="searchDiv != null and searchDiv == 10">
+                 AND t2.big_list = #{BigNm}
+                 GROUP BY t2.mid_list
+             </when>
+             <when test="searchDiv != null and searchDiv == 20">
+                 AND t2.big_list = #{BigNm}
+                 AND t2.mid_list = #{MidNm}
+                 GROUP BY t2.mid_list
+             </when>
+             <when test="searchDiv != null and searchDiv == 30">
+                 AND t3.big_list = #{BigNm}
+                 GROUP BY t3.mid_list
+             </when>
+             <when test="searchDiv != null and searchDiv == 40">
+                 AND t3.big_list = #{BigNm}
+                 AND t3.mid_list = #{MidNm}
+                 GROUP BY t3.mid_list
+             </when>
+        </choose>
+        <choose>
+             <when test="(subCityBigNm != '' and subCityBigNm != null) 
+             and (subCityMidNm == null or subCityMidNm == '')">
+                 AND t4.big_list = #{subCityBigNm}
+             </when>
+             <when test="(subCityBigNm != '' and subCityBigNm != null) 
+             and (subCityMidNm != null or subCityMidNm != '')">
+                 AND t4.big_list = #{subCityBigNm}
+                 AND t4.mid_list = #{subCityMidNm}
+             </when>
+        </choose>
+    </sql>
+    
     <select id="totalData" parameterType="Search" resultType="Firedata">
         SELECT COUNT(*) totalCnt,
                sum(t1.injured_sum) injuredSum,
@@ -80,19 +114,26 @@
     </select>
     
     <select id="totalDataList" parameterType="Search" resultType="Firedata">
-        SELECT :CATE t2.big_list subFactorBigNm,
-		       mid_list subFactorMidNm,
-		       SUM(t1.injured_sum) injuredSum,
+        SELECT #{BigNm} big_list,
+               <choose>
+                   <when test="searchDiv == 10 || searchDiv == 20">
+                    t2.mid_list,
+                   </when>
+                   <when test="searchDiv == 30 || searchDiv == 40">
+                    t3.mid_list,
+                   </when>
+               </choose>
+		       SUM(t1.injured_sum) injured_sum,
 		       SUM(t1.DEAD) dead,
 		       SUM(t1.injured) injured,
 		       SUM(t1.amount) amount
 		FROM FIRE_DATA t1
-		LEFT JOIN CODE t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
-		WHERE t2.big_list = :CATE
+		LEFT JOIN code t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
+        LEFT JOIN code t3 ON t3.master_code = 'location' AND t3.sub_code = t1.sub_loc
+        LEFT JOIN code t4 ON t4.master_code = 'city' AND t4.sub_code = t1.sub_city
 		AND to_char(t1.reg_dt,'yyyy-mm-dd') <![CDATA[>=]]> #{searchDateStart}
 		AND to_char(t1.reg_dt,'yyyy-mm-dd') <![CDATA[<=]]> #{searchDateEnd}
-		<include refid="sumWhen"/>
-		GROUP BY MID_LIST
+		<include refid="sumWhenGroup"/>
     </select>
     
     <select id="doRetrieve" parameterType="Search" resultType="Firedata">
@@ -142,10 +183,10 @@
                     <include refid="doRetrieveWhere"/>
                 ) T1
                 WHERE
-                    ROWNUM <![CDATA[<=]]> 10
+                    ROWNUM <![CDATA[<=]]> ( #{pageSize}*(#{pageNo} -1) + #{pageSize} )
             ) TT1
             WHERE
-                TT1.RNUM <![CDATA[>=]]> 1
+                TT1.RNUM <![CDATA[>=]]> ( #{pageSize}*(#{pageNo} -1) + 1 )
         ) A
         CROSS JOIN (
             SELECT COUNT(*) AS totalCnt
