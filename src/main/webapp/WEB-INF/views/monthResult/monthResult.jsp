@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
     	console.log("selectBtn click");
     	event.stopPropagation();//이벤트 버블링 방지
     	todayMonthData();
+    	locBigData();
+
     });
    
    
@@ -82,22 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();//이벤트 버블링 방지
     });
     
-    //--------------------------------------------------------------------------
-    function firstJs() {
-    //--쿼리 데이터 값
-    const todayFireCount = ${data.tmData.todayFireCount}
-    const lastYearDayFireCount = ${data.tmData.lastYearDayFireCount}
-    
-    //--<p>태그
-    const FireCountP = document.querySelector('#FireCount');
-
-    const contentHTML =
-    '오늘 ' + todayFireCount + ' 건 / 월 n 건'
-    ;
-
-    fireCountP.innerHTML = contentHTML;
-    }
-    
+    //--------------------------------------------------------------------------   
     function todayMonthData(regDt){
     	console.log("todayMonthData(regDt):"+selectBtn);
     	
@@ -132,7 +119,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(allMessage.messageId);
                     if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
                         alert(allMessage.messageContents);
-              
+                        firstJs(jsonData);
+                    
                     }else{
                         alert("에러야"+allMessage.messageContents);
                     }
@@ -145,8 +133,128 @@ document.addEventListener('DOMContentLoaded', function() {
         });//--pAjax end 
     }//--todayMonthData() end
     
+   /*  function locBigData(regDt){
+        console.log("locBigData(regDt):"+selectBtn);
+        
+        //비동기 통신
+        let type = "GET";
+        let url = "/ehr/monthfiredata/locBigData.do";
+        let async = "true";
+        let dataType = "html";
+        let params = {
+             "regDt" : yearSelectInput.value+monthSelectInput.value
+        };
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            console.log("data: ",data);
+            
+            if(data){
+                try{
+                    const jsonData = JSON.parse(data);
+                    const allMessage = jsonData.message;
+                    console.log(jsonData);
+                    console.log(allMessage.messageId);
+                    if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
+                        alert(allMessage.messageContents);
+                        firstJs(jsonData);
+                    
+                    }else{
+                        alert("에러야"+allMessage.messageContents);
+                    }
+                }catch(e){
+                    alert("화재데이터가 없습니다.");
+                }
+                
+            }
+            
+        });//--pAjax end 
+    }//--locBigData() end
+     */
     
     
+    function firstJs(jsonData) {
+		//--쿼리 데이터 값
+		const todayFireCount = jsonData.tmData.todayFireCount;
+		console.log("todayFireCount:"+todayFireCount);
+		const monthFireCount = jsonData.tmData.monthFireCount;
+		const lastYearDayFireCount = jsonData.tmData.lastYearDayFireCount;
+		const lastYearMonthFireCount = jsonData.tmData.lastYearMonthFireCount;
+		const todayDead = jsonData.tmData.todayDead;
+		const monthDead = jsonData.tmData.monthDead;
+		const lastYearDayDead = jsonData.tmData.lastYearDayDead;
+		const lastYearMonthDead = jsonData.tmData.lastYearMonthDead;
+		
+		const todayInjured        =jsonData.tmData.todayInjured ;
+		const monthInjured        =jsonData.tmData.monthInjured ;
+		const lastYearDayInjured  =jsonData.tmData.lastYearDayInjured ;
+		const lastYearMonthInjured=jsonData.tmData.lastYearMonthInjured ;
+		
+		const todayAmount         =jsonData.tmData.todayAmount ;
+		const monthAmount         =jsonData.tmData.monthAmount ;
+		const lastYearDayAmount   =jsonData.tmData.lastYearDayAmount ;
+		const lastYearMonthAmount =jsonData.tmData.lastYearMonthAmount ;
+		
+		const lastYearMonthAmount =jsonData.lbData.0 ;
+		console.log("lastYearMonthAmount:"+lastYearMonthAmount );
+		
+		//--<div>태그 id
+		const FireCountDiv = document.querySelector('#FireCount');
+		const DeadCountDiv = document.querySelector('#DeadCount');
+		const InjuredCountDiv = document.querySelector('#InjuredCount');
+		const AmountCountDiv = document.querySelector('#AmountCount');
+		
+		//화면에서 화재건수 박스
+		const FireCountcontentHTML =
+			`
+			<b class="card-icon"><i class="bi bi-fire"></i></b>
+	        <h5 class="card-title">화재 건수</h5>
+	        <p class="card-text">오늘 `+todayFireCount+` 건 / 월 `+monthFireCount+` 건</p>
+	        <hr>
+	        <b>전년 동기</b>
+	        <p class="card-text">오늘 `+lastYearDayFireCount+` 건 / 월 `+lastYearMonthFireCount+` 건</p>
+	        `;
+		FireCountDiv.innerHTML = FireCountcontentHTML;
+		
+		//화면에서 사망자수 박스
+	    const DeadCountcontentHTML =
+	        `
+	        <b class="card-icon"><i class="bi bi-person-x-fill"></i></b>
+	        <h5 class="card-title">사망자 수</h5>
+	        <p class="card-text">오늘 `+todayDead+` 명 / 월 `+monthDead+` 명</p>
+	        <hr>
+	        <b>전년 동기</b>
+	        <p class="card-text">오늘 `+lastYearDayDead+` 명 / 월 `+lastYearMonthDead+` 명</p>
+	        `;
+	    DeadCountDiv.innerHTML = DeadCountcontentHTML;
+	    
+	    //화면에서 부상자수 박스
+	    const InjuredCountcontentHTML =
+            `
+            <b class="card-icon"><i class="bi bi-lungs-fill"></i></b>
+            <h5 class="card-title">부상자 수</h5>
+            <p class="card-text">오늘 `+todayInjured+` 명 / 월 `+monthInjured+` 명</p>
+            <hr>
+            <b>전년 동기</b>
+            <p class="card-text">오늘 `+lastYearDayInjured+` 명 / 월 `+lastYearMonthAmount+` 명</p>
+            `;
+        InjuredCountDiv.innerHTML = InjuredCountcontentHTML;
+        
+        //화면에서 재산피해액 박스
+        const AmountCountcontentHTML =
+            `
+            <b class="card-icon"><i class="bi bi-database-fill-x"></i></b>
+            <h5 class="card-title">재산피해</h5>
+            <p class="card-text">오늘 `+todayAmount+` 천원 / 월 `+monthAmount+` 천원</p>
+            <hr>
+            <b>전년 동기</b>
+            <p class="card-text">오늘 `+lastYearDayAmount+` 천원 / 월 `+lastYearMonthInjured+` 천원</p>
+            `;
+        AmountCountDiv.innerHTML = AmountCountcontentHTML;
+	   
+        
+	    
+    }//--firstJs() end
+
     
 });//--DOMContentLoaded end   
 </script>
@@ -189,10 +297,10 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="row mt-3">
         <div class="col-md-3 mb-2">
             <div class="card text-center">
-                <div class="card-body">
+                <div class="card-body" id="FireCount">
                     <b class="card-icon"><i class="bi bi-fire"></i></b>
                     <h5 class="card-title">화재 건수</h5>
-                    <p class="card-text" id="FireCount">오늘  0 건 / 월 0 건</p>
+                    <p class="card-text" >오늘  0 건 / 월 0 건</p>
                     <hr>
                     <b>전년 동기</b>
                     <p class="card-text">오늘 0 건 / 월 0 건</p>
@@ -202,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="col-md-3 mb-2">
             <div class="card text-center">
-                <div class="card-body">
+                <div class="card-body" id="DeadCount">
                     <b class="card-icon"><i class="bi bi-person-x-fill"></i></b>
                     <h5 class="card-title">사망자 수</h5>
                     <p class="card-text">오늘 0 명 / 월 0 명</p>
@@ -215,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="col-md-3 mb-2">
             <div class="card text-center">
-                <div class="card-body">
+                <div class="card-body" id="InjuredCount">
                     <b class="card-icon"><i class="bi bi-lungs-fill"></i></b>
                     <h5 class="card-title">부상자 수</h5>
                     <p class="card-text">오늘 0 명 / 월 0 명</p>
@@ -226,11 +334,9 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         
-        ${data}
-        
         <div class="col-md-3 mb-2">
             <div class="card text-center">
-                <div class="card-body">
+                <div class="card-body" id="AmountCount">
                     <b class="card-icon"><i class="bi bi-database-fill-x"></i></b>
                     <h5 class="card-title">재산피해</h5>
                     <p class="card-text">오늘 0 천원 / 월 0 천원</p>

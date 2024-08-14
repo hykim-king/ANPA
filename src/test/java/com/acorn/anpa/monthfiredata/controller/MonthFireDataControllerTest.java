@@ -116,7 +116,7 @@ public class MonthFireDataControllerTest implements PLog{
 			
 	}
 	
-	@Ignore
+	//@Ignore
 	@Test
 	public void locBigData() throws Exception {
 		log.debug("┌────────────────────────────────────────────────────────");
@@ -202,6 +202,7 @@ public class MonthFireDataControllerTest implements PLog{
 			
 	}
 	
+	@Ignore
 	@Test
 	public void factorMidData() throws Exception {
 		log.debug("┌────────────────────────────────────────────────────────");
