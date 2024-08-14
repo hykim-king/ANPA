@@ -127,12 +127,12 @@
                 FROM (
                     SELECT
                         FIRE_DATA.*,
-                        fac_big.big_list AS subFactorBigNm,
-                        fac_mid.mid_list AS subFactorMidNm,
-                        loc_big.big_list AS subLocBigNm,
-                        loc_mid.mid_list AS subLocMidNm,
-                        city_big.big_list AS subCityBigNm,
-                        city_mid.mid_list AS subCityMidNm
+                        fac.big_list AS subFactorBigNm,
+                        fac.mid_list AS subFactorMidNm,
+                        loc.big_list AS subLocBigNm,
+                        loc.mid_list AS subLocMidNm,
+                        city.big_list AS subCityBigNm,
+                        city.mid_list AS subCityMidNm
                     FROM
                         FIRE_DATA FIRE_DATA
                         LEFT JOIN CODE fac ON fac.master_code = 'factor' AND fac.sub_code = FIRE_DATA.sub_factor AND fac.use_yn = 1
