@@ -79,6 +79,22 @@
         <include refid="sumWhen"/>
     </select>
     
+    <select id="totalDataList" parameterType="Search" resultType="Firedata">
+        SELECT :CATE t2.big_list subFactorBigNm,
+		       mid_list subFactorMidNm,
+		       SUM(t1.injured_sum) injuredSum,
+		       SUM(t1.DEAD) dead,
+		       SUM(t1.injured) injured,
+		       SUM(t1.amount) amount
+		FROM FIRE_DATA t1
+		LEFT JOIN CODE t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
+		WHERE t2.big_list = :CATE
+		AND to_char(t1.reg_dt,'yyyy-mm-dd') <![CDATA[>=]]> #{searchDateStart}
+		AND to_char(t1.reg_dt,'yyyy-mm-dd') <![CDATA[<=]]> #{searchDateEnd}
+		<include refid="sumWhen"/>
+		GROUP BY MID_LIST
+    </select>
+    
     <select id="doRetrieve" parameterType="Search" resultType="Firedata">
 		SELECT
             A.*,
@@ -119,13 +135,10 @@
                         city_mid.mid_list AS subCityMidNm
                     FROM
                         FIRE_DATA FIRE_DATA
-                        LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = FIRE_DATA.sub_factor AND fac_big.use_yn = 1
-                        LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = FIRE_DATA.sub_factor AND fac_mid.use_yn = 1
-                        LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = FIRE_DATA.sub_loc AND loc_big.use_yn = 1
-                        LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = FIRE_DATA.sub_loc AND loc_mid.use_yn = 1
-                        LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = FIRE_DATA.sub_city AND city_big.use_yn = 1
-                        LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = FIRE_DATA.sub_city AND city_mid.use_yn = 1
-                    WHERE 1=1
+                        LEFT JOIN CODE fac ON fac.master_code = 'factor' AND fac.sub_code = FIRE_DATA.sub_factor AND fac.use_yn = 1
+			            LEFT JOIN CODE loc ON loc.master_code = 'location' AND loc.sub_code = FIRE_DATA.sub_loc AND loc.use_yn = 1
+			            LEFT JOIN CODE city ON city.master_code = 'city' AND city.sub_code = FIRE_DATA.sub_city AND city.use_yn = 1
+		            WHERE 1=1
                     <include refid="doRetrieveWhere"/>
                 ) T1
                 WHERE
@@ -137,12 +150,9 @@
         CROSS JOIN (
             SELECT COUNT(*) AS totalCnt
             FROM FIRE_DATA
-            LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = FIRE_DATA.sub_factor AND fac_big.use_yn = 1
-            LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = FIRE_DATA.sub_factor AND fac_mid.use_yn = 1
-            LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = FIRE_DATA.sub_loc AND loc_big.use_yn = 1
-            LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = FIRE_DATA.sub_loc AND loc_mid.use_yn = 1
-            LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = FIRE_DATA.sub_city AND city_big.use_yn = 1
-            LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = FIRE_DATA.sub_city AND city_mid.use_yn = 1
+	            LEFT JOIN CODE fac ON fac.master_code = 'factor' AND fac.sub_code = FIRE_DATA.sub_factor AND fac.use_yn = 1
+	            LEFT JOIN CODE loc ON loc.master_code = 'location' AND loc.sub_code = FIRE_DATA.sub_loc AND loc.use_yn = 1
+	            LEFT JOIN CODE city ON city.master_code = 'city' AND city.sub_code = FIRE_DATA.sub_city AND city.use_yn = 1
             WHERE 1=1
 		    <include refid="doRetrieveWhere"/>
         ) B
@@ -151,26 +161,29 @@
     <sql id="doRetrieveWhere">
 	    <choose>
 	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord == null or searchWord == '')">
-	            AND FAC_BIG.main_code = #{searchDiv}
+	            AND fac.big_list = #{searchDiv}
 	        </when>
 	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord != null and searchWord != '')">
-	            AND FIRE_DATA.sub_factor = #{searchWord}
+	            AND fac.big_list = #{searchDiv}
+	            AND fac.mid_list = #{searchWord}
 	        </when>
 	    </choose>
 	    <choose>
 	        <when test="(BigNm != '' and BigNm != null) and (MidNm == null or MidNm == '')">
-	            AND LOC_BIG.main_code = #{BigNm}
+	            AND loc.big_list = #{BigNm}
 	        </when>
 	        <when test="(BigNm != '' and BigNm != null) and (MidNm != null and MidNm != '')">
-	            AND FIRE_DATA.sub_loc = #{MidNm}
+	            AND loc.big_list = #{BigNm}
+	            AND loc.mid_list = #{MidNm}
 	        </when>
 	    </choose>
 	    <choose>
 	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm == null or subCityMidNm == '')">
-	            AND CITY_BIG.main_code = #{subCityBigNm}
+	            AND city.big_list = #{subCityBigNm}
 	        </when>
 	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm != null and subCityMidNm != '')">
-	            AND FIRE_DATA.sub_city = #{subCityMidNm}
+	            AND city.big_list = #{subCityBigNm}
+	            AND city.mid_list = #{subCityMidNm}
 	        </when>
 	    </choose>
 	    <choose>

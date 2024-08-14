@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 @RequestMapping("firedata")
 public class FireDataController implements PLog {
 	
-	@Autowired
+	//@Autowired
 	FireDataService fireDataService;
 	
 	@Autowired
