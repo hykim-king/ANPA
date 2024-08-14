@@ -22,13 +22,6 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() { 
-    
-    console.log(sessionStorage.getItem("fBselectValue"));
-    console.log(sessionStorage.getItem("fMselectValue"));
-    console.log(sessionStorage.getItem("lBselectValue"));
-    console.log(sessionStorage.getItem("lMselectValue"));
-    console.log(sessionStorage.getItem("cBselectValue"));
-    console.log(sessionStorage.getItem("cMselectValue"));
 	
 	// 변수 선언
     const frmUpdate = document.querySelector("#frmDataUpdate");
@@ -44,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 	// 업데이트 버튼 클릭 실행
 	updateBtnsClick();
-    cityCodeSet();
+	midOptionSelectDelSession();
 	
 	// 클릭 이벤트 시작
 	// 검색 버튼
@@ -87,11 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const cBselectValue = frm.cBselect.value; 
         const cMselectValue = frm.cMselect.value; 
         
-        sessionStorage.setItem("fBselectValue", fBselectValue); // 세션에 저장
         sessionStorage.setItem("fMselectValue", fMselectValue); // 세션에 저장
-        sessionStorage.setItem("lBselectValue", lBselectValue); // 세션에 저장
         sessionStorage.setItem("lMselectValue", lMselectValue); // 세션에 저장
-        sessionStorage.setItem("cBselectValue", cBselectValue); // 세션에 저장
         sessionStorage.setItem("cMselectValue", cMselectValue); // 세션에 저장
         
         frm.action = "/ehr/manage/doRetrieveData.do";    
@@ -175,14 +165,21 @@ document.addEventListener('DOMContentLoaded', function() {
 	        });
 	    });
 	}
+	// 중분류 옵션 자동 선택 및 중분류 세션 정보 삭제
+	function midOptionSelectDelSession(){
+		cityCodeSet();
+		factorCodeSet();
+		locCodeSet();
+		sessionStorage.removeItem("fMselectValue"); // 삭제
+		sessionStorage.removeItem("lMselectValue"); // 삭제
+		sessionStorage.removeItem("cMselectValue"); // 삭제
+	}
 	// 시도 선택 시 시군구 변경
 	function cityCodeSet() {	
 	    const cityCode = cBselect.value;
 	    const url = "/ehr/manage/doSelectCode.do";
 	    const type = "GET";
-/*         const subCityMidNm = ${search.subCityMidNm} */
-	    
-	    console.log("cBselect.value :" + cBselect.value);
+	    const subCityMidNm = sessionStorage.getItem("cMselectValue");
 	    
 	    if (cBselect.value === "") {
 	        cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
@@ -202,11 +199,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	                optionCodeData.forEach(function(item) {
 	                    const option = document.createElement("option");
 	                    option.value = item.subCode;
-/*                         if (subCityMidNm == item.subCode) {
+                        if (subCityMidNm == item.subCode) {
                             option.selected = true;
                         }else{
                             option.selected = false;                            
-                        } */
+                        } 
 	                    option.text = item.midList;
 	                    console.log(item.subCode);
 	                    console.log(item.midList);
@@ -228,8 +225,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const factorCode = fBselect.value;
         const url = "/ehr/manage/doSelectCode.do";
         const type = "GET";
+        const factorMidNm = sessionStorage.getItem("fMselectValue");
         
-        console.log("함수fBselect.value :" + fBselect.value);
+        console.log("함수factorMidNm.value :" + factorMidNm);
         
         if (fBselect.value === "") {
             fMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
@@ -249,11 +247,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     optionCodeData.forEach(function(item) {
                         const option = document.createElement("option");
                         option.value = item.subCode;
-/*                         if (searchWord == item.subCode) {
+                        if (factorMidNm == item.subCode) {
                             option.selected = true;
                         }else{
                             option.selected = false;                            
-                        } */
+                        }
                         option.text = item.midList;
                         console.log(item.subCode);
                         console.log(item.midList);
@@ -276,8 +274,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const locCode = lBselect.value;
         const url = "/ehr/manage/doSelectCode.do";
         const type = "GET";
+        const locMidNm = sessionStorage.getItem("lMselectValue");
         
-        console.log("함수lBselect.value :" + lBselect.value);
+        console.log("함수locMidNm.value :" + locMidNm);
         
         if (lBselect.value === "") {
             lMselect.innerHTML = '<option value="">' + "화재장소 미선택" + '</option>';
@@ -297,11 +296,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     optionCodeData.forEach(function(item) {
                         const option = document.createElement("option");
                         option.value = item.subCode;
-/*                         if (MidNm == item.subCode) {
+                        if (locMidNm == item.subCode) {
                         	option.selected = true;
                         }else{
                         	option.selected = false;                        	
-                        } */
+                        }
                         option.text = item.midList;
                         console.log(item.subCode);
                         console.log(item.midList);

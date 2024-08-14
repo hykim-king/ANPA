@@ -200,24 +200,31 @@ public class ManageControllerTest implements PLog{
 		log.debug("┌─────────────────────────────────────────────────────────");
 		log.debug("│ doRetrieveData Test()");
 		log.debug("└─────────────────────────────────────────────────────────");
-	
+		
 		search.setPageNo(1);
 		search.setPageSize(10);
-		search.setSearchDiv("1600");
-		search.setBigNm("5040");
-		search.setSubCityBigNm("21080");
-		search.setSearchDateStart("20230101");
-		search.setSearchDateEnd("20231231");
+		search.setSearchDiv("4100");
+//		search.setSearchWord("8010");
+//		search.setBigNm("200");
+//		search.setMidNm("503");
+		search.setSubCityBigNm("11000");
+//		search.setSubCityMidNm("31023");
+//		search.setSearchDateStart("20230101");
+//		search.setSearchDateEnd("20231231");
 		
 		//요청 매핑
 		MockHttpServletRequestBuilder requestBuilder =
 			MockMvcRequestBuilders.get("/manage/doRetrieveData.do")
+			.param("pageNo", search.getPageNo()+"")
 			.param("pageSize", search.getPageSize()+"")
-			.param("searchDiv", search.getSearchDiv())
-			.param("BigNm", search.getBigNm())
-			.param("subCityBigNm", search.getSubCityBigNm())
-			.param("searchDateStart", search.getSearchDateStart())
-			.param("searchDateEnd", search.getSearchDateEnd())
+			.param("fBselect", search.getSearchDiv())
+			.param("fMselect", search.getSearchWord())
+			.param("lBselect", search.getBigNm())
+			.param("lMselect", search.getMidNm())
+			.param("cBselect", search.getSubCityBigNm())
+			.param("cMselect", search.getSubCityMidNm())
+//			.param("searchDateStart", search.getSearchDateStart())
+//			.param("searchDateEnd", search.getSearchDateEnd())
 			;
 		
 		//호출 및 결과
@@ -233,7 +240,11 @@ public class ManageControllerTest implements PLog{
 		
 		List<Firedata> list = (List<Firedata>) modelMap.get("list");
 		assertNotNull(list);
-		for (Firedata vo : list) log.debug(vo);		
+		for (Firedata vo : list) {
+			log.debug("┌─────────────────────────────────────────────────────────");
+			log.debug(vo);		
+			log.debug("└─────────────────────────────────────────────────────────");
+		}
 		
 		String viewName = mvcResult.getModelAndView().getViewName();
 		

@@ -219,6 +219,9 @@ public class ManageController implements PLog{
 		search.setPageNo(Integer.parseInt(pageNo));
 		
 		List<Firedata> list = fireDataService.doRetrieve(search);
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ list : " + list);
+		log.debug("└──────────────────────────────────────────────");	
 		
 		// 모델에 튜닝 리스트, 검색 조건
 		model.addAttribute("list", list);
