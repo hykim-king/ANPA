@@ -22,11 +22,11 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // .nav 클래스의 첫 번째 .nav-item의 자식 .nav-link를 선택합니다
+    /* // .nav 클래스의 첫 번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:first-child .nav-link');
 
     // 선택한 요소에 "active" 클래스를 추가합니다
-    firstNavLink.classList.add('active');
+    firstNavLink.classList.add('active'); */
     
     //화재 요인 버튼
     const factorBtn = document.querySelector('#factor');
@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let div = '';
     let selectedText = '';
+    let workDiv = '';
     //검색조건
     const searchConditions = document.querySelector('#searchConditions');
     
@@ -79,6 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
     		let searchDiv = '20';
             div = 'city';
             categoryMidList(searchDiv,div,title,sigungo);
+            
+            doData();
     	});
     	
     });
@@ -99,68 +102,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             }
         }
+        doData();
     });
     
     //시군구 선택시
     sigungo.addEventListener("change",function(event){
-        // 조회 짜야됨
-        // 조회 짜야됨
-        // 조회 짜야됨
-        // 조회 짜야됨
+    	doData();
         
     });
     
     
     //조회버튼
     doRetrieveBtn.addEventListener("click",function(event){
-    	console.log('fRdateStart: '+fRdateStart.value);
-    	console.log('fRdateEnd: '+fRdateEnd.value);
-    	console.log('bigList: '+bigList.value);
-    	console.log('midList: '+midList.value);
     	
-    	let url = '/ehr/firedata/totalData.do';
-        let params = {
-            "searchDateStart": fRdateStart.value,
-            "searchDateEnd" : fRdateEnd.value,
-            "BigNm" : '',
-            "MidNm" : '',
-            "subCityBigNm" : '',
-            "subCityMidNm" : '',
-            "searchDiv" : ""
-        };
-        dataType = 'json';
-        type = 'GET';
-        async = 'true';
-    	
-        PClass.pAjax(url, params,dataType,type,async,function(response){
-        	if(response){
-        		try{
-        			let data = response;
-        			console.log('data: '+data);
-        			console.log('data[0].totalCnt:'+data[0].totalCnt);
-        			
-        			columnChart(data[0],data[1]);
-        			pieChart(data[0].totalCnt,data[1].totalCnt,fireCnt,'화재건수');
-        			pieChart(data[0].amount,data[1].amount,amount,'재산피해(천원)');
-        		            			
-        		}catch(e){
-                    console.error("data가 null혹은, undefined 입니다.",e);
-                    alert("data가 null혹은, undefined 입니다.");  
-                }
-        		
-        	}else{
-                console.error("통신실패!");
-                alert("통신실패!");
-            }
-        	
-        	
-        });//아작스
+    	doData();
     	
     });
     
     //화재요인버튼
     factorBtn.addEventListener("click",function(event){
-    	div = 'factor'
+    	div = 'factor';
+    	workDiv = 'factor';
     	let searchDiv = '10';
     	midList.value = '';
     	
@@ -171,7 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //화재장소버튼
     locationBtn.addEventListener("click",function(event){
-        div = 'location'
+        div = 'location';
+       	workDiv = 'location';
         let searchDiv = '10';
         midList.value = '';
         
@@ -303,67 +266,145 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     	
     }
-    function pieChart(totalData,data,id,title){
-    	const percentage = (data / totalData) * 100;
-    	
-    	Highcharts.chart(id, {
-    		accessibility: {
+    
+    function doData(){
+    	bigListText = bigList.options[bigList.selectedIndex].textContent
+        midListText = midList.options[midList.selectedIndex].textContent
+        sidoText = sido.options[sido.selectedIndex].textContent
+        sigungoText = sigungo.options[sigungo.selectedIndex].textContent
+        let searchDiv = '';
+        
+        console.log('workDiv: '+workDiv);
+        console.log('fRdateStart: '+fRdateStart.value);
+        console.log('fRdateEnd: '+fRdateEnd.value);
+        console.log('bigListText: '+bigListText);
+        console.log('div: '+div);
+        console.log('bigList.value: '+bigList.value);
+        console.log('midList.value: '+midList.value);
+        console.log('sido.value: '+sido.value);
+        console.log('sigungo.value: '+sigungo.value);
+        
+        if(workDiv == 'factor' && midList.value == '' ){
+            searchDiv = '10';
+        }else if(workDiv == 'factor' && midList.value != ''){
+            searchDiv = '20';
+        }else if(workDiv == 'location' && midList.value == ''){
+            searchDiv = '30';
+        }else if(workDiv == 'location' && midList.value != ''){
+            searchDiv = '40';
+        }
+        
+        console.log('searchDiv: '+searchDiv);
+        console.log('midListText: '+midListText);
+        if(sido.value == '') sidoText = '';
+        console.log('sidoText: '+sidoText);
+        if(sigungoText === '전체') sigungoText = '';
+        console.log('sigungoText: '+sigungoText);
+        
+        if(workDiv == '' ) alert('카테고리를 선택하세요');
+        
+        let url = '/ehr/firedata/totalData.do';
+        let params = {
+            "searchDateStart": fRdateStart.value,
+            "searchDateEnd" : fRdateEnd.value,
+            "BigNm" : bigListText,
+            "MidNm" : midListText,
+            "subCityBigNm" : sidoText,
+            "subCityMidNm" : sigungoText,
+            "searchDiv" : searchDiv
+        };
+        dataType = 'json';
+        type = 'GET';
+        async = 'true';
+        
+        PClass.pAjax(url, params,dataType,type,async,function(response){
+            if(response){
+                try{
+                    let data = response;
+                    console.log('data[0].totalCnt:'+data[0].totalCnt);
+                    console.log('data[1].totalCnt:'+data[1].totalCnt);
+                    
+                    let tooltip = bigListText + '-' + midListText;
+                    
+                    columnChart(data[0],data[1]);
+                    pieChart(data[0].totalCnt,data[1].totalCnt,fireCnt,'화재건수',tooltip);
+                    pieChart(data[0].amount,data[1].amount,amount,'재산피해(천원)',tooltip);
+                                        
+                }catch(e){
+                    console.error("data가 null혹은, undefined 입니다.",e);
+                    alert("data가 null혹은, undefined 입니다.");  
+                }
+                
+            }else{
+                console.error("통신실패!");
+                alert("통신실패!");
+            }
+            
+            
+        });//아작스
+    }
+    
+    function pieChart(totalData, data, id, title,tooltip) {
+        Highcharts.chart(id, {
+            accessibility: {
                 enabled: false
             },
-    	    chart: {
-    	        type: 'pie'
-    	    },
-    	    title: {
-    	        text: title
-    	    },
-    	    subtitle: {
-    	        text: '비교기준 : 전국'
-    	        
-    	    },
-    	    plotOptions: {
-    	        series: {
-    	            allowPointSelect: true,
-    	            cursor: 'pointer',
-    	            dataLabels: [{
-    	                enabled: true,
-    	                distance: 20
-    	            }, {
-    	                enabled: true,
-    	                distance: -40,
-    	                format: '{point.percentage:.1f}%',
-    	                style: {
-    	                    fontSize: '1.2em',
-    	                    textOutline: 'none',
-    	                    opacity: 0.7
-    	                },
-    	                filter: {
-    	                    operator: '>',
-    	                    property: 'percentage',
-    	                    value: 10
-    	                }
-    	            }]
-    	        }
-    	    },
-    	    series: [
-    	        {
-    	            name: title,
-    	            colorByPoint: true,
-    	            data: [
-    	                {
-                            name: '선택',
-                            y: data,
+            chart: {
+                type: 'pie'
+            },
+            title: {
+                text: title
+            },
+            subtitle: {
+                text: '비교기준 : 전국'
+            },credits: {
+                enabled: false
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return this.point.name + ': ' + Highcharts.numberFormat(this.point.y, 0) + ' (' + Highcharts.numberFormat(this.point.percentage, 1) + '%)';
+                        },
+                        distance: 20,
+                        style: {
+                            fontSize: '1.2em',
+                            textOutline: 'none',
+                            opacity: 0.7
+                        },
+                        filter: {
+                            operator: '>',
+                            property: 'percentage',
+                            value: 0
                         }
-    	            ]
-    	        }
-    	    ],
-    	    // 전국 데이터의 퍼센트를 기준으로 차트를 그리도록 설정
+                    }
+                }
+            },
+            series: [
+                {
+                    name: title,
+                    colorByPoint: true,
+                    data: [
+                        {
+                            name: tooltip,
+                            y: data
+                        },
+                        {
+                            name: '전국 / ' + tooltip,
+                            y: totalData - data
+                        }
+                    ]
+                }
+            ],
             tooltip: {
-                formatter: function () {
-                    return this.point.name + ': ' + Highcharts.numberFormat(percentage, 1) + '%'; // 퍼센트 표시
+                formatter: function() {
+                    return this.point.name + ': ' + Highcharts.numberFormat(this.point.y, 0) + ' (' + Highcharts.numberFormat(this.point.percentage, 1) + '%)';
                 }
             }
-    	});
-
+        });
     }
     
     function columnChart(totalData,data){
@@ -532,6 +573,14 @@ document.addEventListener('DOMContentLoaded', function() {
     <div name = "amount" id = "amount" class="row g-1"></div>
     <div name = "result" id = "result" class="row g-1"></div>
 </section>
+
+<!-- 통계 테이블 -->
+<div>
+    <table id="table">
+    
+    
+    </table>
+</div>
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>        
