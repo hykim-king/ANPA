@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
     	event.stopPropagation();//이벤트 버블링 방지
     	todayMonthData();
     	locBigData();
+    	locMidData();
+    	factorMidData();
 
     });
    
@@ -119,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(allMessage.messageId);
                     if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
                         alert(allMessage.messageContents);
-                        firstJs(jsonData);
+                        tmJSON(jsonData);
                     
                     }else{
                         alert("에러야"+allMessage.messageContents);
@@ -133,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });//--pAjax end 
     }//--todayMonthData() end
     
-   /*  function locBigData(regDt){
+   function locBigData(regDt){
         console.log("locBigData(regDt):"+selectBtn);
         
         //비동기 통신
@@ -154,25 +156,210 @@ document.addEventListener('DOMContentLoaded', function() {
                     const allMessage = jsonData.message;
                     console.log(jsonData);
                     console.log(allMessage.messageId);
+
                     if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
-                        alert(allMessage.messageContents);
-                        firstJs(jsonData);
+                        //alert(allMessage.messageContents);
+                        lbJSON(jsonData);
                     
                     }else{
                         alert("에러야"+allMessage.messageContents);
                     }
                 }catch(e){
-                    alert("화재데이터가 없습니다.");
+                    //alert("화재데이터가 없습니다.");
                 }
                 
             }
             
         });//--pAjax end 
     }//--locBigData() end
-     */
+    
+   function locMidData(regDt){
+       console.log("locMidData(regDt):"+selectBtn);
+       
+       //비동기 통신
+       let type = "GET";
+       let url = "/ehr/monthfiredata/locMidData.do";
+       let async = "true";
+       let dataType = "html";
+       let params = {
+            "regDt" : yearSelectInput.value+monthSelectInput.value
+       };
+       
+       PClass.pAjax(url,params,dataType,type,async,function(data){
+           console.log("data: ",data);
+           
+           if(data){
+               try{
+                   const jsonData = JSON.parse(data);
+                   const allMessage = jsonData.message;
+                   console.log(jsonData);
+                   console.log(allMessage.messageId);
+
+                   if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
+                       //alert(allMessage.messageContents);
+                       lmJSON(jsonData);
+                   
+                   }else{
+                       alert("에러야"+allMessage.messageContents);
+                   }
+               }catch(e){
+                   //alert("화재데이터가 없습니다.");
+               }
+               
+           }
+           
+       });//--pAjax end 
+   }//--locMidData() end
+   
+   function factorMidData(regDt){
+       console.log("factorMidData(regDt):"+selectBtn);
+       
+       //비동기 통신
+       let type = "GET";
+       let url = "/ehr/monthfiredata/factorMidData.do";
+       let async = "true";
+       let dataType = "html";
+       let params = {
+            "regDt" : yearSelectInput.value+monthSelectInput.value
+       };
+       
+       PClass.pAjax(url,params,dataType,type,async,function(data){
+           console.log("data: ",data);
+           
+           if(data){
+               try{
+                   const jsonData = JSON.parse(data);
+                   const allMessage = jsonData.message;
+                   console.log(jsonData);
+                   console.log(allMessage.messageId);
+
+                   if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
+                       //alert(allMessage.messageContents);
+                       fmJSON(jsonData);
+                   
+                   }else{
+                       alert("에러야"+allMessage.messageContents);
+                   }
+               }catch(e){
+                   //alert("화재데이터가 없습니다.");
+               }
+               
+           }
+           
+       });//--pAjax end 
+   }//--factorMidData() end
+    
+   function fmJSON(jsonData) {
+       console.log("fmData:"+jsonData.fmData);
+       console.log("fmData[0]:"+jsonData.fmData[0].subFactorMidNm);
+       //쿼리 화재장소대분류1순위
+       const subFactorMidNm1 = jsonData.fmData[0].subFactorMidNm;
+       console.log("subFactorMidNm1:"+subFactorMidNm1);
+       const monthFireCount1 = jsonData.fmData[0].monthFireCount;
+       const monthAvg1 = jsonData.fmData[0].monthAvg;
+       //쿼리 화재장소대분류2순위
+       const subFactorMidNm2 = jsonData.fmData[1].subFactorMidNm;
+       const monthFireCount2 = jsonData.fmData[1].monthFireCount;
+       const monthAvg2 = jsonData.fmData[1].monthAvg;
+       //쿼리 화재장소대분류3순위
+       const subFactorMidNm3 = jsonData.fmData[2].subFactorMidNm;
+       const monthFireCount3 = jsonData.fmData[2].monthFireCount;
+       const monthAvg3 = jsonData.fmData[2].monthAvg;
+       console.log("monthAvg3:"+monthAvg3);
+
+       //--<div>태그 id
+       const FactorMidDiv = document.querySelector('#FactorMid');
+        //화면에서 화재장소대분류 상위3건 박스
+       const FactorMidcontentHTML =
+           `
+           <h5 class="card-title">발화 원인</h5>
+           <hr>
+           <b><i class="bi bi-1-square-fill"></i> `+subFactorMidNm1+` `+monthFireCount1+` 건</b>
+           <p class="card-text">평균 `+monthAvg1+` 건</p>
+           <b><i class="bi bi-2-square-fill"></i> `+subFactorMidNm2+` `+monthFireCount2+` 건</b>
+           <p class="card-text">평균 `+monthAvg2+` 건</p>
+           <b><i class="bi bi-3-square-fill"></i> `+subFactorMidNm3+` `+monthFireCount3+` 건</b>
+           <p class="card-text">평균 `+monthAvg3+` 건</p>         
+           `;
+       FactorMidDiv.innerHTML = FactorMidcontentHTML;
+
+   }//--fmJSON end
+    
+   
+   function lmJSON(jsonData) {
+       console.log("lmData:"+jsonData.lmData);
+       console.log("lmData[0]:"+jsonData.lmData[0].subLocMidNm);
+       //쿼리 화재장소대분류1순위
+       const subLocMidNm1 = jsonData.lmData[0].subLocMidNm;
+       console.log("subLocBigNm1:"+subLocMidNm1);
+       const monthFireCount1 = jsonData.lmData[0].monthFireCount;
+       const monthAvg1 = jsonData.lmData[0].monthAvg;
+       //쿼리 화재장소대분류2순위
+       const subLocMidNm2 = jsonData.lmData[1].subLocMidNm;
+       const monthFireCount2 = jsonData.lmData[1].monthFireCount;
+       const monthAvg2 = jsonData.lmData[1].monthAvg;
+       //쿼리 화재장소대분류3순위
+       const subLocMidNm3 = jsonData.lmData[2].subLocMidNm;
+       const monthFireCount3 = jsonData.lmData[2].monthFireCount;
+       const monthAvg3 = jsonData.lmData[2].monthAvg;
+       console.log("monthAvg3:"+monthAvg3);
+
+       //--<div>태그 id
+       const LocMidDiv = document.querySelector('#LocMid');
+        //화면에서 화재장소대분류 상위3건 박스
+       const LocMidcontentHTML =
+           `
+           <h5 class="card-title">화재 장소 소분류</h5>
+           <hr>
+           <b><i class="bi bi-1-square-fill"></i> `+subLocMidNm1+` `+monthFireCount1+` 건</b>
+           <p class="card-text">평균 `+monthAvg1+` 건</p>
+           <b><i class="bi bi-2-square-fill"></i> `+subLocMidNm2+` `+monthFireCount2+` 건</b>
+           <p class="card-text">평균 `+monthAvg2+` 건</p>
+           <b><i class="bi bi-3-square-fill"></i> `+subLocMidNm3+` `+monthFireCount3+` 건</b>
+           <p class="card-text">평균 `+monthAvg3+` 건</p>         
+           `;
+       LocMidDiv.innerHTML = LocMidcontentHTML;
+   }//--lmJSON end
+    
+    function lbJSON(jsonData) {
+    	console.log("lbJSON:"+jsonData.lbData);
+    	console.log("lbJSON[0]:"+jsonData.lbData[0]);
+    	//쿼리 화재장소대분류1순위
+        const subLocBigNm1 = jsonData.lbData[0].subLocBigNm;
+        console.log("subLocBigNm1:"+subLocBigNm1);
+        const monthFireCount1 = jsonData.lbData[0].monthFireCount;
+        const monthAvg1 = jsonData.lbData[0].monthAvg;
+        //쿼리 화재장소대분류2순위
+        const subLocBigNm2 = jsonData.lbData[1].subLocBigNm;
+        const monthFireCount2 = jsonData.lbData[1].monthFireCount;
+        const monthAvg2 = jsonData.lbData[1].monthAvg;
+        //쿼리 화재장소대분류3순위
+        const subLocBigNm3 = jsonData.lbData[2].subLocBigNm;
+        const monthFireCount3 = jsonData.lbData[2].monthFireCount;
+        const monthAvg3 = jsonData.lbData[2].monthAvg;
+        console.log("monthAvg3:"+monthAvg3);
+
+        //--<div>태그 id
+        const LocBigDiv = document.querySelector('#LocBig');
+         //화면에서 화재장소대분류 상위3건 박스
+        const LocBigcontentHTML =
+            `
+            <h5 class="card-title">화재 장소</h5>
+            <hr>
+            <b><i class="bi bi-1-square-fill"></i> `+subLocBigNm1+` `+monthFireCount1+` 건</b>
+            <p class="card-text">평균 `+monthAvg1+` 건</p>
+            <b><i class="bi bi-2-square-fill"></i> `+subLocBigNm2+` `+monthFireCount2+` 건</b>
+            <p class="card-text">평균 `+monthAvg2+` 건</p>
+            <b><i class="bi bi-3-square-fill"></i> `+subLocBigNm3+` `+monthFireCount3+` 건</b>
+            <p class="card-text">평균 `+monthAvg3+` 건</p>         
+            `;
+        LocBigDiv.innerHTML = LocBigcontentHTML;
+    
+        
+    }//--lbJSON end
     
     
-    function firstJs(jsonData) {
+    function tmJSON(jsonData) {
 		//--쿼리 데이터 값
 		const todayFireCount = jsonData.tmData.todayFireCount;
 		console.log("todayFireCount:"+todayFireCount);
@@ -193,9 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const monthAmount         =jsonData.tmData.monthAmount ;
 		const lastYearDayAmount   =jsonData.tmData.lastYearDayAmount ;
 		const lastYearMonthAmount =jsonData.tmData.lastYearMonthAmount ;
-		
-		const lastYearMonthAmount =jsonData.lbData.0 ;
-		console.log("lastYearMonthAmount:"+lastYearMonthAmount );
+
 		
 		//--<div>태그 id
 		const FireCountDiv = document.querySelector('#FireCount');
@@ -253,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	   
         
 	    
-    }//--firstJs() end
+    }//--tmJSON() end
 
     
 });//--DOMContentLoaded end   
@@ -351,7 +536,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="row mt-3">
         <div class="col-md-4 mb-2">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" id="LocBig">
                     <h5 class="card-title">화재 장소</h5>
                     <hr>
                     <b><i class="bi bi-1-square-fill"></i> 비주거 0건</b>
@@ -366,7 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         <div class="col-md-4 mb-2">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" id="LocMid">
                     <h5 class="card-title">화재 장소 소분류</h5>
                     <hr>
                     <b><i class="bi bi-1-square-fill"></i> 상점가 0건</b>
@@ -381,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="col-md-4 mb-2">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body" id="FactorMid">
                     <h5 class="card-title">발화 원인</h5>
                     <hr>
                     <b><i class="bi bi-1-square-fill"></i> 전기적 요인 0건</b>
