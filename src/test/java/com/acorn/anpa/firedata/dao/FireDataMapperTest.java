@@ -97,14 +97,29 @@ public class FireDataMapperTest implements PLog {
 		search.setBigNm("부주의");
 		
 		List<Firedata> outVO = fireMapper.totalDataList(search);
-		for(Firedata vo : outVO) {
-			log.debug("vo: "+vo);
-			//테스트 해야되`~~ 꼬였어
-			//테스트 해야되`~~ 꼬였어
-			//테스트 해야되`~~ 꼬였어
-			//테스트 해야되`~~ 꼬였어
-			//테스트 해야되`~~ 꼬였어
-		}
+		assertEquals(13, outVO.size());
+		
+		search.setSearchDiv("20");
+		search.setMidNm("불장난");
+		outVO = fireMapper.totalDataList(search);
+		assertEquals(1, outVO.size());
+		
+		search.setSearchDiv("30");
+		search.setBigNm("숙박시설");
+		outVO = fireMapper.totalDataList(search);
+		
+		search.setSearchDiv("40");
+		search.setMidNm("민박");
+		outVO = fireMapper.totalDataList(search);
+		assertEquals(1, outVO.size());
+		
+		search.setSearchDiv("20");
+		search.setSubCityBigNm("서울특별시");
+		search.setSubCityMidNm("중구");
+		search.setBigNm("부주의");
+		search.setMidNm("불장난");
+		outVO = fireMapper.totalDataList(search);
+		assertEquals(1, outVO.size());
 	}
 	
 	@Ignore

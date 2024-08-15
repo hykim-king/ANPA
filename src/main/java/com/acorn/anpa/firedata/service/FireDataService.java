@@ -1,6 +1,7 @@
 package com.acorn.anpa.firedata.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.cmn.WorkDiv;
@@ -14,4 +15,6 @@ public interface FireDataService extends WorkDiv<Firedata>{
 	Firedata totalData(Search search) throws SQLException;
 	
 	Firedata doMainData() throws SQLException;
+	
+	List<Firedata> totalDataList(Search search) throws SQLException;
 }

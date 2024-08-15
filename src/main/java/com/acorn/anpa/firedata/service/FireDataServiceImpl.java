@@ -141,7 +141,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 	@Override
 	public List<Firedata> doRetrieve(DTO search) throws SQLException {
 		log.debug("1. param : " + search);
-		return fireDataMapper.doRetrieve(search);
+		return this.fireDataMapper.doRetrieve(search);
 	}
 
 	@Override
@@ -159,12 +159,18 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 	@Override
 	public Firedata totalData(Search search) throws SQLException {
 		log.debug("1. param : " + search);
-		return fireDataMapper.totalData(search);
+		return this.fireDataMapper.totalData(search);
 	}
 
 	@Override
 	public Firedata doMainData() throws SQLException {
 		// TODO Auto-generated method stub
-		return fireDataMapper.doMainData();
+		return this.fireDataMapper.doMainData();
+	}
+
+	@Override
+	public List<Firedata> totalDataList(Search search) throws SQLException {
+		log.debug("1. param : " + search);
+		return this.fireDataMapper.totalDataList(search);
 	}    
 }
