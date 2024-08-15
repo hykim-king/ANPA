@@ -36,8 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("doRetrieveBtn click : "+doRetrieveBtn);
         event.stopPropagation(); // 이벤트 버블링 방지
         
-        doRetrieve();
-        
+        doRetrieve();        
     }); //조회버튼
     doDeleteMemberBtn.addEventListener("click",function(event){
         event.stopPropagation(); // 이벤트 버블링 방지
@@ -46,6 +45,17 @@ document.addEventListener('DOMContentLoaded', function() {
         
     }); //삭제버튼
     // 클릭 이벤트 끝
+    
+    // 키다운 이벤트 시작
+    frm.searchWord.addEventListener("keydown", function(event) {
+        if (event.which == 13 ){
+        	console.log("야이 반동분자 새기야");
+        	
+            event.preventDefault();
+            doRetrieve();
+        }
+     });
+    // 키다운 이벤트 끝
     
     // 변화 감지 이벤트 시작
     frm.searchDiv.addEventListener("change",function(event){
@@ -129,9 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <jsp:include page="/WEB-INF/views/header.jsp" />
 
 <section class="content content2 content3 align-items-center">
-    <h3>    
-            관리자 페이지 - 회원 정보            
-    </h3>
+    <h3>관리자 페이지 - 회원 정보</h3>
 
     <div class="row g-1 align-items-center mt-2">
         <div class="col-md-auto">

@@ -24,7 +24,10 @@
 document.addEventListener('DOMContentLoaded', function() { 
 	
 	// 변수 선언
+	const popUp = document.querySelector(".popup");
+	const doDeleteMemberBtn = document.querySelector("#doDeleteMember");
     const frmUpdate = document.querySelector("#frmDataUpdate");
+    const frmUpdateBtn = document.querySelector("#frmUpdateBtn");
     const checkAll = document.querySelector('#checkAll');
     const doRetrieveBtn = document.querySelector("#doRetrieve");
     const frmUpCloseBtn = document.querySelector("#frmUpCloseBtn");
@@ -34,50 +37,139 @@ document.addEventListener('DOMContentLoaded', function() {
     const lMselect = document.querySelector("#lMselect");
     const fBselect = document.querySelector("#fBselect");
     const fMselect = document.querySelector("#fMselect");
+    const UcBselect = document.querySelector("#UcBselect");
+    const UcMselect = document.querySelector("#UcMselect");
+    const UlBselect = document.querySelector("#UlBselect");
+    const UlMselect = document.querySelector("#UlMselect");
+    const UfBselect = document.querySelector("#UfBselect");
+    const UfMselect = document.querySelector("#UfMselect");
+    const rows = document.querySelectorAll("#manageDataTable tbody tr");
+    let fireSeq = "";
+    const fireSeqs = [];  
     
 	// 업데이트 버튼 클릭 실행
 	updateBtnsClick();
 	midOptionSelectDelSession();
 	
 	// 클릭 이벤트 시작
+	// 수정 버튼
+	frmUpdateBtn.addEventListener("click",function(event){
+        doUpdateData();        
+        event.stopPropagation(); // 이벤트 버블링 방지        
+    });
+	// 삭제 버튼
+	doDeleteMemberBtn.addEventListener("click",function(event){
+        doDeleteData();        
+        event.stopPropagation(); // 이벤트 버블링 방지        
+    });
 	// 검색 버튼
-	doRetrieveBtn.addEventListener('click', function() {
+	doRetrieveBtn.addEventListener('click', function(event) {
 		doRetrieve(1);
+		event.stopPropagation(); // 이벤트 버블링 방지
 	});
 	// 정보 수정 닫기버튼
-    frmUpCloseBtn.addEventListener('click', function() {
-    	frmUpdate.classList.add('d-none');
+    frmUpCloseBtn.addEventListener('click', function(event) {
+        popUp.classList.toggle('popupHide');
+        popUp.classList.add('popupDoSaveHide');
+        event.stopPropagation(); // 이벤트 버블링 방지
+        event.stopImmediatePropagation(); 
     });
 	// 클릭 이벤트 끝
 
 	// 변화 감지 이벤트 시작
 	// 시도 change이벤트
     cBselect.addEventListener("change",function(){
-        console.log("cBselect change : "+cBselect.value);
-        cityCodeSet();        
+        cityCodeSet("", cBselect, cMselect);        
+        const subCityMidNm = sessionStorage.getItem("cMselectValue");
+        if (subCityMidNm != null && subCityMidNm !== '') {
+            sessionStorage.removeItem("cMselectValue"); // 삭제   
+        } 
+    });	
+    UcBselect.addEventListener("change",function(){
+        cityCodeSet("", UcBselect, UcMselect);     
     });	
 	// 화재요인 change이벤트
     fBselect.addEventListener("change",function(){
-        factorCodeSet();        
+        factorCodeSet("", fBselect, fMselect);     
+        const factorMidNm  = sessionStorage.getItem("fMselectValue");
+        if (factorMidNm != null && factorMidNm !== '') {
+	        sessionStorage.removeItem("fMselectValue"); // 삭제
+        }
+    });	
+    UfBselect.addEventListener("change",function(){
+        factorCodeSet("", UfBselect, UfMselect);        
     });	
 	// 화재장소 change이벤트
     lBselect.addEventListener("change",function(){
-        locCodeSet();        
+        locCodeSet("", lBselect, lMselect);  
+        const locMidNm = sessionStorage.getItem("lMselectValue");
+        if (locMidNm != null && locMidNm !== '') {
+	        sessionStorage.removeItem("lMselectValue"); // 삭제
+        }
+    });	
+    UlBselect.addEventListener("change",function(){
+        locCodeSet("", UlBselect, UlMselect);        
     });	
 	// 변화 감지 이벤트 끝
-
+	
 	// 함수 시작
+	// 화재정보 삭제
+	function doDeleteData(){
+        console.log('doDeleteData');
+        
+        // 각 행을 반복 처리합니다
+        rows.forEach(function(row) {
+            // 현재 행의 체크박스를 찾습니다
+            const checkbox = row.querySelector("td.checkbox input.chk");
+
+            // 체크박스가 체크되어 있는지 확인합니다
+            if (checkbox.checked) {
+                // 현재 행의 fireSeq를 찾습니다
+                fireSeq = row.querySelector("td.fireSeqTd input").value;
+                fireSeqs.push(fireSeq);
+            }
+        });
+        
+        // fireSeqs 체크 여부
+        if(isEmpty(fireSeqs) == true){
+            alert('체크된 화재정보가 존재하지 않습니다. 잘못된 경로!');
+        }else if(false == confirm('삭제 하시겠습니까?')){
+              return;
+        }  
+        
+        let type = "GET"; 
+        let url = "/ehr/manage/doDeleteData.do";
+        let async = "true";
+        let dataType = "html";
+        let params = {
+            "fireSeqs": JSON.stringify(fireSeqs)
+        };
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            console.log("data: ",data);
+
+            if(data){
+                let message = JSON.parse(data);
+
+                if(isEmpty(message)==false){
+                    alert(message.messageContents);
+
+                    doRetrieve(1);
+                }else{
+                    alert(message.messageContents);
+                }
+            }
+
+        }); 
+	}
     // 전체 조회
-	function doRetrieve(pageNo){
+	function doRetrieve(pageNo){    	
 		const frm = document.querySelector("#frmDataSearch");
         frm.pageNo.value = pageNo;
         console.log("pageNo: "+pageNo);     
         
-        const fBselectValue = frm.fBselect.value; 
         const fMselectValue = frm.fMselect.value; 
-        const lBselectValue = frm.lBselect.value; 
         const lMselectValue = frm.lMselect.value; 
-        const cBselectValue = frm.cBselect.value; 
         const cMselectValue = frm.cMselect.value; 
         
         sessionStorage.setItem("fMselectValue", fMselectValue); // 세션에 저장
@@ -89,6 +181,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 	// 단건 조회
 	function doSelectOne(fireSeq){            
+		const allMessageBox = document.querySelector(".allMessage");
+		const firedataBox = document.querySelector(".firedata");
+		const messageBox = document.querySelector(".message");
 		console.log("doSelectOne(fireSeq) : " + fireSeq);
 		// 비동기 통신
 		let type = "GET";
@@ -122,10 +217,29 @@ document.addEventListener('DOMContentLoaded', function() {
 		      console.log("frmUpdate : ", frmUpdate);
 		      console.log("frmUpdate.injuredSum : ", frmUpdate.injuredSum);
 		      
+		      frmUpdate.UfireSeq.value = firedata.fireSeq;
 		      frmUpdate.injuredSum.value = firedata.injuredSum;
 		      frmUpdate.dead.value       = firedata.dead;
 		      frmUpdate.injured.value    = firedata.injured;
 		      frmUpdate.amount.value     = firedata.amount;
+		      frmUpdate.UcBselect.value  = firedata.todayInjured;
+		      cityCodeSet(jsonObj.firedata.subCity, frmUpdate.UcBselect, frmUpdate.UcMselect);
+		      if (!isEmpty(firedata.todayFireCount) && 
+		    		    firedata.todayFireCount !== 0 && 
+		    		    firedata.todayFireCount !== '0'){
+		    	    frmUpdate.UfBselect.value  = firedata.todayFireCount;	
+		      }else{
+		    	    frmUpdate.UfBselect.value  = firedata.subFactor;	
+		      }
+		      factorCodeSet(jsonObj.firedata.subFactor, frmUpdate.UfBselect, frmUpdate.UfMselect);
+              if (!isEmpty(firedata.todayDead) && 
+                      firedata.todayDead !== 0 && 
+                      firedata.todayDead !== '0'){  
+			      frmUpdate.UlBselect.value  = firedata.todayDead;
+              }else{
+			      frmUpdate.UlBselect.value  = firedata.subLoc;   
+		      }
+		      locCodeSet(jsonObj.firedata.subLoc, frmUpdate.UlBselect, frmUpdate.UlMselect);
 		      
 		    }else{
 		      alert("조회 실패입니다.");
@@ -143,10 +257,101 @@ document.addEventListener('DOMContentLoaded', function() {
 		}); // PClass 끝
 	} // doSelectOne 끝
 	
-	// 수정버튼 함수
+	// 수정 메서드
+	function doUpdateData(){		
+        if(isEmpty(frmUpdate.UcBselect.value) == true){
+            alert("지역을 선택 하세요.");
+            frmUpdate.UcBselect.focus();
+            return;
+        }
+        if(isEmpty(frmUpdate.UfBselect.value) == true){
+            alert("요인을 선택 하세요.");
+            frmUpdate.UfBselect.focus();
+            return;
+        }
+        if(isEmpty(frmUpdate.UlBselect.value) == true){
+            alert("장소를 선택 하세요.");
+            frmUpdate.UlBselect.focus();
+            return;
+        }
+		
+        if(confirm("수정 하시겠습니까?")===false) return;
+        
+        // 지역
+        var UcselectValue = "";        
+        if(isEmpty(frmUpdate.UcMselect.value) == true){
+        	UcselectValue = frmUpdate.UcBselect.value;
+        }else{
+        	UcselectValue = frmUpdate.UcMselect.value;        	
+        }        
+        console.log(UcselectValue);
+        
+        // 요인
+        var UfselectValue = "";        
+        if(isEmpty(frmUpdate.UfMselect.value) == true){
+        	UfselectValue = frmUpdate.UfBselect.value;
+        }else{
+        	UfselectValue = frmUpdate.UfMselect.value;        	
+        }        
+        console.log(UfselectValue);
+        
+        // 장소
+        var UlselectValue = "";        
+        if(isEmpty(frmUpdate.UlMselect.value) == true){
+        	UlselectValue = frmUpdate.UlBselect.value;
+        }else{
+        	UlselectValue = frmUpdate.UlMselect.value;        	
+        }        
+        console.log(UlselectValue);
+        
+        let userId;
+        
+        if(isEmpty(sessionStorage.getItem("user")) == false){
+            userId = sessionStorage.getItem("user").userId;
+        }
+        
+        console.log(userId);
+        
+        let type = "POST"; 
+        let url = "/ehr/manage/doUpdateData.do";
+        let async = "true";
+        let dataType = "html";
+        let params = {
+            "injuredSum" : frmUpdate.injuredSum.value,
+            "dead" : frmUpdate.dead.value,
+            "injured" : frmUpdate.injured.value,
+            "amount" : frmUpdate.amount.value,
+            "subFactor" : UfselectValue,
+            "subLoc" : UlselectValue,
+            "subCity" : UcselectValue,
+            "modId" : userId,
+            "fireSeq" : frmUpdate.UfireSeq.value
+        };
+       
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            console.log("data: ",data);
+
+            if(data){
+                let message = JSON.parse(data); 
+                try{
+                    if(isEmpty(message) === false && 1 === message.messageId){                        
+                        alert(message.messageContents);
+                        doRetrieve(1);
+                    }else{
+                        alert(message.messageContents);
+                    }
+
+                }catch(error){
+                    alert("널 혹은 언디파인드임");
+                }
+            }
+
+        }); 
+	}
+	
+	// 테이블 수정 버튼 함수
 	function updateBtnsClick() {
 	    const updateBtns = document.querySelectorAll("#manageDataTable tbody tr .btn");
-	    console.log("btn click");
 	
 	    updateBtns.forEach(function(updateBtn) {
 	        updateBtn.addEventListener("click", function() {
@@ -157,29 +362,45 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	            // 해당 행에서 .fireSeqTd 클래스의 td를 찾아서 그 내부의 input 요소의 value를 읽어옵니다
 	            const fireSeqInput = row.querySelector('.fireSeqTd input');
-	            let fireSeq = fireSeqInput.value.trim();
+	            fireSeq = fireSeqInput.value.trim();
 	            
 	            console.log(fireSeq);
 	            doSelectOne(fireSeq);
-	            frmUpdate.classList.remove('d-none');
+	            popUp.classList.toggle('popupHide');
+	            popUp.classList.remove('popupDoSaveHide');
 	        });
 	    });
 	}
 	// 중분류 옵션 자동 선택 및 중분류 세션 정보 삭제
 	function midOptionSelectDelSession(){
-		cityCodeSet();
-		factorCodeSet();
-		locCodeSet();
-		sessionStorage.removeItem("fMselectValue"); // 삭제
-		sessionStorage.removeItem("lMselectValue"); // 삭제
-		sessionStorage.removeItem("cMselectValue"); // 삭제
+        const factorMidNm  = sessionStorage.getItem("fMselectValue");
+        const locMidNm     = sessionStorage.getItem("lMselectValue");
+        const subCityMidNm = sessionStorage.getItem("cMselectValue");
+		
+        if (factorMidNm != null && factorMidNm !== '') {
+            const factorMidNm = sessionStorage.getItem("fMselectValue");
+			factorCodeSet(factorMidNm, fBselect, fMselect);
+        }else if (isEmpty(fBselect) === false) {          
+            factorCodeSet("", fBselect, fMselect); 
+        }
+        if (locMidNm != null && locMidNm !== '') {
+            const locMidNm = sessionStorage.getItem("lMselectValue");
+            locCodeSet(locMidNm, lBselect, lMselect);
+        }else if (isEmpty(lBselect) === false) {          
+            locCodeSet("", lBselect, lMselect);  
+        }
+        if (subCityMidNm != null && subCityMidNm !== '') {
+            const subCityMidNm = sessionStorage.getItem("cMselectValue");
+            cityCodeSet(subCityMidNm, cBselect, cMselect);
+        }else if (isEmpty(cBselect) === false) {          
+            cityCodeSet("", cBselect, cMselect);
+        }        
 	}
 	// 시도 선택 시 시군구 변경
-	function cityCodeSet() {	
+	function cityCodeSet(subCityMidNm, cBselect, cMselect) {	
 	    const cityCode = cBselect.value;
 	    const url = "/ehr/manage/doSelectCode.do";
 	    const type = "GET";
-	    const subCityMidNm = sessionStorage.getItem("cMselectValue");
 	    
 	    if (cBselect.value === "") {
 	        cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
@@ -205,8 +426,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             option.selected = false;                            
                         } 
 	                    option.text = item.midList;
-	                    console.log(item.subCode);
-	                    console.log(item.midList);
 	                    cMselect.appendChild(option);
 	                });
 	            } else {
@@ -221,13 +440,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	        xhr.send();
 	    }
 	}
-	function factorCodeSet() {    
+	function factorCodeSet(factorMidNm, fBselect, fMselect) {    
         const factorCode = fBselect.value;
         const url = "/ehr/manage/doSelectCode.do";
         const type = "GET";
-        const factorMidNm = sessionStorage.getItem("fMselectValue");
-        
-        console.log("함수factorMidNm.value :" + factorMidNm);
         
         if (fBselect.value === "") {
             fMselect.innerHTML = '<option value="">' + "화재요인 미선택" + '</option>';
@@ -253,8 +469,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             option.selected = false;                            
                         }
                         option.text = item.midList;
-                        console.log(item.subCode);
-                        console.log(item.midList);
                         fMselect.appendChild(option);
                     });
                 } else {
@@ -270,13 +484,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 	
-	function locCodeSet() {    
+	function locCodeSet(locMidNm, lBselect, lMselect) {    
         const locCode = lBselect.value;
         const url = "/ehr/manage/doSelectCode.do";
         const type = "GET";
-        const locMidNm = sessionStorage.getItem("lMselectValue");
-        
-        console.log("함수locMidNm.value :" + locMidNm);
         
         if (lBselect.value === "") {
             lMselect.innerHTML = '<option value="">' + "화재장소 미선택" + '</option>';
@@ -302,8 +513,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         	option.selected = false;                        	
                         }
                         option.text = item.midList;
-                        console.log(item.subCode);
-                        console.log(item.midList);
                         lMselect.appendChild(option);
                     });
                 } else {
@@ -326,15 +535,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <jsp:include page="/WEB-INF/views/header.jsp" />
 
 <section class="content content2 content3 align-items-center">
-    <h3>    
-            관리자 페이지 - 화재 정보    
-            ${search}        
-            ${search.subCityMidNm}        
-    </h3>
+    <h3>관리자 페이지 - 화재 정보 </h3>
 
     <div class="row g-1 align-items-center mt-2">
         <div class="col-md-1">
-            <button class="btn btn-danger">삭제</button>
+            <button id="doDeleteMember" class="btn btn-danger">삭제</button>
         </div>
         <div class="col-md-auto"></div>
         
@@ -348,13 +553,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="dateStart" style="padding-top : 6px">검색 날짜 : </label>
                 </div>
                 <div class="col-md-auto">
-				    <input class="form-control" type="date" id="dateStart" name="dateStart">
+				    <input class="form-control" type="date" value="${not empty search.searchDateStart ? search.searchDateStart : ''}" id="dateStart" name="dateStart">
                 </div>
                 <div class="col-md-auto">
                     <label for="dateEnd" style="padding-top : 6px">종료 날짜 : </label>
                 </div>
                 <div class="col-md-auto">
-					<input class="form-control" type="date" id="dateEnd" name="dateEnd">
+					<input class="form-control" type="date" value="${not empty search.searchDateEnd ? search.searchDateEnd : ''}" id="dateEnd" name="dateEnd">
                 </div>
                 <div class="col-md-auto">
                     <select class="form-select" name="cBselect" id="cBselect">
@@ -445,14 +650,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <c:when test="${list.size() >0 }">
                     <c:forEach var="item" items="${list}">
 	                <tr>
-	                    <td class="align-middle"><input type="checkbox" class="chk"></td>
+	                    <td class="align-middle checkbox"><input type="checkbox" class="chk"></td>
                         <td class="align-middle">${item.regDt}</td>
 	                    <td class="align-middle d-none fireSeqTd"><input type="password" value="${item.fireSeq}"></td>
 	                    <td class="align-middle">${item.injuredSum}</td>
 	                    <td class="align-middle">${item.dead}</td>
 	                    <td class="align-middle">${item.injured}</td>
-	                    <td class="align-middle">${item.subFactorBigNm}</td>
-	                    <td class="align-middle">${item.subFactorMidNm}</td>
+	                    <td class="align-middle">${item.subFactorBigNm} - ${item.subFactorMidNm}</td>
+	                    <td class="align-middle">${item.subLocBigNm} - ${item.subLocMidNm}</td>
 	                    <td class="align-middle">${item.subCityBigNm} ${item.subCityMidNm}</td>
 	                    <td class="align-middle">${item.regId}</td>
 	                    <td class="align-middle d-none">${item.modDt}</td>
@@ -499,14 +704,21 @@ document.addEventListener('DOMContentLoaded', function() {
 </section>
 
 <!-- form -->
-<form action="#" name="frmDataUpdate" id="frmDataUpdate" class="form-horizontal d-none">
+<div class = "popup popupHide">
+<form action="#" name="frmDataUpdate" id="frmDataUpdate" class="form-horizontal">
   <div class="row m-0 mb-2">
       <div class="col-sm-10"></div>
       <div class="col-sm-2">
-        <button class="btn btn-danger" id="frmUpCloseBtn">X</button>
+        <button class="btn btn-danger" id="frmUpCloseBtn" type="button">X</button>
       </div>
   </div>
 
+  <div class="row m-0 mb-2">
+      <div class="col-sm-auto d-none">
+        <input type="password" class="form-control" name="UfireSeq" id="UfireSeq"   required="required">
+      </div> 
+  </div>
+  
   <div class="row m-0 mb-2">
       <label for="injuredSum" class="col-sm-3 col-form-label">사상자</label>
       <div class="col-sm-auto">
@@ -534,7 +746,61 @@ document.addEventListener('DOMContentLoaded', function() {
         <input type="number" class="form-control" name="amount" id="amount" required="required">
       </div> 
   </div>    
+  
+  <div class="row m-0 mb-2">
+      <select class="form-select" name="UcBselect" id="UcBselect">
+          <option value="">시도 전체</option>
+          <c:forEach var="item" items="${cityCode}">
+              <c:if test="${item.mainCode == 0}">
+                  <option value="${item.subCode}">${item.bigList}</option>
+              </c:if>
+          </c:forEach>
+      </select>
+  </div>
+  <div class="row m-0 mb-2">
+      <select class="form-select" name="UcMselect" id="UcMselect">
+          <option value="">시군구 전체</option>
+      </select>
+  </div>
+  <div class="row m-0 mb-2">
+      <select class="form-select" name="UfBselect" id="UfBselect">
+          <option value="">화재요인 전체</option>
+          <c:forEach var="item" items="${factorCode}">
+            <c:if test="${item.mainCode == 0}">
+                <option value="${item.subCode}">${item.bigList}</option>
+            </c:if>
+          </c:forEach>
+      </select>
+  </div>
+  <div class="row m-0 mb-2">
+      <select class="form-select" name="UfMselect" id="UfMselect">
+          <option value="">화재요인 미선택</option>
+      </select>
+  </div>
+  <div class="row m-0 mb-2">
+      <select class="form-select" name="UlBselect" id="UlBselect">
+          <option value="">화재장소 전체</option>
+          <c:forEach var="item" items="${LocCode}">
+            <c:if test="${item.mainCode == 0}">
+                <option value="${item.subCode}">${item.bigList}</option>
+            </c:if>
+          </c:forEach>
+      </select>
+  </div>
+  <div class="row m-0 mb-2">
+      <select class="form-select" name="UlMselect" id="UlMselect">
+          <option value="">화재장소 미선택</option>
+      </select>
+  </div>
+
+  <div class="row m-0 mb-2">
+      <div class="col-sm-10"></div>
+      <div class="col-sm-2">
+        <button class="btn btn-success" id="frmUpdateBtn" type="button">수정</button>
+      </div>
+  </div>    
 </form>
+</div>
 <!--// form -->
 
 <jsp:include page="/WEB-INF/views/footer.jsp" />

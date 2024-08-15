@@ -22,9 +22,9 @@ public class Firedata extends DTO{
 	private String subCityMidNm;   // 시군구 이름
 	
 	//월별화재데이터 검색 시 필요 추가(승희)
-	private int todayFireCount        ;//오늘 화재건수
-	private int todayDead             ;//오늘 사망자수
-	private int todayInjured          ;//오늘 부상자수
+	private int todayFireCount        ;//오늘 화재건수&화재요인(대)코드 (준모 작성)
+	private int todayDead             ;//오늘 사망자수&화재장소(대)코드 (준모 작성)
+	private int todayInjured          ;//오늘 부상자수&시도 (시군구/대) 코드 (준모 작성)
 	private int todayAmount           ;//오늘 피해액
 	private int monthFireCount        ;//검색 월 화재건수
 	private int monthDead             ;//검색 월 사망자수

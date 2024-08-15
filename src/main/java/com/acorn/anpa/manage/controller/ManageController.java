@@ -189,6 +189,11 @@ public class ManageController implements PLog{
 		
 		Search search = new Search();	
 		
+		//searchDateStart = "" (사고 날짜 시작)
+		String searchDateStart = StringUtil.nvl(req.getParameter("dateStart"), "");
+		//searchDateEnd = "" (사고 날짜 종류)
+		String searchDateEnd = StringUtil.nvl(req.getParameter("dateEnd"), "");
+
 		//searchDiv = "" (화재요인 대분류)
 		String searchDiv = StringUtil.nvl(req.getParameter("fBselect"), "");
 		//searchWord = "" (화재요인 중분류)
@@ -209,6 +214,8 @@ public class ManageController implements PLog{
 		//pageNo=1 (기본값)
 		String pageNo = StringUtil.nvl(req.getParameter("pageNo"), "1");
 		
+		search.setSearchDateStart(searchDateStart);
+		search.setSearchDateEnd(searchDateEnd);
 		search.setSearchDiv(searchDiv);
 		search.setSearchWord(searchWord);
 		search.setBigNm(bigNm);
@@ -305,7 +312,13 @@ public class ManageController implements PLog{
 		log.debug("param FireData : " + inVO);
 		
 		//TODO : session 처리 예정
+		String injuredSum = StringUtil.nvl(inVO.getInjuredSum()+"", "0"); 
+		String dead = StringUtil.nvl(inVO.getDead()+"", "0"); 
+		String injured = StringUtil.nvl(inVO.getInjured()+"", "0"); 
+		String amount = StringUtil.nvl(inVO.getAmount()+"", "0"); 
 		String modId = StringUtil.nvl(inVO.getModId(), "admin1"); 
+		inVO.setInjuredSum(Integer.parseInt(injuredSum));
+		inVO.setDead(Integer.parseInt(dead));
 		inVO.setModId(modId);
 		
 		int flag = fireDataService.doUpdate(inVO);
@@ -331,18 +344,42 @@ public class ManageController implements PLog{
 			produces = "text/plain;charset=UTF-8"
 	)		// produces : 화면으로 전송할 때 encoding
 	@ResponseBody
-	public String doDeleteData(Firedata inVO)throws SQLException {
+	public String doDeleteData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		String jsonString = "";
 		
-		log.debug("param Firedata : " + inVO);
+		// HTTP 요청에서 bookCodes를 받아옵니다.
+    	String fireSeqsJson = request.getParameter("fireSeqs");
+    	log.debug("fireSeqsJson" + fireSeqsJson);
 		
-		int flag = fireDataService.doDelete(inVO);
-		log.debug("flag : " + flag);
+    	// Gson을 사용하여 JSON 문자열을 배열로 변환합니다.
+        Gson fireSeqsgson = new Gson();
+    	String[] fireSeqs = fireSeqsgson.fromJson(fireSeqsJson, String[].class);
+    	log.debug("fireSeqs" + Arrays.toString(fireSeqs));    	
+    	
+    	// 삭제 결과를 저장할 변수
+        int totalDeleted = 0;
+        int flag = 0;
+        if (fireSeqs != null && fireSeqs.length > 0) {
+        	// 각 bookCode에 대해 삭제 작업을 수행합니다.
+            for (String fireSeq : fireSeqs) {
+            	Firedata inVO = new Firedata();
+            	inVO.setFireSeq(Integer.parseInt(fireSeq.trim())); // 공백 제거 후 화면에서 가져온 fireSeq 부여
+            	log.debug("inVO" + inVO);
+            	
+            	flag = fireDataService.doDelete(inVO);
+            	log.debug("flag : " + flag);
+            	totalDeleted += flag;
+            	}
+        }else {
+        	log.debug("fireSeqs가 null이거나 길이가 0입니다.");
+        }
+        
+        log.debug("총 {} 건 삭제되었습니다.", totalDeleted);
 		
 		String message = "";
 		
-		if(1==flag) {
-			message = "화재 데이터가 삭제되었습니다.";
+		if(totalDeleted > 0) {
+			message = totalDeleted + "건의 화재데이터가 삭제되었습니다.";
 		}else {
 			message = "삭제 실패! 존재하지 않는 데이터입니다.";			
 		}
@@ -372,7 +409,7 @@ public class ManageController implements PLog{
 		String message = "";
 		int flag = 0;
 		if (null != outVO) {
-			message = inVO.getFireSeq() + " 의 데이터가 조회되었습니다";
+			message = "화재정보 " + inVO.getFireSeq() + " 번 데이터가 조회되었습니다";
 			flag = 1;
 		}else {
 			message = inVO.getFireSeq() + " 조회 실패!";

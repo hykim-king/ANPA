@@ -65,17 +65,6 @@
     
     <sql id="sumWhenGroup">
         <choose>
-             <when test="(subCityBigNm != '' and subCityBigNm != null) 
-             and (subCityMidNm == null or subCityMidNm == '')">
-                 AND t4.big_list = #{subCityBigNm}
-             </when>
-             <when test="(subCityBigNm != '' and subCityBigNm != null) 
-             and (subCityMidNm != null or subCityMidNm != '')">
-                 AND t4.big_list = #{subCityBigNm}
-                 AND t4.mid_list = #{subCityMidNm}
-             </when>
-        </choose>
-        <choose>
              <when test="searchDiv != null and searchDiv == 10">
                  AND t2.big_list = #{BigNm}
                  GROUP BY t2.mid_list
@@ -93,6 +82,17 @@
                  AND t3.big_list = #{BigNm}
                  AND t3.mid_list = #{MidNm}
                  GROUP BY t3.mid_list
+             </when>
+        </choose>
+        <choose>
+             <when test="(subCityBigNm != '' and subCityBigNm != null) 
+             and (subCityMidNm == null or subCityMidNm == '')">
+                 AND t4.big_list = #{subCityBigNm}
+             </when>
+             <when test="(subCityBigNm != '' and subCityBigNm != null) 
+             and (subCityMidNm != null or subCityMidNm != '')">
+                 AND t4.big_list = #{subCityBigNm}
+                 AND t4.mid_list = #{subCityMidNm}
              </when>
         </choose>
     </sql>
@@ -114,13 +114,13 @@
     </select>
     
     <select id="totalDataList" parameterType="Search" resultType="Firedata">
-        SELECT #{BigNm} subFactorBigNm,
+        SELECT #{BigNm} big_list,
                <choose>
                    <when test="searchDiv == 10 || searchDiv == 20">
-                    t2.mid_list subFactorMidNm,
+                    t2.mid_list,
                    </when>
                    <when test="searchDiv == 30 || searchDiv == 40">
-                    t3.mid_list subFactorMidNm,
+                    t3.mid_list,
                    </when>
                </choose>
 		       SUM(t1.injured_sum) injured_sum,
@@ -131,14 +131,13 @@
 		LEFT JOIN code t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
         LEFT JOIN code t3 ON t3.master_code = 'location' AND t3.sub_code = t1.sub_loc
         LEFT JOIN code t4 ON t4.master_code = 'city' AND t4.sub_code = t1.sub_city
-        WHERE 1=1
 		AND to_char(t1.reg_dt,'yyyy-mm-dd') <![CDATA[>=]]> #{searchDateStart}
 		AND to_char(t1.reg_dt,'yyyy-mm-dd') <![CDATA[<=]]> #{searchDateEnd}
 		<include refid="sumWhenGroup"/>
     </select>
     
     <select id="doRetrieve" parameterType="Search" resultType="Firedata">
-		SELECT
+        SELECT
             A.*,
             B.totalCnt
         FROM (
@@ -178,63 +177,76 @@
                     FROM
                         FIRE_DATA FIRE_DATA
                         LEFT JOIN CODE fac ON fac.master_code = 'factor' AND fac.sub_code = FIRE_DATA.sub_factor AND fac.use_yn = 1
-			            LEFT JOIN CODE loc ON loc.master_code = 'location' AND loc.sub_code = FIRE_DATA.sub_loc AND loc.use_yn = 1
-			            LEFT JOIN CODE city ON city.master_code = 'city' AND city.sub_code = FIRE_DATA.sub_city AND city.use_yn = 1
-		            WHERE 1=1
+                        LEFT JOIN CODE loc ON loc.master_code = 'location' AND loc.sub_code = FIRE_DATA.sub_loc AND loc.use_yn = 1
+                        LEFT JOIN CODE city ON city.master_code = 'city' AND city.sub_code = FIRE_DATA.sub_city AND city.use_yn = 1
+                    WHERE 1=1
                     <include refid="doRetrieveWhere"/>
+                    ORDER BY FIRE_DATA.reg_dt
                 ) T1
                 WHERE
-                    ROWNUM <![CDATA[<=]]> ( #{pageSize}*(#{pageNo} -1) + #{pageSize} )
+                    ROWNUM <![CDATA[<=]]> (#{pageSize} * (#{pageNo} - 1) + #{pageSize})
             ) TT1
             WHERE
-                TT1.RNUM <![CDATA[>=]]> ( #{pageSize}*(#{pageNo} -1) + 1 )
+                TT1.RNUM <![CDATA[>=]]> (#{pageSize} * (#{pageNo} - 1) + 1)
         ) A
         CROSS JOIN (
             SELECT COUNT(*) AS totalCnt
             FROM FIRE_DATA
-	            LEFT JOIN CODE fac ON fac.master_code = 'factor' AND fac.sub_code = FIRE_DATA.sub_factor AND fac.use_yn = 1
-	            LEFT JOIN CODE loc ON loc.master_code = 'location' AND loc.sub_code = FIRE_DATA.sub_loc AND loc.use_yn = 1
-	            LEFT JOIN CODE city ON city.master_code = 'city' AND city.sub_code = FIRE_DATA.sub_city AND city.use_yn = 1
+                LEFT JOIN CODE fac ON fac.master_code = 'factor' AND fac.sub_code = FIRE_DATA.sub_factor AND fac.use_yn = 1
+                LEFT JOIN CODE loc ON loc.master_code = 'location' AND loc.sub_code = FIRE_DATA.sub_loc AND loc.use_yn = 1
+                LEFT JOIN CODE city ON city.master_code = 'city' AND city.sub_code = FIRE_DATA.sub_city AND city.use_yn = 1
             WHERE 1=1
-		    <include refid="doRetrieveWhere"/>
+            <include refid="doRetrieveWhere"/>
         ) B
     </select>
     
     <sql id="doRetrieveWhere">
-	    <choose>
-	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord == null or searchWord == '')">
-	            AND fac.big_list = #{searchDiv}
-	        </when>
-	        <when test="(searchDiv != '' and searchDiv != null) and (searchWord != null and searchWord != '')">
-	            AND fac.big_list = #{searchDiv}
-	            AND fac.mid_list = #{searchWord}
-	        </when>
-	    </choose>
-	    <choose>
-	        <when test="(BigNm != '' and BigNm != null) and (MidNm == null or MidNm == '')">
-	            AND loc.big_list = #{BigNm}
-	        </when>
-	        <when test="(BigNm != '' and BigNm != null) and (MidNm != null and MidNm != '')">
-	            AND loc.big_list = #{BigNm}
-	            AND loc.mid_list = #{MidNm}
-	        </when>
-	    </choose>
-	    <choose>
-	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm == null or subCityMidNm == '')">
-	            AND city.big_list = #{subCityBigNm}
-	        </when>
-	        <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm != null and subCityMidNm != '')">
-	            AND city.big_list = #{subCityBigNm}
-	            AND city.mid_list = #{subCityMidNm}
-	        </when>
-	    </choose>
-	    <choose>
-	        <when test="(searchDateStart != null and searchDateStart != '') and (searchDateEnd != null and searchDateEnd != '')">
-	            AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[>=]]> #{searchDateStart} 
-	            AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[<=]]> #{searchDateEnd}
-	        </when>
-	    </choose>
-	</sql>
+        <choose>
+            <when test="(searchDiv != '' and searchDiv != null) and (searchWord == null or searchWord == '')">
+                AND(
+                    FAC.main_code = #{searchDiv}
+                    OR FAC.sub_code = #{searchDiv}
+                )    
+            </when>
+            <when test="(searchDiv != '' and searchDiv != null) and (searchWord != null and searchWord != '')">
+                AND FIRE_DATA.sub_factor = #{searchWord}
+            </when>
+        </choose>
+        <choose>
+            <when test="(BigNm != '' and BigNm != null) and (MidNm == null or MidNm == '')">
+                AND(
+                    LOC.main_code = #{BigNm}
+                    OR LOC.sub_code = #{BigNm}
+                )    
+            </when>
+            <when test="(BigNm != '' and BigNm != null) and (MidNm != null and MidNm != '')">
+                AND FIRE_DATA.sub_loc = #{MidNm}
+            </when>
+        </choose>
+        <choose>
+            <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm == null or subCityMidNm == '')">
+                AND(
+                    CITY.main_code = #{subCityBigNm}
+                    OR CITY.sub_code = #{subCityBigNm}
+                )
+            </when>
+            <when test="(subCityBigNm != '' and subCityBigNm != null) and (subCityMidNm != null and subCityMidNm != '')">
+                AND FIRE_DATA.sub_city = #{subCityMidNm}
+            </when>
+        </choose>
+        <choose>
+            <when test="(searchDateStart != null and searchDateStart != '') and (searchDateEnd != null and searchDateEnd != '')">
+                AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[>=]]> #{searchDateStart}
+                AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[<=]]> #{searchDateEnd}
+            </when>
+            <when test="searchDateStart != null and searchDateStart != ''">
+                AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[>=]]> #{searchDateStart} 
+            </when>
+            <when test="searchDateEnd != null and searchDateEnd != ''">
+                AND TO_CHAR(FIRE_DATA.reg_dt, 'YYYY-MM-DD') <![CDATA[<=]]> #{searchDateEnd}
+            </when>
+        </choose>
+    </sql>
 
     <insert id="doSave" parameterType="Firedata">
         INSERT INTO FIRE_DATA (
@@ -281,32 +293,28 @@
     </delete>
     
     <select id="doSelectOne" parameterType="Firedata" resultType="Firedata">
-        SELECT  fd.fire_seq AS fireSeq,
-                fd.injured_sum AS injuredSum,
-                fd.dead,
-                fd.injured,
-                fd.amount,
-                fd.sub_factor AS subFactor,
-                fac_big.big_list AS subFactorBigNm,
-                fac_mid.mid_list AS subFactorMidNm,
-                fd.sub_loc AS subLoc,
-                loc_big.big_list AS subLocBigNm,
-                loc_mid.mid_list AS subLocMidNm,
-                fd.sub_city AS subCity,
-                city_big.big_list AS subCityBigNm,
-                city_mid.mid_list AS subCityMidNm,
-                fd.reg_id AS regId,
-                TO_CHAR(fd.reg_dt, 'YYYY/MM/DD HH24:MI:SS') AS regDt,
-                fd.mod_id AS modId,
-                TO_CHAR(fd.mod_dt, 'YYYY/MM/DD HH24:MI:SS') AS modDt
-        FROM    FIRE_DATA fd
-                LEFT JOIN CODE fac_big ON fac_big.master_code = 'factor' AND fac_big.sub_code = fd.sub_factor
-                LEFT JOIN CODE fac_mid ON fac_mid.master_code = 'factor' AND fac_mid.sub_code = fd.sub_factor
-                LEFT JOIN CODE loc_big ON loc_big.master_code = 'location' AND loc_big.sub_code = fd.sub_loc
-                LEFT JOIN CODE loc_mid ON loc_mid.master_code = 'location' AND loc_mid.sub_code = fd.sub_loc
-                LEFT JOIN CODE city_big ON city_big.master_code = 'city' AND city_big.sub_code = fd.sub_city
-                LEFT JOIN CODE city_mid ON city_mid.master_code = 'city' AND city_mid.sub_code = fd.sub_city
-        WHERE   fd.fire_seq = #{fireSeq}
+		SELECT  FIRE_DATA.fire_seq AS fireSeq,
+		        FIRE_DATA.injured_sum AS injuredSum,
+		        FIRE_DATA.dead,
+		        FIRE_DATA.injured,
+		        FIRE_DATA.amount,
+		        FAC.main_code AS todayFireCount,
+		        FIRE_DATA.sub_factor AS subFactor,
+		        FAC.big_list AS subFactorBigNm,
+		        FAC.mid_list AS subFactorMidNm,
+		        LOC.main_code AS todayDead,        
+		        FIRE_DATA.sub_loc AS subLoc,
+		        LOC.big_list AS subLocBigNm,
+		        LOC.mid_list AS subLocMidNm,
+		        CITY.main_code AS todayInjured,
+		        FIRE_DATA.sub_city AS subCity,
+		        CITY.big_list AS subCityBigNm,
+		        CITY.mid_list AS subCityMidNm
+		FROM    FIRE_DATA
+		        LEFT JOIN CODE FAC ON FAC.master_code = 'factor' AND FAC.sub_code = FIRE_DATA.sub_factor
+		        LEFT JOIN CODE LOC ON LOC.master_code = 'location' AND LOC.sub_code = FIRE_DATA.sub_loc
+		        LEFT JOIN CODE CITY ON CITY.master_code = 'city' AND CITY.sub_code = FIRE_DATA.sub_city
+		WHERE   FIRE_DATA.fire_seq = #{fireSeq}
     </select>
     
     <!-- 테스트용 DAO 메서드 -->

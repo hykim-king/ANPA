@@ -1,18 +1,32 @@
 @charset "UTF-8";
 
 /* 관리자 페이지 시작 */
-#frmDataUpdate{
-	transform : translate(-50%, -50%);
-	background-color: #fff;
-	position : fixed;
-	width : 80%;
-	max-width : 1500px;
-	height: auto;
-	top : 50%;
-	left: 50%;
-	z-index : 999;
-	padding : 50px;
-	box-shadow : 5px 5px 2px rgba(0,0,0,.6);
+.popup{
+    box-shadow : -5px -5px 15px rgba(0, 0, 0, 0.1);
+    border-radius : 5px;
+    opacity : 1;
+    width: 90%;
+    max-width: 900px;
+    height: auto;
+    min-height: 550px;
+    position: fixed;
+    top : 50%;
+    left : 50%;
+    transform : translate(-50%, -50%);
+    border : 1px solid #eee;
+    background-color : white;
+    padding : 50px; 
+    transition : opacity .5s ease-in-out;
+    z-index : 999;
+}
+.popupHide{
+    user-select: none; /* 텍스트 선택 금지 */
+    pointer-events: none; /* 마우스 이벤트 무시 */
+    width: 0;
+    height: 0;
+    overflow: hidden; /* 내용 숨김 */
+    opacity : 0;
+    visibility: hidden;
 }
 #checkAll,
 .chk{cursor : pointer;}
