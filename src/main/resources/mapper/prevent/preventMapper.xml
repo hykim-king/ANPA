@@ -49,10 +49,13 @@
         SELECT A.*, B.*
         FROM (
             SELECT TT1.RNUM AS NO,
-                   TT1.PREVENT_SEQ,
+                   TT1.PREVENT_SEQ AS preventSeq,
                    TT1.title,
                    TT1.contents,
                    TT1.read_cnt as readCnt,
+                   TT1.img_src as imgSrc,  
+                   TT1.reg_id as regId, -- 등록자
+                   TT1.reg_dt as regDt, -- 등록일
                    TT1.mod_id as modId,
                    DECODE(
                        TO_CHAR(TT1.mod_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
