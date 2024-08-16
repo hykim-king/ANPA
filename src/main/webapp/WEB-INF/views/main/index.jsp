@@ -28,7 +28,87 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("상단 앱 메뉴 클릭");
     });
     // header end
-
+    
+    // 함수 시작
+    // 서브 차트 함수 시작
+    Highcharts.chart('graphBox2', {
+	    chart: {
+	        type: 'spline'
+	    },
+	    title: {
+	        text: 'Monthly Average Temperature'
+	    },
+	    subtitle: {
+	        text: 'Source: ' +
+	            '<a href="https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature" ' +
+	            'target="_blank">Wikipedia.com</a>'
+	    },
+	    xAxis: {
+	        categories: [
+	            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+	            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+	        ],
+	        accessibility: {
+	            description: 'Months of the year'
+	        }
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Temperature'
+	        },
+	        labels: {
+	            format: '{value}°'
+	        }
+	    },
+	    tooltip: {
+	        crosshairs: true,
+	        shared: true
+	    },
+	    plotOptions: {
+	        spline: {
+	            marker: {
+	                radius: 4,
+	                lineColor: '#666666',
+	                lineWidth: 1
+	            }
+	        }
+	    },
+	    series: [{
+	        name: 'Tokyo',
+	        marker: {
+	            symbol: 'square'
+	        },
+	        data: [5.2, 5.7, 8.7, 13.9, 18.2, 21.4, 25.0, {
+	            y: 26.4,
+	            marker: {
+	                symbol: 'url(https://www.highcharts.com/samples/graphics/sun.png)'
+	            },
+	            accessibility: {
+	                description: 'Sunny symbol, this is the warmest point in the ' +
+	                    'chart.'
+	            }
+	        }, 22.8, 17.5, 12.1, 7.6]
+	
+	    }, {
+	        name: 'Bergen',
+	        marker: {
+	            symbol: 'diamond'
+	        },
+	        data: [{
+	            y: 1.5,
+	            marker: {
+	                symbol: 'url(https://www.highcharts.com/samples/graphics/snow.png)'
+	            },
+	            accessibility: {
+	                description: 'Snowy symbol, this is the coldest point in the ' +
+	                    'chart.'
+	            }
+	        }, 1.6, 3.3, 5.9, 10.5, 13.5, 14.5, 14.4, 11.5, 8.7, 4.7, 2.6]
+	    }]
+	});
+    // 서브 차트 함수 끝
+    
+    // 메인 타이틀 실시간 변화
     function updateMainTitleBox() {
     	const todayFireCount = ${firedata.todayFireCount}
         const todayInjured = ${firedata.todayInjured}
@@ -47,7 +127,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         mainTitleBox.innerHTML = contentHTML;
     }
-
+    
+    // 메인차트 실시간 변화
     function updateGraph() {
     	const todayFireCount = ${firedata.todayFireCount}
         const todayInjured = ${firedata.todayInjured}
@@ -152,14 +233,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    updateMainTitleBox();
-    updateGraph();
 
     // 1분마다 updateMainTitleBox()와 updateGraph() 함수 실행
     setInterval(function() {
         updateMainTitleBox();
         updateGraph();
     }, 10000); // 60000밀리초 = 1분
+    // 함수 끝
+
+    // 메인, 메인 차트 함수 실행
+    updateMainTitleBox();
+    updateGraph();
 });
 </script>    
 </head>
@@ -185,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     
     <div class="preventBox container-fluid">
-        <div class="m-0 mt-2 row g-1" style="margin : 0;">
+        <div class="m-0 mt-2 row g-1">
             <div class="mt-0 col-md-3">
                 <strong>소화기 사용요령</strong>
                 <span>User Guide of
@@ -217,6 +301,64 @@ Fire Extinguisher</span>
 Cabinet</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
+        </div>
+    </div>
+    00 : ${monthFrData00} <br>
+    01 : ${monthFrData01} <br>
+    02 : ${monthFrData02}
+    <div class="rankBox container-fluid">
+        <div class="m-0 mt-2 row g-1">
+            <div class="mt-0 col-md-4">
+				<c:choose>
+					<c:when test="${rankLbData.size() >0 }">
+					  <c:forEach var="item" items="${rankLbData}">
+					   <div>
+						   <p>${item.subLocBigNm} : ${item.monthFireCount} 건</p>
+						   <p>평균 : ${item.monthAvg} 건</p>
+					   </div>
+					  </c:forEach>
+					</c:when>
+					<c:otherwise>
+					   <p>화재 발생이 없습니다 :)</p>
+					</c:otherwise>
+				</c:choose>
+            </div>
+            <div class="mt-0 col-md-4">
+                <c:choose>
+                    <c:when test="${rankLmData.size() >0 }">
+                      <c:forEach var="item" items="${rankLmData}">
+                       <div>
+                           <p>${item.subLocMidNm} : ${item.monthFireCount} 건</p>
+                           <p>평균 : ${item.monthAvg} 건</p>
+                       </div>
+                      </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                       <p>화재 발생이 없습니다 :)</p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <div class="mt-0 col-md-4">
+                <c:choose>
+                    <c:when test="${rankFmData.size() >0 }">
+                      <c:forEach var="item" items="${rankFmData}">
+                       <div>
+                           <p>${item.subFactorMidNm} : ${item.monthFireCount} 건</p>
+                           <p>평균 : ${item.monthAvg} 건</p>
+                       </div>
+                      </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                       <p>화재 발생이 없습니다 :)</p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </div>
+    
+    <div class="subGraphBox container-fluid">
+        <div class="m-0 mt-2 row g-1">
+            <div id="graphBox2"></div>
         </div>
     </div>
     
