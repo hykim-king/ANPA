@@ -12,6 +12,13 @@ import com.acorn.anpa.firedata.domain.Firedata;
 public interface MonthFireDataMapper extends WorkDiv<Firedata> {
 	
 	/**
+	 * selectbox에 들어갈 연도
+	 * @return
+	 * @throws SQLException
+	 */
+	List<String> selectYear() throws SQLException;
+	
+	/**
 	 * 오늘/검색 월에 대한 화재건수,사망자수,부상자수,피해액
 	 * @param fire01 
 	 * @return

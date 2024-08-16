@@ -34,6 +34,43 @@ public class MonthFireDataController implements PLog {
 	}
 	
 	@RequestMapping(
+			value = "/selectYear.do",
+			method = RequestMethod.GET,
+			produces = "text/plain;charset=UTF-8"
+			)
+	@ResponseBody//데이터만 보여줌
+	public String selectYear() throws SQLException {
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ selectYear()");
+		log.debug("└──────────────────────────────────────────────");	
+		
+		String jsonString = "";
+		List<String> outVO = monthFireDataService.selectYear();
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("1. outVO : " + outVO);
+		log.debug("└──────────────────────────────────────────────");
+		
+		String message = "";
+		int flag = 0;
+		if(null != outVO) {
+			message = "연도가 조회되었습니다.";
+			flag = 1;
+		}else{
+			message = "연도 조회에 실패했습니다.";			
+		}
+		
+		jsonString = new Gson().toJson(new Message(flag, message));
+		log.debug("2. jsonString : " + jsonString);
+		
+		String jsonData = new Gson().toJson(outVO);
+		
+		String allMessage = "{\"yearData\" : "+jsonData + ",\"message\": "+jsonString+"}";
+		
+		
+		return allMessage;
+	}
+	
+	@RequestMapping(
 			value = "/todayMonthData.do",
 			method = RequestMethod.GET,
 			produces = "text/plain;charset=UTF-8"

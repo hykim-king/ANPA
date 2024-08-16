@@ -2,7 +2,7 @@ package com.acorn.anpa.monthfiredata.dao;
 
 import static org.junit.Assert.*;
 
-
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.After;
@@ -52,6 +52,16 @@ public class MonthFireDataMapperTest implements PLog{
 		log.debug("│ tearDown()");
 		log.debug("└─────────────────────────────────────────────────────────");
 	
+	}
+	
+	@Test
+	public void selectYear() throws Exception{
+		log.debug("┌─────────────────────────────────────────────────────────");
+		log.debug("│ selectYear()");
+		log.debug("└─────────────────────────────────────────────────────────");
+	
+		 List<String> years = monthFireDataMapper.selectYear();  
+		 log.debug("Retrieved Years: " + years);
 	}
 
 	@Ignore

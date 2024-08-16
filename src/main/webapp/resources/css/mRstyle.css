@@ -14,7 +14,16 @@
     box-shadow: 2px 2px 3px rgba(0, 0, 0, .5);
 }
 
-.mRsysdate{height: 40px;}
-.mRsysdate{padding-top: 5px;}
+/* .mRsysdate{height: 40px;}
+.mRsysdate{padding-top: 5px;} */
+.mRsysdate {
+    height: 40px;
+    padding-top: 5px;
+    padding-right: 80px; /* 오른쪽으로 이동시키기 */
+}
+.mRsysdate div {
+    text-align: right;
+    margin-left: 50px; /* 오른쪽 여백 추가 */
+}
 .card-icon{font-size: 55px;}
 /* 영역 끝 */

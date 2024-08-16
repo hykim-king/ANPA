@@ -8,6 +8,7 @@
 <html lang="kor">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
+
 <head>
 <!-- 파비콘 추가 -->
 <link rel="icon" type="image/x-icon" href="${CP}/resources/img/favicon.ico">
@@ -38,17 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // 서버에서 JSP로 현재 날짜를 가져옵니다.
     const dateValue = '<%= new SimpleDateFormat("yyyy-MM").format(new Date()) %>';
 
-    // JavaScript를 통해 input 요소의 기본값을 현재 날짜로 설정
-/*     document.getElementById('mRselect').value = dateValue; */
-   
+    selectYear();
     
     selectBtn.addEventListener("click",function(event){
-    	console.log("selectBtn click");
-    	event.stopPropagation();//이벤트 버블링 방지
-    	todayMonthData();
-    	locBigData();
-    	locMidData();
-    	factorMidData();
+	   	console.log("selectBtn click");
+	   	event.stopPropagation();//이벤트 버블링 방지
+	   	todayMonthData();
+	   	locBigData();
+	   	locMidData();
+	   	factorMidData();
 
     });
    
@@ -248,28 +247,76 @@ document.addEventListener('DOMContentLoaded', function() {
            
        });//--pAjax end 
    }//--factorMidData() end
+   
+   function selectYear(){
+	   console.log("selectYear:"+selectYear);
+	   
+	   //비동기 통신
+       let type = "GET";
+       let url = "/ehr/monthfiredata/selectYear.do";
+       let async = "true";
+       let dataType = "html";
+       let params = {
+       };
+       
+       PClass.pAjax(url,params,dataType,type,async,function(data){
+           console.log("data: ",data);
+           
+                   
+           if(data){
+               try{
+                   const jsonData = JSON.parse(data);
+                   const allMessage = jsonData.message;
+                   console.log(jsonData);
+                   console.log(allMessage.messageId);
+                   
+
+                   if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
+                       //alert(allMessage.messageContents);
+                   }else{
+                       alert("에러야"+allMessage.messageContents);
+                   }
+                   // 연도 데이터를 기반으로 select 태그에 옵션 추가
+                   const yearSelectInput = document.querySelector("#yearSelect");
+                   yearSelectInput.innerHTML = '<option value="">연도 선택</option>'; // 초기화
+
+                   jsonData.yearData.forEach(function(year) {
+                       const option = document.createElement('option');
+                       option.value = year;
+                       option.textContent = year + '년';
+                       yearSelectInput.appendChild(option);
+                   });
+
+               }catch(e){
+                   //alert("연도 데이터가 없습니다.");
+               }
+               
+           }
+           
+       });//--pAjax end 
+   }//--selectYear() end
     
    function fmJSON(jsonData) {
        console.log("fmData:"+jsonData.fmData);
        console.log("fmData[0]:"+jsonData.fmData[0].subFactorMidNm);
-       //쿼리 화재장소대분류1순위
-       const subFactorMidNm1 = jsonData.fmData[0].subFactorMidNm;
+       //쿼리 화재요인소분류1순위
+       const subFactorMidNm1 = jsonData.fmData[0].subFactorMidNm.toLocaleString();
        console.log("subFactorMidNm1:"+subFactorMidNm1);
-       const monthFireCount1 = jsonData.fmData[0].monthFireCount;
-       const monthAvg1 = jsonData.fmData[0].monthAvg;
-       //쿼리 화재장소대분류2순위
-       const subFactorMidNm2 = jsonData.fmData[1].subFactorMidNm;
-       const monthFireCount2 = jsonData.fmData[1].monthFireCount;
-       const monthAvg2 = jsonData.fmData[1].monthAvg;
-       //쿼리 화재장소대분류3순위
-       const subFactorMidNm3 = jsonData.fmData[2].subFactorMidNm;
-       const monthFireCount3 = jsonData.fmData[2].monthFireCount;
-       const monthAvg3 = jsonData.fmData[2].monthAvg;
+       const monthFireCount1 = jsonData.fmData[0].monthFireCount.toLocaleString();
+       const monthAvg1 = jsonData.fmData[0].monthAvg.toLocaleString();
+       //쿼리 화재요인소분류2순위
+       const subFactorMidNm2 = jsonData.fmData[1].subFactorMidNm.toLocaleString();
+       const monthFireCount2 = jsonData.fmData[1].monthFireCount.toLocaleString();
+       const monthAvg2 = jsonData.fmData[1].monthAvg.toLocaleString();
+       //쿼리 화재요인소분류3순위
+       const subFactorMidNm3 = jsonData.fmData[2].subFactorMidNm.toLocaleString();
+       const monthFireCount3 = jsonData.fmData[2].monthFireCount.toLocaleString();
+       const monthAvg3 = jsonData.fmData[2].monthAvg.toLocaleString();
        console.log("monthAvg3:"+monthAvg3);
 
        //--<div>태그 id
        const FactorMidDiv = document.querySelector('#FactorMid');
-        //화면에서 화재장소대분류 상위3건 박스
+        //화면에서 화재요인소분류 상위3건 박스
        const FactorMidcontentHTML =
            `
            <h5 class="card-title">발화 원인</h5>
@@ -289,24 +336,24 @@ document.addEventListener('DOMContentLoaded', function() {
    function lmJSON(jsonData) {
        console.log("lmData:"+jsonData.lmData);
        console.log("lmData[0]:"+jsonData.lmData[0].subLocMidNm);
-       //쿼리 화재장소대분류1순위
-       const subLocMidNm1 = jsonData.lmData[0].subLocMidNm;
+       //쿼리 화재장소소분류1순위
+       const subLocMidNm1 = jsonData.lmData[0].subLocMidNm.toLocaleString();
        console.log("subLocBigNm1:"+subLocMidNm1);
-       const monthFireCount1 = jsonData.lmData[0].monthFireCount;
-       const monthAvg1 = jsonData.lmData[0].monthAvg;
-       //쿼리 화재장소대분류2순위
-       const subLocMidNm2 = jsonData.lmData[1].subLocMidNm;
-       const monthFireCount2 = jsonData.lmData[1].monthFireCount;
-       const monthAvg2 = jsonData.lmData[1].monthAvg;
-       //쿼리 화재장소대분류3순위
-       const subLocMidNm3 = jsonData.lmData[2].subLocMidNm;
-       const monthFireCount3 = jsonData.lmData[2].monthFireCount;
-       const monthAvg3 = jsonData.lmData[2].monthAvg;
+       const monthFireCount1 = jsonData.lmData[0].monthFireCount.toLocaleString();
+       const monthAvg1 = jsonData.lmData[0].monthAvg.toLocaleString();
+       //쿼리 화재장소소분류2순위
+       const subLocMidNm2 = jsonData.lmData[1].subLocMidNm.toLocaleString();
+       const monthFireCount2 = jsonData.lmData[1].monthFireCount.toLocaleString();
+       const monthAvg2 = jsonData.lmData[1].monthAvg.toLocaleString();
+       //쿼리 화재장소소분류3순위
+       const subLocMidNm3 = jsonData.lmData[2].subLocMidNm.toLocaleString();
+       const monthFireCount3 = jsonData.lmData[2].monthFireCount.toLocaleString();
+       const monthAvg3 = jsonData.lmData[2].monthAvg.toLocaleString();
        console.log("monthAvg3:"+monthAvg3);
 
        //--<div>태그 id
        const LocMidDiv = document.querySelector('#LocMid');
-        //화면에서 화재장소대분류 상위3건 박스
+        //화면에서 화재장소소분류 상위3건 박스
        const LocMidcontentHTML =
            `
            <h5 class="card-title">화재 장소 소분류</h5>
@@ -325,18 +372,18 @@ document.addEventListener('DOMContentLoaded', function() {
     	console.log("lbJSON:"+jsonData.lbData);
     	console.log("lbJSON[0]:"+jsonData.lbData[0]);
     	//쿼리 화재장소대분류1순위
-        const subLocBigNm1 = jsonData.lbData[0].subLocBigNm;
+        const subLocBigNm1 = jsonData.lbData[0].subLocBigNm.toLocaleString();
         console.log("subLocBigNm1:"+subLocBigNm1);
-        const monthFireCount1 = jsonData.lbData[0].monthFireCount;
-        const monthAvg1 = jsonData.lbData[0].monthAvg;
+        const monthFireCount1 = jsonData.lbData[0].monthFireCount.toLocaleString();
+        const monthAvg1 = jsonData.lbData[0].monthAvg.toLocaleString();
         //쿼리 화재장소대분류2순위
-        const subLocBigNm2 = jsonData.lbData[1].subLocBigNm;
-        const monthFireCount2 = jsonData.lbData[1].monthFireCount;
-        const monthAvg2 = jsonData.lbData[1].monthAvg;
+        const subLocBigNm2 = jsonData.lbData[1].subLocBigNm.toLocaleString();
+        const monthFireCount2 = jsonData.lbData[1].monthFireCount.toLocaleString();
+        const monthAvg2 = jsonData.lbData[1].monthAvg.toLocaleString();
         //쿼리 화재장소대분류3순위
-        const subLocBigNm3 = jsonData.lbData[2].subLocBigNm;
-        const monthFireCount3 = jsonData.lbData[2].monthFireCount;
-        const monthAvg3 = jsonData.lbData[2].monthAvg;
+        const subLocBigNm3 = jsonData.lbData[2].subLocBigNm.toLocaleString();
+        const monthFireCount3 = jsonData.lbData[2].monthFireCount.toLocaleString();
+        const monthAvg3 = jsonData.lbData[2].monthAvg.toLocaleString();
         console.log("monthAvg3:"+monthAvg3);
 
         //--<div>태그 id
@@ -361,25 +408,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function tmJSON(jsonData) {
 		//--쿼리 데이터 값
-		const todayFireCount = jsonData.tmData.todayFireCount;
+		const todayFireCount = jsonData.tmData.todayFireCount.toLocaleString();
 		console.log("todayFireCount:"+todayFireCount);
-		const monthFireCount = jsonData.tmData.monthFireCount;
-		const lastYearDayFireCount = jsonData.tmData.lastYearDayFireCount;
-		const lastYearMonthFireCount = jsonData.tmData.lastYearMonthFireCount;
-		const todayDead = jsonData.tmData.todayDead;
-		const monthDead = jsonData.tmData.monthDead;
-		const lastYearDayDead = jsonData.tmData.lastYearDayDead;
-		const lastYearMonthDead = jsonData.tmData.lastYearMonthDead;
+		const monthFireCount = jsonData.tmData.monthFireCount.toLocaleString();
+		const lastYearDayFireCount = jsonData.tmData.lastYearDayFireCount.toLocaleString();
+		const lastYearMonthFireCount = jsonData.tmData.lastYearMonthFireCount.toLocaleString();
+		const todayDead = jsonData.tmData.todayDead.toLocaleString();
+		const monthDead = jsonData.tmData.monthDead.toLocaleString();
+		const lastYearDayDead = jsonData.tmData.lastYearDayDead.toLocaleString();
+		const lastYearMonthDead = jsonData.tmData.lastYearMonthDead.toLocaleString();
 		
-		const todayInjured        =jsonData.tmData.todayInjured ;
-		const monthInjured        =jsonData.tmData.monthInjured ;
-		const lastYearDayInjured  =jsonData.tmData.lastYearDayInjured ;
-		const lastYearMonthInjured=jsonData.tmData.lastYearMonthInjured ;
+		const todayInjured        =jsonData.tmData.todayInjured.toLocaleString(); 
+		const monthInjured        =jsonData.tmData.monthInjured.toLocaleString(); 
+		const lastYearDayInjured  =jsonData.tmData.lastYearDayInjured.toLocaleString(); 
+		const lastYearMonthInjured=jsonData.tmData.lastYearMonthInjured.toLocaleString(); 
 		
-		const todayAmount         =jsonData.tmData.todayAmount ;
-		const monthAmount         =jsonData.tmData.monthAmount ;
-		const lastYearDayAmount   =jsonData.tmData.lastYearDayAmount ;
-		const lastYearMonthAmount =jsonData.tmData.lastYearMonthAmount ;
+		// 숫자에 서식 적용
+		const todayAmount = jsonData.tmData.todayAmount.toLocaleString();
+		
+		const monthAmount         =jsonData.tmData.monthAmount.toLocaleString();
+		const lastYearDayAmount   =jsonData.tmData.lastYearDayAmount.toLocaleString(); 
+		const lastYearMonthAmount =jsonData.tmData.lastYearMonthAmount.toLocaleString();
 
 		
 		//--<div>태그 id
@@ -444,6 +493,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });//--DOMContentLoaded end   
 </script>
 </head>
+<style>
+    .form-control {
+        appearance: auto; /* 브라우저 기본 스타일 사용 */
+        -webkit-appearance: auto; /* Safari 및 Chrome 브라우저용 */
+        -moz-appearance: auto; /* Firefox 브라우저용 */
+    }
+</style>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
 
@@ -454,29 +510,29 @@ document.addEventListener('DOMContentLoaded', function() {
         <input type = "hidden" name = "work_div" id = "work_div">
         <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
         <input type = "hidden" name = "seq" id = "seq">
-        <div class="col-md-4 d-grid gap-2 d-md-flex">                   
+        <div class="col-md-4 d-grid gap-2 d-md-flex" style="width: 300px; padding: 10px;">                   
             <!-- 연 / 월  -->
             <select class="form-control" id="yearSelect">
-                <option value="">연도 선택</option>
-                <option value="2023">2023년</option>
-                <option value="2024">2024년</option>
-                <option value="2025">2025년</option>
             </select>  
             <select class="form-control" id="monthSelect">
                 <option value="월 선택">월 선택</option>
             </select>    
             
-            <input class = "form-control" type = "button" id="selectBtn" name="selectBtn" value="조회">      
+            <input class="form-control" type="button" id="selectBtn" name="selectBtn" value="조회"
+       style="width: 100px; padding: 5px; background-color:#f2f2f2">     
         </div>
-        <div class="col-md-7 d-flex justify-content-end mRsysdate">
-        <%
-           Date date = new Date();
-           SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
-           String strDate = simpleDate.format(date);
-        
-        %>
-            <p style="margin-right : 5px;">오늘은 </p> <p style="color:#4169E1"> <%=strDate %><p> <p style="margin-left : 5px;"> 입니다</p>
-        </div>
+		  <div class="col-md-7 d-flex justify-content-end mRsysdate">
+		    <%
+		       Date date = new Date();
+		       SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
+		       String strDate = simpleDate.format(date);
+		    %>
+		    <div style="text-align: right; margin-left: 50px;"> <!-- margin-left로 변경 -->
+		        <p style="margin-right: 5px; display: inline; margin: 0;">오늘은</p>
+		        <p style="color:#4169E1; display: inline; margin: 0;"> <%= strDate %> </p>
+		        <p style="margin-left: 5px; display: inline; margin: 0;">입니다</p>
+		    </div>
+		</div>
     </form>
 
     <div class="row mt-3">

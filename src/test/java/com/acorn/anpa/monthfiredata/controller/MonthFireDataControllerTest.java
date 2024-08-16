@@ -73,6 +73,48 @@ public class MonthFireDataControllerTest implements PLog{
 		
 	}
 	
+	@Test
+	public void selectYear() throws Exception {
+		log.debug("┌────────────────────────────────────────────────────────");
+		log.debug("│ selectYear() : ");
+		log.debug("└────────────────────────────────────────────────────────");
+		
+
+		// 1. url, param 설정
+		MockHttpServletRequestBuilder requestBuilder =
+				MockMvcRequestBuilders.get("/monthfiredata/selectYear.do");
+				
+				
+		// 2. 호출
+		ResultActions resultActions = mockMvc.perform(requestBuilder)
+		// return encoding
+		.andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
+		// Web 상태
+		.andExpect(status().is2xxSuccessful());		
+		
+		String jsonResult = resultActions.andDo(print())
+				.andReturn()
+				.getResponse().getContentAsString();
+		log.debug("┌────────────────────────────────────────");
+		log.debug("│ jsonResult : " + jsonResult);
+		log.debug("└────────────────────────────────────────");
+		
+		// JSON 문자열을 JsonObject로 파싱
+        JsonObject jsonObject = JsonParser.parseString(jsonResult).getAsJsonObject();
+
+        // "yeardataJson" "message" 노드를 추출
+        String yeardataJson = jsonObject.get("yearData").toString();
+		
+        String messageJson = jsonObject.get("message").toString();
+        
+        // "message" 노드를 Message로 변환
+        Type messageType = new TypeToken<Message>() {}.getType();
+        Message resultMessage = new Gson().fromJson(messageJson, messageType);
+		assertEquals(1, resultMessage.getMessageId());
+		assertEquals("연도가 조회되었습니다.", resultMessage.getMessageContents());
+			
+	}
+	
 	@Ignore
 	@Test
 	public void todayMonthData() throws Exception{

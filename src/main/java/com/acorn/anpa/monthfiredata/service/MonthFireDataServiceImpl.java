@@ -21,6 +21,12 @@ public class MonthFireDataServiceImpl implements MonthFireDataService, PLog {
 	}
 	
 	@Override
+	public List<String> selectYear() throws SQLException {
+		log.debug("1. param : " + "없음");
+		return this.monthFireDataMapper.selectYear();
+	}
+	
+	@Override
 	public Firedata todayMonthData(Firedata date) throws SQLException {
 		log.debug("1. param : " + date);
 		return this.monthFireDataMapper.todayMonthData(date);
@@ -76,5 +82,6 @@ public class MonthFireDataServiceImpl implements MonthFireDataService, PLog {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 }
