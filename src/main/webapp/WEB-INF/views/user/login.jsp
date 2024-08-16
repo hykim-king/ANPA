@@ -17,6 +17,79 @@
     <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <title>ANPA | 로그인</title>
+    <script>
+    document.addEventListener("DOMContentLoaded", function(){
+        console.log("DOMContentLoaded");
+        //로그인
+        const loginInfoBtn = document.querySelector("#loginInfo");
+        console.log("loginInfoBtn",loginInfoBtn);
+        
+        const userIdInput  = document.querySelector("#userId");
+
+        const passwordInput  = document.querySelector("#password"); 
+        
+        loginInfoBtn.addEventListener("click",function(event){
+            console.log("loginInfoBtn click",event);
+            event.stopPropagation();
+             
+            loginInfo(); 
+            
+        });
+        
+        function loginInfo(){
+            console.log("loginInfo()");
+            console.log("userId:"+userIdInput.value);
+            console.log("password:"+passwordInput.value);
+            
+            if(isEmpty(userIdInput.value) === true){
+                alert("아이디를 입력 하세요.");
+                userIdInput.focus();
+                return;
+            }
+            
+            if(isEmpty(passwordInput.value) === true){
+                alert("비밀번호를 입력 하세요.");
+                passwordInput.focus();
+                return;
+            }       
+            
+            //비동기 통신
+            let type= "POST";  
+            let url = "/ehr/user/login.do";
+            let async = "true";
+            let dataType = "html";
+            
+            let params = {  
+                "userId": userIdInput.value.trim(),
+                "password": passwordInput.value.trim()      
+            }        
+            
+            PClass.pAjax(url,params,dataType,type,async,function(data){
+                if(data){
+                    try{
+                        const message = JSON.parse(data);
+                        if(isEmpty(message) === false && 10 === message.messagId){
+                            alert(message.messageContents);
+                            userIdInput.focus();
+                        }else if(isEmpty(message) === false && 20 === message.messagId){
+                            alert(message.messageContents);
+                            passowrdInput.focus();
+                        }else if(isEmpty(message) === false && 30 === message.messagId){
+                            alert(message.messageContents);
+                            window.location.href ="/ehr/main/index.do";
+                        }else{
+                            alert(message.messageContents);
+                        }
+                    }catch(e){
+                         alert("data를 확인 하세요.");     
+                    }           
+                }
+            });
+        }
+        
+        
+    });
+    </script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -72,7 +145,7 @@
         }
         
         .info-message {
-		    margin-top: 50px; 
+		    margin-top: 30px; 
 		    margin-bottom: 20px; 
 		    font-size: 1rem; 
 		    color: #555; 
@@ -127,20 +200,19 @@
     </style>
 </head>
 <body>
-    <!-- 헤더 포함 -->
     <jsp:include page="/WEB-INF/views/header.jsp" />
 
     <div class="login-container">
         <h2>로그인</h2>
-        <form action="${CP}/login" method="post">
+        <form action="${CP}/user/login.do" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" id="username" name="username" placeholder="아이디" required>
+                <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디" required>
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary w-100">로그인</button>
+                <button type="submit" class="btn btn-primary w-100" id="loginInfo">로그인</button>
             </div>
         </form>
         <div class="text-center mt-3">
@@ -157,8 +229,7 @@
             <a href="${CP}/user/signup.do" class="btn btn-success w-100" id="signup">회원가입</a>
         </div>
     </div>
-
-    <!-- 푸터 포함 -->
+    
     <jsp:include page="/WEB-INF/views/footer.jsp" />
     
     <script src="${CP}/resources/js/bootstrap.bundle.min.js"></script>    

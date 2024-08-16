@@ -4,13 +4,49 @@
 
     <!-- 로그인 -->
     <select id="login" parameterType="Member" resultType="Member">
-        SELECT * 
+        SELECT 
+            user_id as userId,
+            user_name as userName,
+            password,
+            email,
+            email_yn as emailYn,
+            admin_yn as adminYn,
+            sub_city as subCity,
+            tel,
+            mod_id as modId,
+            TO_CHAR(mod_dt,'YYYY/MM/DD HH24:MI:SS') as modDt,
+            reg_id as regId,
+            TO_CHAR(reg_dt,'YYYY/MM/DD HH24:MI:SS') as regDt
         FROM member 
         WHERE user_id = #{userId} 
         AND password = #{password}
     </select>
 
-    <!-- 회원 가입 -->
+    <select id="idCheck" parameterType="Member" resultType="int">
+        SELECT COUNT(*) cnt
+        FROM member 
+        WHERE user_id = #{userId}
+    </select>
+    
+    <select id="passwordCheck" parameterType="Member" resultType="int">
+        SELECT COUNT(*) cnt
+        FROM member
+        WHERE user_id = #{userId}
+          AND password = #{password}
+    </select>
+    
+    <select id="loginInfo" parameterType="Member" resultType="Member">
+        SELECT
+            user_id AS userId,
+            password,
+            user_name AS userName,
+            email,
+            tel
+        FROM
+            member
+        WHERE user_id = #{userId}
+    </select>
+
     <insert id="signUp" parameterType="Member">
         INSERT INTO member(
              user_id, 
@@ -20,8 +56,12 @@
              email_yn, 
              admin_yn, 
              sub_city, 
-             tel
-             )VALUES(
+             tel,
+             mod_id,
+             mod_dt,
+             reg_id,
+             reg_dt
+         ) VALUES( 
              #{userId}, 
              #{password}, 
              #{userName}, 
@@ -29,42 +69,14 @@
              #{emailYn}, 
              #{adminYn}, 
              #{subCity}, 
-             #{tel}
-             )
+             #{tel},
+             #{modId},
+             sysdate,
+             #{regId},
+             sysdate
+         )
     </insert>
 
-    <!-- ID 중복 체크 -->
-    <select id="idCheck" parameterType="Member" resultType="int">
-        SELECT COUNT(*) 
-        FROM member 
-        WHERE user_id = #{userId}
-    </select>
-
-    <!-- 아이디 찾기 -->
-    <select id="findUserId" parameterType="Member" resultType="String">
-        SELECT user_id 
-        FROM member 
-        WHERE user_name = #{userName} 
-        AND email = #{email}
-    </select>
-
-    <!-- 비밀번호 찾기 -->
-    <select id="findPassword" parameterType="Member" resultType="String">
-        SELECT password 
-        FROM member 
-        WHERE user_id = #{userId} 
-        AND user_name = #{userName} 
-        AND email = #{email}
-    </select>
-
-    <!-- 비밀번호 재설정 -->
-    <update id="resetPassword" parameterType="Member">
-        UPDATE member
-        SET password = #{password}
-        WHERE user_id = #{userId}
-    </update>
-
-    
     <!-- 모든 데이터 삭제 (테스트 용도) -->
     <delete id="deleteAll">
         DELETE FROM member

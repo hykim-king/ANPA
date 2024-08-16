@@ -8,23 +8,44 @@
 <meta charset="UTF-8">    
 <head>
 <style>
-    /* 로고를 네비게이션 바 내에 위치시키기 위한 수정 */
+
     .nav { 
         flex-grow: 1;
-        font-size: 1.2rem; /* 네비게이션 글씨 크기 증가 */
+        font-size: 1.2rem; 
     }
 
     .top_logo {
         height: auto;
-        margin-right: 20px; /* 로고와 첫 네비게이션 항목 사이의 여백 조정 */
+        margin-right: 20px;
     }
 
     .top_logo img {
-        height: 75px; /* 로고 크기 설정 */
+        height: 75px; 
     }
 
     .nav-item {
-        margin: 0 20px; /* 네비게이션 항목 간격 조정 */
+        margin: 0 20px; 
+    }
+
+    /* 로그인 버튼 스타일 */
+    .login-btn {
+        color: #000; /* 버튼 텍스트 색상 검정 */
+        background: none; /* 배경색 제거 */
+        border: none; /* 테두리 제거 */
+        padding: 10px 15px; /* 버튼 패딩 */
+        font-size: 1rem; /* 버튼 텍스트 크기 */
+        text-decoration: none; /* 링크 밑줄 제거 */
+        display: flex;
+        align-items: center; /* 아이콘과 텍스트 정렬 */
+    }
+
+    .login-btn:hover {
+        text-decoration: underline; /* 마우스를 올리면 밑줄 표시 */
+    }
+
+    .login-btn svg {
+        margin-right: 8px; /* 아이콘과 텍스트 사이의 여백 */
+        fill: #000; /* 아이콘 색상 검정 */
     }
 </style>
 </head>
@@ -54,6 +75,15 @@
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#">건의사항</a></li>
                 </ul>
+            </li>
+            <!-- 로그인 버튼 수정 -->
+            <li class="nav-item d-flex align-items-center">
+                <a class="login-btn" href="${CP}/user/login.do">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#000000">
+					    <path d="M10.09 15.59L8.67 14.17 11.5 11.34H2V9.34H11.5L8.67 6.5L10.09 5.08L15.17 10.16L10.09 15.59ZM19 3H5C3.9 3 3 3.9 3 5V8H5V5H19V19H5V16H3V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z"/>
+					</svg>
+                    로그인 / 회원가입
+                </a>
             </li>
         </ul>
         <!-- 네비게이션 바 끝 -->
