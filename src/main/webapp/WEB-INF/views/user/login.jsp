@@ -19,77 +19,69 @@
     <title>ANPA | 로그인</title>
     <script>
     document.addEventListener("DOMContentLoaded", function(){
-        console.log("DOMContentLoaded");
-        //로그인
+        // 로그인 버튼 & 입력 필드
         const loginInfoBtn = document.querySelector("#loginInfo");
-        console.log("loginInfoBtn",loginInfoBtn);
-        
         const userIdInput  = document.querySelector("#userId");
-
         const passwordInput  = document.querySelector("#password"); 
         
-        loginInfoBtn.addEventListener("click",function(event){
-            console.log("loginInfoBtn click",event);
-            event.stopPropagation();
-             
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
             loginInfo(); 
-            
         });
         
+        // 로그인 처리 함수
         function loginInfo(){
-            console.log("loginInfo()");
-            console.log("userId:"+userIdInput.value);
-            console.log("password:"+passwordInput.value);
-            
-            if(isEmpty(userIdInput.value) === true){
-                alert("아이디를 입력 하세요.");
+            if (isEmpty(userIdInput.value)) {
+                alert("아이디를 입력하세요.");
                 userIdInput.focus();
                 return;
             }
             
-            if(isEmpty(passwordInput.value) === true){
-                alert("비밀번호를 입력 하세요.");
+            if (isEmpty(passwordInput.value)) {
+                alert("비밀번호를 입력하세요.");
                 passwordInput.focus();
                 return;
             }       
-            
-            //비동기 통신
+
             let type= "POST";  
             let url = "/ehr/user/login.do";
-            let async = "true";
-            let dataType = "html";
-            
+            let dataType = "json";  
+            let async = true;
             let params = {  
                 "userId": userIdInput.value.trim(),
                 "password": passwordInput.value.trim()      
-            }        
+            };        
             
-            PClass.pAjax(url,params,dataType,type,async,function(data){
-                if(data){
-                    try{
-                        const message = JSON.parse(data);
-                        if(isEmpty(message) === false && 10 === message.messagId){
-                            alert(message.messageContents);
-                            userIdInput.focus();
-                        }else if(isEmpty(message) === false && 20 === message.messagId){
-                            alert(message.messageContents);
-                            passowrdInput.focus();
-                        }else if(isEmpty(message) === false && 30 === message.messagId){
-                            alert(message.messageContents);
-                            window.location.href ="/ehr/main/index.do";
-                        }else{
-                            alert(message.messageContents);
+            $.ajax({
+                type: type,
+                url: url,
+                data: params,
+                dataType: dataType,
+                async: async,
+                success: function(data) {
+                    if (data) {
+                        if (data.messageId === 30) {  // 로그인 성공
+                            window.location.href = "/ehr/main/index.do";
+                        } else {  // 로그인 실패
+                            alert(data.messageContents);
+                            userIdInput.focus(); 
                         }
-                    }catch(e){
-                         alert("data를 확인 하세요.");     
-                    }           
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("로그인 처리 중 오류가 발생했습니다.");
+                    console.error("Error: " + error);
                 }
             });
         }
         
-        
+        // 유효성 검사 함수
+        function isEmpty(value) {
+            return value === null || value.trim() === "";
+        }
     });
-    </script>
+</script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -230,8 +222,7 @@
         </div>
     </div>
     
-    <jsp:include page="/WEB-INF/views/footer.jsp" />
-    
+    <jsp:include page="/WEB-INF/views/footer.jsp" />   
     <script src="${CP}/resources/js/bootstrap.bundle.min.js"></script>    
 </body>
 </html>

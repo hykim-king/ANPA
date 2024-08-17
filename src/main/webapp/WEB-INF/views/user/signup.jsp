@@ -17,7 +17,223 @@
     <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <title>ANPA | 회원가입</title>
-    <style>
+    <script>
+    $(document).ready(function(){
+        
+        // 변수 선언 시작
+        const cBselect = document.querySelector("#cBselect");
+        const cMselect = document.querySelector("#cMselect");
+        // 변수 선언 끝
+        
+        cBselect.addEventListener("change",function(){
+	        cityCodeSet("", cBselect, cMselect);        
+	        const subCityMidNm = sessionStorage.getItem("cMselectValue");
+	        if (subCityMidNm != null && subCityMidNm !== '') {
+	        	   sessionStorage.removeItem("cMselectValue"); // 삭제   
+	        } 
+    }); 
+        
+    function cityCodeSet(subCityMidNm, cBselect, cMselect) {   
+        const cityCode = cBselect.value;
+        const url = "/ehr/manage/doSelectCode.do";
+        const type = "GET";
+        
+        if (cBselect.value === "") {
+            cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
+        } else {
+            const param1 = "masterCode=city"
+            const param2 = "&subCode=" + encodeURIComponent(cityCode);
+            
+            const xhr = new XMLHttpRequest();
+            xhr.open(type, url + "?" + param1 + param2, false); // `false` for synchronous requests
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    const optionCodeData = JSON.parse(xhr.responseText);
+                    console.log(optionCodeData);
+                    cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
+                    optionCodeData.forEach(function(item) {
+                        const option = document.createElement("option");
+                        option.value = item.subCode;
+                        if (subCityMidNm == item.subCode) {
+                            option.selected = true;
+                        }else{
+                            option.selected = false;                            
+                        } 
+                        option.text = item.midList;
+                        cMselect.appendChild(option);
+                    });
+                } else {
+                    console.error("Request failed with status: " + xhr.status);
+                }
+            };
+            
+            xhr.onerror = function() {
+                console.error("Request error");
+            };
+            
+            xhr.send();
+        }
+    }
+        
+        console.log("document ready!");
+    
+        let idDuplicatedClick = 0; // ID 중복 체크 클릭 여부 (1/0)
+    
+        // 아이디 중복 체크
+        $("#idDuplicateCheck").on("click", function(event){
+            event.preventDefault(); // 이벤트 버블링 방지
+            console.log("idDuplicateCheck click");
+            idDuplicateCheck();
+        });
+    
+        function idDuplicateCheck(){
+            console.log("idDuplicateCheck()");
+    
+            let userIdInput = $("#userId").val();
+    
+            if(isEmpty(userIdInput)){
+                alert("아이디를 입력하세요.");
+                $("#userId").focus();
+                return;
+            }
+    
+            // 비동기 통신
+            let type = "GET";  
+            let url = "${CP}/user/idDuplicateCheck.do";
+            let async = true;
+            let dataType = "json";
+    
+            let params = { 
+                "userId" : userIdInput
+            };
+    
+            PClass.pAjax(url, params, dataType, type, async, function(data){
+                if(data){
+                    try{
+                        console.log("message.messagId:" + data.messageId);
+                        console.log("message.messageContents:" + data.messageContents);
+    
+                        if(data.messageId === 1){ 
+                            alert(data.messageContents); // 사용 불가
+                            $("#userId").focus();
+                            idDuplicatedClick = 0;
+                        }else{ // 사용 가능
+                            alert(data.messageContents);
+                            idDuplicatedClick = 1;
+                        }  
+                    }catch(e){
+                        console.error("data가 null 혹은 undefined 입니다.", e);
+                        alert("data가 null 혹은 undefined 입니다.");     
+                    }           
+                }
+            });
+        }
+    
+        // 회원가입 버튼 클릭
+        $("#signup").on("click", function(event){
+            event.preventDefault();         
+            console.log("signup click");        
+            doSave();
+        });
+    
+        function doSave(){
+            console.log("signup()");
+    
+            // 필수 입력 처리
+            if(isEmpty($("#userName").val())){
+                alert("이름을 입력하세요.");
+                $("#userName").focus();
+                return;
+            }
+            
+            if(isEmpty($("#userId").val())){
+                alert("아이디를 입력하세요.");
+                $("#userId").focus();
+                return;
+            }
+    
+            if(idDuplicatedClick === 0){
+                alert("아이디 중복 체크를 하세요.");
+                $("#idDuplicateCheck").focus();
+                return;
+            }
+    
+            if(isEmpty($("#email").val())){
+                alert("이메일을 입력하세요.");
+                $("#email").focus();
+                return;
+            }
+            
+            if (!$("#agreeEmail").is(":checked")) {
+                alert("이메일 수신 동의 여부를 체크하세요.");
+                return;
+            }
+            
+            if(isEmpty($("#tel").val())){
+                alert("전화번호를 입력하세요.");
+                $("#tel").focus();
+                return;
+            }      
+    
+            if(isEmpty($("#password").val())){
+                alert("비밀번호를 입력하세요.");
+                $("#password").focus();
+                return;
+            }        
+    
+            if(isEmpty($("#confirmPassword").val())){
+                alert("비밀번호를 재입력하세요.");
+                $("#confirmPassword").focus();
+                return;
+            }
+    
+            if($("#confirmPassword").val() != $("#password").val()){
+                alert("비밀번호가 서로 다릅니다.");
+                $("#confirmPassword").focus();
+                return;
+            }
+    
+            // 회원가입 요청 비동기 통신
+            let type = "POST";  
+            let url = "${CP}/user/signup.do";
+            let async = true;
+            let dataType = "json";
+    
+            let params = { 
+                "userName"   : $("#userName").val(),
+                "userId"     : $("#userId").val(),
+                "email"      : $("#email").val(),
+                "agreeMarketing": $("#agreeMarketing").is(":checked") ? "Y" : "N",
+                "tel"        : $("#tel").val(),
+                "password"   : $("#password").val()
+            };
+    
+            if(confirm("회원가입을 하시겠습니까?") === false) return;
+    
+            PClass.pAjax(url, params, dataType, type, async, function(data){
+                if(data){
+                    try{
+                        console.log("message.messagId:" + data.messageId);
+                        console.log("message.messageContents:" + data.messageContents);
+    
+                        if(data.messageId === 1){   
+                            alert(data.messageContents);
+                            window.location.href = "${CP}/user/login.do";
+                        }else{
+                            alert(data.messageContents);
+                        }          
+                    }catch(e){
+                        console.error("데이터가 null 혹은 undefined 입니다", e);
+                        alert("데이터가 null 혹은 undefined 입니다");     
+                    }         
+                }
+            });
+        }    
+    });
+    </script>
+     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #ffffff;
@@ -46,13 +262,13 @@
         .form-group {
             margin-bottom: 25px;
         }
-        .form-control {
+        .form-control, .form-select {
             border: 1px solid #ccc;
             border-radius: 30px;
             padding: 10px 15px;
             font-size: 1rem;
         }
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             box-shadow: none;
             outline: none;
             border: 2px solid #424242;
@@ -65,7 +281,7 @@
         .input-group .form-control {
             flex: 1;
             margin-right: 10px;
-            max-width: 150px; 
+            max-width: 200px; 
         }
         .btn-primary {
             border-radius: 30px;
@@ -120,81 +336,86 @@
             cursor: pointer;
             text-transform: uppercase;
             transition: background-color 0.3s;
-            flex-shrink: 0; /* 버튼이 축소되지 않도록 설정 */
-            width: 130px; /* 중복 체크 버튼 너비 조정 */
+            flex-shrink: 0; 
+            width: 130px; 
         }
         .btn-check-duplicate:hover {
             background-color: #ddd;
         }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+        .checkbox-group .form-control {
+            margin: 0;
+            max-width: 300px; 
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin: 0;
+        }
+        .checkbox-group label {
+            margin: 0;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
-    <!-- 헤더 포함 -->
     <jsp:include page="/WEB-INF/views/header.jsp" />
 
     <div class="signup-container">
         <h2>회원가입</h2>
-        <form id="signupForm" action="${CP}/signup" method="post">
+        <form id="signupForm" action="${CP}/user/signup.do" method="post">
             <div class="form-group">
-                <input type="text" class="form-control" id="name" name="name" placeholder="이름" required>
+                <input type="text" class="form-control" id="userName" name="userName" 
+                       placeholder="이름"  maxlength="17" required="required">
             </div>
             <div class="form-group d-flex align-items-center">
-                <input type="text" class="form-control" id="username" name="username" placeholder="아이디" required>
-                <button type="button" class="btn-check-duplicate ms-2" onclick="idCheck()">id 중복 체크</button>
+                <input type="text" class="form-control" id="userId" name="userId" 
+                       placeholder="아이디"  maxlength="20" required="required">
+                <button type="button" class="btn-check-duplicate ms-2" id="idDuplicateCheck">id 중복 체크</button>
+            </div>
+            <div class="form-group d-flex align-items-center checkbox-group">
+                <input type="email" class="form-control" id="email" name="email" 
+                       placeholder="이메일"  maxlength="320" required="required">
+                <input type="checkbox" id="agreeEmail" name="agreeEmail">
+                <label for="agreeEmail">수신동의</label>
             </div>
             <div class="form-group">
-                <input type="email" class="form-control" id="email" name="email" placeholder="이메일" required>
+                <input type="tel" class="form-control" id="tel" name="tel" 
+                       placeholder="전화번호"  maxlength="15" required="required">
             </div>
             <div class="form-group">
-                <input type="email" class="form-control" id="tel" name="tel" placeholder="전화번호" required>
+                <input type="password" class="form-control" id="password" name="password" 
+                       placeholder="비밀번호"  maxlength="32" required="required">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호" required>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+                       placeholder="비밀번호를 재입력해주세요"  maxlength="32" required="required">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="비밀번호를 재입력해주세요" required>
+               <select class="form-select" name="cBselect" id="cBselect">
+                    <option value="">시도 전체</option>
+                    <c:forEach var="item" items="${cityCode}">
+                        <c:if test="${item.mainCode == 0}">
+                            <option value="${item.subCode}" <c:if test="${search.subCityBigNm == item.subCode}">selected</c:if>>${item.bigList}</option>
+                        </c:if>
+                    </c:forEach>
+               </select>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-success w-100">회원가입</button>
+                <select class="form-select" name="cMselect" id="cMselect">
+                    <option value="">시군구 전체</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success w-100" id="doSave">회원가입</button>
             </div>
         </form>
     </div>
 
-    <!-- 푸터 포함 -->
-    <jsp:include page="/WEB-INF/views/footer.jsp" />
-    
+    <jsp:include page="/WEB-INF/views/footer.jsp" />   
     <script src="${CP}/resources/js/bootstrap.bundle.min.js"></script> 
-    <script>
-        function checkDuplicate() {
-            var username = document.getElementById('username').value;
-            if (username) {
-                // Ajax 요청 또는 페이지 전환을 통해 중복 체크를 수행합니다.
-                // 예를 들어:
-                alert('사용 가능한 아이디입니다');
-                // 실제 중복 확인 로직은 서버 사이드에서 처리해야 합니다.
-            } else {
-                alert('아이디를 입력해주세요');
-            }
-        }
-
-        // 회원가입 완료 후 메시지와 리다이렉션 처리
-        document.getElementById('signupForm').onsubmit = function(event) {
-            event.preventDefault(); // 폼 제출을 막습니다.
-
-            var form = event.target;
-            var formData = new FormData(form);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: formData
-            }).then(response => response.text())
-              .then(result => {
-                  alert('안전파수꾼 회원이 되신 걸 환영합니다!');
-                  window.location.href = '${CP}/user/login.do'; // 로그인 페이지로 리다이렉트
-              }).catch(error => {
-                  console.error('회원가입 오류:', error);
-              });
-        };
-    </script>
 </body>
 </html>
