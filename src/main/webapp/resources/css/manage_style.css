@@ -28,6 +28,8 @@
     opacity : 0;
     visibility: hidden;
 }
+.popupSave #frmUpdateBtn{display : none;}
+.popupUpdate #frmSaveBtn{display : none;}
 #checkAll,
 .chk{cursor : pointer;}
 /* 관리자 페이지 시작 */

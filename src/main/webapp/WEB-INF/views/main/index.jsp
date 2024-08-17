@@ -18,9 +18,11 @@
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="${CP}/resources/js/common.js"></script> 
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+	
     // header start
     const appMenus = document.querySelector('.appmenu');    
     
@@ -30,89 +32,153 @@ document.addEventListener('DOMContentLoaded', function() {
     // header end
     
     // 함수 시작
-    // 서브 차트 함수 시작
+    // 서브 차트 함수 시작    
+    const monFireCnt00 = parseFloat("${monthFrData00.monthFireCount}"); // 현재 
+    const monFireCnt01 = parseFloat("${monthFrData01.monthFireCount}"); // 1달전 
+    const monFireCnt02 = parseFloat("${monthFrData02.monthFireCount}"); // 2달전 
+    const monFireCnt03 = parseFloat("${monthFrData03.monthFireCount}"); // 3달전 
+    const monFireCnt04 = parseFloat("${monthFrData04.monthFireCount}"); // 4달전
+    const monFireCnt05 = parseFloat("${monthFrData05.monthFireCount}"); // 5달전 
+    const monFireCnt06 = parseFloat("${monthFrData06.monthFireCount}"); // 6달전
+
+    const lyFireCnt00 = parseFloat("${monthFrData00.lastYearMonthFireCount}"); // 1년전 
+    const lyFireCnt01 = parseFloat("${monthFrData01.lastYearMonthFireCount}"); // 1년 1달전 
+    const lyFireCnt02 = parseFloat("${monthFrData02.lastYearMonthFireCount}"); // 1년 2달전 
+    const lyFireCnt03 = parseFloat("${monthFrData03.lastYearMonthFireCount}"); // 1년 3달전 
+    const lyFireCnt04 = parseFloat("${monthFrData04.lastYearMonthFireCount}"); // 1년 4달전
+    const lyFireCnt05 = parseFloat("${monthFrData05.lastYearMonthFireCount}"); // 1년 5달전 
+    const lyFireCnt06 = parseFloat("${monthFrData06.lastYearMonthFireCount}"); // 1년 6달전
+    
+ // 데이터 포인트를 정의하는 함수
+    function getMarkerSymbol(value, data) {
+        var highest = Math.max.apply(Math, data);
+        return value === highest ? 'url(https://www.highcharts.com/samples/graphics/sun.png)' : 'circle';
+    }
+
+    // 데이터 포인트를 배열로 설정
+    const lyFireCnts = [lyFireCnt06, lyFireCnt05, lyFireCnt04, lyFireCnt03, lyFireCnt02, lyFireCnt01, lyFireCnt00];
+    const monFireCnts = [monFireCnt06, monFireCnt05, monFireCnt04, monFireCnt03, monFireCnt02, monFireCnt01, monFireCnt00];
+    
     Highcharts.chart('graphBox2', {
-	    chart: {
-	        type: 'spline'
-	    },
-	    title: {
-	        text: 'Monthly Average Temperature'
-	    },
-	    subtitle: {
-	        text: 'Source: ' +
-	            '<a href="https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature" ' +
-	            'target="_blank">Wikipedia.com</a>'
-	    },
-	    xAxis: {
-	        categories: [
-	            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-	            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-	        ],
-	        accessibility: {
-	            description: 'Months of the year'
-	        }
-	    },
-	    yAxis: {
-	        title: {
-	            text: 'Temperature'
-	        },
-	        labels: {
-	            format: '{value}°'
-	        }
-	    },
-	    tooltip: {
-	        crosshairs: true,
-	        shared: true
-	    },
-	    plotOptions: {
-	        spline: {
-	            marker: {
-	                radius: 4,
-	                lineColor: '#666666',
-	                lineWidth: 1
-	            }
-	        }
-	    },
-	    series: [{
-	        name: 'Tokyo',
-	        marker: {
-	            symbol: 'square'
-	        },
-	        data: [5.2, 5.7, 8.7, 13.9, 18.2, 21.4, 25.0, {
-	            y: 26.4,
-	            marker: {
-	                symbol: 'url(https://www.highcharts.com/samples/graphics/sun.png)'
-	            },
-	            accessibility: {
-	                description: 'Sunny symbol, this is the warmest point in the ' +
-	                    'chart.'
-	            }
-	        }, 22.8, 17.5, 12.1, 7.6]
-	
-	    }, {
-	        name: 'Bergen',
-	        marker: {
-	            symbol: 'diamond'
-	        },
-	        data: [{
-	            y: 1.5,
-	            marker: {
-	                symbol: 'url(https://www.highcharts.com/samples/graphics/snow.png)'
-	            },
-	            accessibility: {
-	                description: 'Snowy symbol, this is the coldest point in the ' +
-	                    'chart.'
-	            }
-	        }, 1.6, 3.3, 5.9, 10.5, 13.5, 14.5, 14.4, 11.5, 8.7, 4.7, 2.6]
-	    }]
-	});
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: null
+        },
+        subtitle: {
+            text: null
+        },
+        xAxis: {
+            categories: [
+                '6달전(현재)/6달전(작년)', '5달전(현재)/5달전(작년)', '4달전(현재)/4달전(작년)', '3달전(현재)/3달전(작년)', '2달전(현재)/2달전(작년)', '1달전(현재)/1달전(작년)', '오늘(현재)/작년의 오늘'
+            ],
+            accessibility: {
+                description: 'Months of the year'
+            }
+        },
+        yAxis: {
+            title: {
+                text: '화재건수 (현재/작년)'
+            },
+            labels: {
+                overflow: 'justify',
+                formatter: function () {
+                    // y축 레이블을 천 단위로 쉼표를 넣어 표시
+                    return Highcharts.numberFormat(this.value, 0, '.', ',');
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        credits: {
+            enabled: false
+        },
+        series: [{
+            name: '현재 - 6개월전',
+            data: monFireCnts.map(function (value) {
+                return {
+                    y: value,
+                    marker: {
+                        symbol: getMarkerSymbol(value, monFireCnts)
+                    }
+                };
+            }),
+            color: '#ff6161',
+            dataLabels: {
+                enabled: true
+            }
+        }, {
+            name: '1년전의 오늘 - 6개월전(작년기준)',
+            data: lyFireCnts.map(function (value) {
+                return {
+                    y: value,
+                    marker: {
+                        symbol: getMarkerSymbol(value, lyFireCnts)
+                    }
+                };
+            }),
+            color: '#4f81bd',
+            dataLabels: {
+                enabled: true
+            }
+        }]
+    });
     // 서브 차트 함수 끝
     
+    //비동기 통신
+    function doRetrieveAjax(){
+        
+        let url = "/ehr/main/mainData.do";
+        let dataType = "html";
+        let type = "GET";
+        let params = "";
+        let async = "true";
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            if(data){
+                try{
+                    const jsonObj = JSON.parse(data);
+                    const todayFireCount = jsonObj.todayFireCount;
+                    const todayInjured = jsonObj.todayInjured;
+                    const todayAmount = jsonObj.todayAmount;
+                    const monthFireCount = jsonObj.monthFireCount;
+                    const monthInjured = jsonObj.monthInjured;
+                    const monthAmount = jsonObj.monthAmount;
+                                        
+                    if(jsonObj !== null && jsonObj !== undefined || jsonObj || Object.keys(jsonObj).length > 0){
+                    	updateMainTitleBox(todayFireCount, todayInjured, todayAmount);
+                    	updateGraph(todayFireCount, todayInjured, todayAmount, monthFireCount, monthInjured, monthAmount);
+                    }else{ //데이터 없는 경우
+                    	updateMainTitleBox(0, 0, 0);
+                        updateGraph(0, 0, 0, 0, 0, 0);
+                        alert("데이터 확인 불가");
+                    }                   
+                        
+                }catch(e){
+                    console.error("실시간 데이터 오류입니다. 관리자에게 문의 주세요");
+                }
+            }        
+        });
+        
+    }
+    
     // 메인 타이틀 실시간 변화
-    function updateMainTitleBox() {
-    	const todayFireCount = ${firedata.todayFireCount}
-        const todayInjured = ${firedata.todayInjured}
-        const todayAmount = ${firedata.todayAmount}
+    function updateMainTitleBox(todayFireCountData, todayInjuredData, todayAmountData) {
+    	const todayFireCount = todayFireCountData;
+        const todayInjured = todayInjuredData;
+        const todayAmount = todayAmountData;
     	const formattedTodayAmount = todayAmount.toLocaleString();
     	
         const mainTitleBox = document.querySelector('.main_title_box');
@@ -129,14 +195,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 메인차트 실시간 변화
-    function updateGraph() {
-    	const todayFireCount = ${firedata.todayFireCount}
-        const todayInjured = ${firedata.todayInjured}
-        const todayAmount = ${firedata.todayAmount}
+    function updateGraph(todayFireCountData, todayInjuredData, todayAmountData, monthFireCountData, monthInjuredData, monthAmountData) {
+        const todayFireCount = todayFireCountData;
+        const todayInjured = todayInjuredData;
+        const todayAmount = todayAmountData;
         
-        const monthFireCount = ${firedata.monthFireCount}
-        const monthInjured = ${firedata.monthInjured}
-        const monthAmount = ${firedata.monthAmount}    
+        const monthFireCount = monthFireCountData;
+        const monthInjured = monthInjuredData;
+        const monthAmount = monthAmountData;    
         
         Highcharts.chart('graphBox', {
             accessibility: {
@@ -171,7 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     overflow: 'justify',
                     formatter: function () {
                         // y축 레이블을 천 단위로 쉼표를 넣어 표시
-                        return Highcharts.numberFormat(this.value, 0, ',', ' ');
+                        return Highcharts.numberFormat(this.value, 0, '.', ',');
                     }
                 },
                 gridLineWidth: 0
@@ -236,14 +302,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 1분마다 updateMainTitleBox()와 updateGraph() 함수 실행
     setInterval(function() {
-        updateMainTitleBox();
-        updateGraph();
+    	doRetrieveAjax();
     }, 10000); // 60000밀리초 = 1분
     // 함수 끝
 
     // 메인, 메인 차트 함수 실행
-    updateMainTitleBox();
-    updateGraph();
+    doRetrieveAjax();
 });
 </script>    
 </head>
@@ -303,9 +367,7 @@ Cabinet</span>
             </div>
         </div>
     </div>
-    00 : ${monthFrData00} <br>
-    01 : ${monthFrData01} <br>
-    02 : ${monthFrData02}
+
     <div class="rankBox container-fluid">
         <div class="m-0 mt-2 row g-1">
             <div class="mt-0 col-md-4">

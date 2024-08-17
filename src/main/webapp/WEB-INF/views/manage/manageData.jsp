@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 	// 변수 선언
 	const popUp = document.querySelector(".popup");
-	const doDeleteMemberBtn = document.querySelector("#doDeleteMember");
+	const doSaveDataBtn = document.querySelector("#doSaveData");
+    const frmSaveBtn = document.querySelector("#frmSaveBtn");
+	const doDeleteDataBtn = document.querySelector("#doDeleteData");
     const frmUpdate = document.querySelector("#frmDataUpdate");
     const frmUpdateBtn = document.querySelector("#frmUpdateBtn");
     const checkAll = document.querySelector('#checkAll');
@@ -52,13 +54,23 @@ document.addEventListener('DOMContentLoaded', function() {
 	midOptionSelectDelSession();
 	
 	// 클릭 이벤트 시작
+	// 신규 데이터 저장 버튼
+	frmSaveBtn.addEventListener("click",function(event){
+		doSaveData();        
+        event.stopPropagation(); // 이벤트 버블링 방지        
+    });
+	// 신규 데이터 저장 열기
+	doSaveDataBtn.addEventListener("click",function(event){
+		doSaveDataOpen();        
+        event.stopPropagation(); // 이벤트 버블링 방지        
+    });
 	// 수정 버튼
 	frmUpdateBtn.addEventListener("click",function(event){
         doUpdateData();        
         event.stopPropagation(); // 이벤트 버블링 방지        
     });
 	// 삭제 버튼
-	doDeleteMemberBtn.addEventListener("click",function(event){
+	doDeleteDataBtn.addEventListener("click",function(event){
         doDeleteData();        
         event.stopPropagation(); // 이벤트 버블링 방지        
     });
@@ -69,8 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 	// 정보 수정 닫기버튼
     frmUpCloseBtn.addEventListener('click', function(event) {
-        popUp.classList.toggle('popupHide');
-        popUp.classList.add('popupDoSaveHide');
+        popUp.classList.add('popupHide');
         event.stopPropagation(); // 이벤트 버블링 방지
         event.stopImmediatePropagation(); 
     });
@@ -113,6 +124,118 @@ document.addEventListener('DOMContentLoaded', function() {
 	// 변화 감지 이벤트 끝
 	
 	// 함수 시작
+	// 신규 데이터 저장 버튼
+	function doSaveData(){
+		if(isEmpty(frmUpdate.UcBselect.value) == true){
+            alert("지역을 선택 하세요.");
+            frmUpdate.UcBselect.focus();
+            return;
+        }
+        if(isEmpty(frmUpdate.UfBselect.value) == true){
+            alert("요인을 선택 하세요.");
+            frmUpdate.UfBselect.focus();
+            return;
+        }
+        if(isEmpty(frmUpdate.UlBselect.value) == true){
+            alert("장소를 선택 하세요.");
+            frmUpdate.UlBselect.focus();
+            return;
+        }
+        
+        if(confirm("저장 하시겠습니까?")===false) return;
+        
+        // 지역
+        var UcselectValue = "";        
+        if(isEmpty(frmUpdate.UcMselect.value) == true){
+            UcselectValue = frmUpdate.UcBselect.value;
+        }else{
+            UcselectValue = frmUpdate.UcMselect.value;          
+        }        
+        console.log(UcselectValue);
+        
+        // 요인
+        var UfselectValue = "";        
+        if(isEmpty(frmUpdate.UfMselect.value) == true){
+            UfselectValue = frmUpdate.UfBselect.value;
+        }else{
+            UfselectValue = frmUpdate.UfMselect.value;          
+        }        
+        console.log(UfselectValue);
+        
+        // 장소
+        var UlselectValue = "";        
+        if(isEmpty(frmUpdate.UlMselect.value) == true){
+            UlselectValue = frmUpdate.UlBselect.value;
+        }else{
+            UlselectValue = frmUpdate.UlMselect.value;          
+        }        
+        console.log(UlselectValue);
+        
+        const userIdSession = "${sessionScope.user.userId}";        
+        console.log(userIdSession);
+        
+        let type = "POST"; 
+        let url = "/ehr/manage/doSaveData.do";
+        let async = "true";
+        let dataType = "html";
+        let params = {
+            "injuredSum" : frmUpdate.injuredSum.value,
+            "dead" : frmUpdate.dead.value,
+            "injured" : frmUpdate.injured.value,
+            "amount" : frmUpdate.amount.value,
+            "subFactor" : UfselectValue,
+            "subLoc" : UlselectValue,
+            "subCity" : UcselectValue,
+            "regId" : userIdSession
+        };
+       
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            console.log("data: ",data);
+
+            if(data){
+                let message = JSON.parse(data); 
+                try{
+                    if(isEmpty(message) === false && 1 === message.messageId){                        
+                        alert(message.messageContents);
+                        doRetrieve(1);
+                    }else{
+                        alert(message.messageContents);
+                    }
+
+                }catch(error){
+                    alert("널 혹은 언디파인드임");
+                }
+            }
+
+        }); 
+	}	
+	// 데이터 설정 리셋
+	function popUpReset(){
+		frmUpdate.UfireSeq.value = "";
+        frmUpdate.injuredSum.value = "";
+        frmUpdate.dead.value       = "";
+        frmUpdate.injured.value    = "";
+        frmUpdate.amount.value     = "";
+        frmUpdate.UcBselect.value  = "";
+        cityCodeSet("", frmUpdate.UcBselect, frmUpdate.UcMselect);
+        frmUpdate.UcMselect.value  = "";
+        frmUpdate.UfBselect.value  = "";
+        factorCodeSet("", frmUpdate.UfBselect, frmUpdate.UfMselect);
+        frmUpdate.UfMselect.value  = "";
+        frmUpdate.UlBselect.value  = "";
+        locCodeSet("", frmUpdate.UlBselect, frmUpdate.UlMselect);
+        frmUpdate.UlMselect.value  = "";
+	}	
+	// 신규 데이터 등록 열기
+	function doSaveDataOpen(){
+        console.log('doSaveData');
+        
+        popUp.classList.remove('popupHide');
+        popUp.classList.add('popupSave');
+        popUp.classList.remove('popupUpdate');
+        
+        popUpReset();        
+	}	
 	// 화재정보 삭제
 	function doDeleteData(){
         console.log('doDeleteData');
@@ -255,8 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 		
 		}); // PClass 끝
-	} // doSelectOne 끝
-	
+	} // doSelectOne 끝	
 	// 수정 메서드
 	function doUpdateData(){		
         if(isEmpty(frmUpdate.UcBselect.value) == true){
@@ -304,13 +426,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }        
         console.log(UlselectValue);
         
-        let userId;
-        
-        if(isEmpty(sessionStorage.getItem("user")) == false){
-            userId = sessionStorage.getItem("user").userId;
-        }
-        
-        console.log(userId);
+        const userIdSession = "${sessionScope.user.userId}";        
+        console.log(userIdSession);
         
         let type = "POST"; 
         let url = "/ehr/manage/doUpdateData.do";
@@ -324,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "subFactor" : UfselectValue,
             "subLoc" : UlselectValue,
             "subCity" : UcselectValue,
-            "modId" : userId,
+            "modId" : userIdSession,
             "fireSeq" : frmUpdate.UfireSeq.value
         };
        
@@ -366,8 +483,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	            
 	            console.log(fireSeq);
 	            doSelectOne(fireSeq);
-	            popUp.classList.toggle('popupHide');
-	            popUp.classList.remove('popupDoSaveHide');
+	            popUp.classList.remove('popupHide');
+	            popUp.classList.remove('popupSave');
+	            popUp.classList.add('popupUpdate');
 	        });
 	    });
 	}
@@ -538,10 +656,10 @@ document.addEventListener('DOMContentLoaded', function() {
     <h3>관리자 페이지 - 화재 정보 </h3>
 
     <div class="row g-1 align-items-center mt-2">
-        <div class="col-md-1">
-            <button id="doDeleteMember" class="btn btn-danger">삭제</button>
+        <div class="col-md-12">
+           <button id="doDeleteData" class="btn btn-danger">삭제</button>
+           <button id="doSaveData" class="btn btn-success">추가</button>
         </div>
-        <div class="col-md-auto"></div>
         
         <form name="frmDataSearch" id="frmDataSearch" class="col-md-auto ms-auto">
             <div class="row g-1">
@@ -797,6 +915,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="col-sm-10"></div>
       <div class="col-sm-2">
         <button class="btn btn-success" id="frmUpdateBtn" type="button">수정</button>
+        <button class="btn btn-success" id="frmSaveBtn" type="button">저장</button>
       </div>
   </div>    
 </form>

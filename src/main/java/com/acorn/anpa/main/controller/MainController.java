@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.firedata.domain.Firedata;
 import com.acorn.anpa.firedata.service.FireDataService;
 import com.acorn.anpa.monthfiredata.service.MonthFireDataService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Controller
 @RequestMapping("main")
@@ -34,6 +38,28 @@ public class MainController implements PLog {
 		log.debug("┌──────────────────────────────────────────┐");
 		log.debug("│ mainController()                     │");
 		log.debug("└──────────────────────────────────────────┘");
+	}
+	
+	@RequestMapping(
+			value = "/mainData.do",
+			method = RequestMethod.GET,
+			produces = "text/plain;charset=UTF-8"
+	)
+	@ResponseBody
+	public String mainDataAjax(Model model, HttpServletRequest req) throws SQLException{
+		String jsonList = "";
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ mainDataAjax()");
+		log.debug("└──────────────────────────────────────────────");
+		
+		Firedata firedata = fireDataService.doMainData();
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		
+		jsonList = gson.toJson(firedata);
+		log.debug("2. jsonList : " + jsonList);
+
+		return jsonList;
 	}
 	
 	@RequestMapping(
