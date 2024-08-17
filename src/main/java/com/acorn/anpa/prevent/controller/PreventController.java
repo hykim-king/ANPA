@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.acorn.anpa.prevent.domain.prevent;
+import com.acorn.anpa.prevent.domain.Prevent;
 import com.acorn.anpa.prevent.service.PreventService;
 import com.acorn.anpa.cmn.Message;
 import com.acorn.anpa.cmn.Search;
@@ -58,7 +58,7 @@ public class PreventController  {
     		method = RequestMethod.POST, 
     		produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String doSave(prevent inVO) throws SQLException {
+    public String doSave(Prevent inVO) throws SQLException {
         log.debug("1. param inVO: " + inVO);
         int flag = preventService.doSave(inVO);
 
@@ -85,7 +85,7 @@ public class PreventController  {
   //http://localhost:8080/ehr/prevent/doSelectOne.do?preventSeq=413
   //http://localhost:8080/ehr/prevent/doSelectOne.do
     @RequestMapping(value = "/doSelectOne.do")
-	public String doSelectOne(prevent inVO, Model model, HttpSession httpSession) throws SQLException, EmptyResultDataAccessException{
+	public String doSelectOne(Prevent inVO, Model model, HttpSession httpSession) throws SQLException, EmptyResultDataAccessException{
 		String view = "prevent/prevent_page";///WEB-INF/views/+board/board_mng+.jsp ->/WEB-INF/views/board/board_mng.jsp
 		log.debug("┌───────────────────────────────────┐");
 		log.debug("│ doSelectOne                       │");
@@ -101,7 +101,7 @@ public class PreventController  {
 		
 		if( null==inVO.getRegId()) {
 			inVO.setRegId(StringUtil.nvl(inVO.getRegId(),"Guest"));
-		}
+		} 
 		
 		////session이 있는 경우
 		//if(null != httpSession.getAttribute("user")) {
@@ -109,7 +109,7 @@ public class PreventController  {
 		//	inVO.setRegId(user.getUserId());
 		//}
 		//
-		prevent outVO = preventService.doSelectOne(inVO);
+		Prevent outVO = preventService.doSelectOne(inVO);
 		model.addAttribute("vo", outVO);
 		
 		return view;
@@ -151,7 +151,7 @@ public class PreventController  {
 			   , method = RequestMethod.POST            //textarea post로
 			   , produces = "text/plain;charset=UTF-8") //json encoding 
 	@ResponseBody //json으로 리턴하기 위한
-	public String doUpdate(prevent inVO) throws SQLException {
+	public String doUpdate(Prevent inVO) throws SQLException {
 		
 		String jsonString = "";
 		log.debug("1.param:" + inVO);
@@ -180,7 +180,7 @@ public class PreventController  {
 	        , produces = "text/plain;charset=UTF-8"
 	        ) //produces : 화면으로 전송 encoding)
 	@ResponseBody
-	public String doDelete(prevent inVO) throws SQLException {
+	public String doDelete(Prevent inVO) throws SQLException {
 		String jsonString = "";
 		log.debug("1.param:" + inVO);
 		
@@ -234,7 +234,7 @@ public class PreventController  {
 		// 1.
 		log.debug("1.param search:" + search);		
 		
-		List<prevent> list = this.preventService.doRetrieve(search);
+		List<Prevent> list = this.preventService.doRetrieve(search);
 		
 		//2. 화면 전송 데이터
 		model.addAttribute("list", list);//조회 데이터
@@ -243,7 +243,7 @@ public class PreventController  {
 		int totalCnt = 0;
 		//페이징:totalcnt
 		if(null != list && list.size() > 0) {
-			prevent firstVO = list.get(0);
+			Prevent firstVO = list.get(0);
 			totalCnt = firstVO.getTotalCnt();
 		}
 		model.addAttribute("totalCnt", totalCnt); //검색조건

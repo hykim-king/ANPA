@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.acorn.anpa.mapper.PreventMapper">
 
-    <insert id="doSave" parameterType="prevent">
+    <insert id="doSave" parameterType="Prevent">
         INSERT INTO prevent (
             title,
             read_cnt,
@@ -25,19 +25,17 @@
     </insert>
 
     <!-- 단건 조회 쿼리 -->
-    <select id="doSelectOne" parameterType="prevent" resultType="prevent">
+    <select id="doSelectOne" parameterType="Prevent" resultType="Prevent">
         SELECT
             prevent_seq as preventSeq,
             title,
             read_cnt as readCnt,
             contents,
             img_src as imgSrc,
-            TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedRegDt, -- 등록일
-            reg_dt as regDt, -- 등록일
+            TO_CHAR(reg_dt, 'YYYY/MM/DD HH24:MI:SS') as regDt, -- 등록일
             reg_id as regId, -- 등록자
             mod_id as modId,
-            TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as formattedModDt, -- 수정일
-            mod_dt as modDt -- 수정일 원본
+            TO_CHAR(mod_dt, 'YYYY/MM/DD HH24:MI:SS') as modDt -- 수정일
         FROM
             prevent
         WHERE
@@ -45,7 +43,7 @@
     </select>
 
     <!-- 조회수 -->
-    <select id="doRetrieve" parameterType="Search" resultType="prevent">
+    <select id="doRetrieve" parameterType="Search" resultType="Prevent">
         SELECT A.*, B.*
         FROM (
             SELECT TT1.RNUM AS NO,

@@ -16,7 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.mapper.PreventMapper;
-import com.acorn.anpa.prevent.domain.prevent;
+import com.acorn.anpa.prevent.domain.Prevent;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/root-context.xml",
@@ -32,9 +32,9 @@ public class PreventControllerTest implements PLog{
 	@Autowired
 	PreventMapper boardMapper;
 	
-    prevent prevent01;
-    prevent prevent02;
-    prevent prevent03;
+    Prevent prevent01;
+    Prevent prevent02;
+    Prevent prevent03;
     
 	com.acorn.anpa.cmn.Search search;
 	

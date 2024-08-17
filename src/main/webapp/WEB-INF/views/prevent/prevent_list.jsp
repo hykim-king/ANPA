@@ -133,7 +133,7 @@
                     <c:when test="${list.size() > 0}">
                         <c:forEach var="vo" items="${list}">
                             <div class="card">
-                                <p>${vo.preventSeq}</p>
+                                <p><a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>" >${vo.preventSeq}</a> </p>
                                 <img src="<c:url value='/resources/img/${vo.imgSrc}'/>" alt="이미지">
                                 <h4>${vo.title}</h4>
                                 <p>${vo.contents}</p>
@@ -144,7 +144,7 @@
                     <c:otherwise>
                         <p>검색 결과가 없습니다.</p>
                     </c:otherwise>
-                </c:choose>
+                </c:choose> 
             </div>
 
             <!-- 페이지 네비게이션 -->

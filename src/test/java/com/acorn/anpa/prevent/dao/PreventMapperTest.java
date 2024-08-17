@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.mapper.PreventMapper;
-import com.acorn.anpa.prevent.domain.prevent;
+import com.acorn.anpa.prevent.domain.Prevent;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = { "file:src/main/webapp/WEB-INF/spring/root-context.xml",
@@ -28,9 +28,9 @@ public class PreventMapperTest implements PLog {
     ApplicationContext context;
     @Autowired
     PreventMapper preventMapper;
-    prevent prevent01;
-    prevent prevent02;
-    prevent prevent03;
+    Prevent prevent01;
+    Prevent prevent02;
+    Prevent prevent03;
     
     Search  search;
     
@@ -40,9 +40,9 @@ public class PreventMapperTest implements PLog {
         log.debug("│ setUp()                      │");
         log.debug("└──────────────────────────────┘");
         preventMapper = context.getBean(PreventMapper.class); // context에서 PreventMapper 빈을 가져옴
-        prevent01 = new prevent(10, "제목01", 0, "내용01", "이미지01");
-        prevent02 = new prevent(20, "제목02", 0, "내용02", "이미지02");
-        prevent03 = new prevent(30, "제목03", 0, "내용03", "이미지03");
+        prevent01 = new Prevent(10, "제목01", 0, "내용01", "이미지01");
+        prevent02 = new Prevent(20, "제목02", 0, "내용02", "이미지02");
+        prevent03 = new Prevent(30, "제목03", 0, "내용03", "이미지03");
         prevent01.setRegId("ADMIN01");
         prevent02.setRegId("ADMIN02");
         prevent03.setRegId("ADMIN03");
@@ -107,7 +107,7 @@ public class PreventMapperTest implements PLog {
         prevent01.setPreventSeq(seq);
 
         // When: 단건 조회 쿼리 실행
-        prevent inVO = preventMapper.doSelectOne(prevent01);
+        Prevent inVO = preventMapper.doSelectOne(prevent01);
 
         // Then: 결과 검증
         log.debug("inVO: " + inVO);
@@ -144,7 +144,7 @@ public class PreventMapperTest implements PLog {
         
         search.setSearchDiv("20"); //string 이니까 ""
                    search.setSearchWord("내용");                //  10>>제목 검색    
-        List<prevent> list = preventMapper.doRetrieve(search);
+        List<Prevent> list = preventMapper.doRetrieve(search);
     }
     
     @Ignore

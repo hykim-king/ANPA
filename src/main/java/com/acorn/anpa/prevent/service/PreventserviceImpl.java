@@ -13,7 +13,7 @@ import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.mapper.CodeMapper;
 import com.acorn.anpa.mapper.PreventMapper;
-import com.acorn.anpa.prevent.domain.prevent;
+import com.acorn.anpa.prevent.domain.Prevent;
 import com.acorn.anpa.prevent.service.PreventService;
 
 @Service
@@ -32,7 +32,7 @@ public class PreventserviceImpl implements PreventService, PLog {
     
     
 	@Override
-	public List<prevent> doRetrieve(DTO search) throws SQLException {
+	public List<Prevent> doRetrieve(DTO search) throws SQLException {
 		log.debug("┌─────────────────────────");
         log.debug("│ doRetrieve()            │");
         log.debug("└─────────────────────────");
@@ -41,18 +41,18 @@ public class PreventserviceImpl implements PreventService, PLog {
         return preventMapper.doRetrieve(search);
 	}
 	@Override
-	public int doUpdate(prevent inVO) throws SQLException {
+	public int doUpdate(Prevent inVO) throws SQLException {
 		log.debug("1. param : "+inVO);
 		return preventMapper.doUpdate(inVO);
 	}
 	@Override
-	public int doDelete(prevent inVO) throws SQLException {
+	public int doDelete(Prevent inVO) throws SQLException {
 		log.debug("1. param : "+inVO);
 		return preventMapper.doDelete(inVO);
 	}
     
     @Override
-    public int doSave(prevent inVO) throws SQLException {
+    public int doSave(Prevent inVO) throws SQLException {
 		{  // prevent -> Prevent
 		    log.debug("┌─────────────────────────");
 		    log.debug("│ doSave()                │");
@@ -65,10 +65,10 @@ public class PreventserviceImpl implements PreventService, PLog {
 
 
 	@Override
-	public prevent doSelectOne(prevent inVO) throws SQLException {
+	public Prevent doSelectOne(Prevent inVO) throws SQLException {
 		log.debug("1. param : "+inVO);
 		
-		prevent outVO = preventMapper.doSelectOne(inVO);
+		Prevent outVO = preventMapper.doSelectOne(inVO);
 		log.debug("2. outVO : " + outVO);
 		
  
