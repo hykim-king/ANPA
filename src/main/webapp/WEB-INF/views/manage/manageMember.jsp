@@ -48,9 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 키다운 이벤트 시작
     frm.searchWord.addEventListener("keydown", function(event) {
-        if (event.which == 13 ){
-        	console.log("야이 반동분자 새기야");
-        	
+        if (event.which == 13 ){        	
             event.preventDefault();
             doRetrieve();
         }

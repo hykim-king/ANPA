@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.acorn.anpa.mapper.AnswerMapper">
+
+    <select id="doRetrieve" parameterType="Search" resultType="Answer">
+        SELECT A.*, B.*                                                                                                                                     
+		FROM( 
+		    SELECT  TT1.no,
+		            TT1.board_seq as boardSeq,
+		            TT1.answer_seq as answerSeq,
+		            TT1.contents as contents,
+		            TT1.mod_id as modId,
+		            DECODE(
+		            TO_CHAR(TT1.mod_dt, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'YYYYMMDD'),
+		            TO_CHAR(TT1.mod_dt, 'HH24:MI'), TO_CHAR(TT1.mod_dt,'YYYY/MM/DD')
+		            ) AS modDt
+		    FROM    (
+		        SELECT ROWNUM AS no, T1.*
+		        FROM(
+		            SELECT  *
+		            FROM    answer
+		            WHERE 1=1
+                    AND board_seq = #{searchWord}
+		            ORDER BY mod_dt DESC
+		        ) T1
+		        WHERE ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
+		    ) TT1
+		    WHERE TT1.no <![CDATA[>= (#{pageSize} * (#{pageNo} - 1) + 1)]]> 
+		)A
+		CROSS JOIN                                                                                                                                           
+		(                                                                                                                                                    
+		    SELECT COUNT(*) totalCnt                                                                                                                             
+		    FROM answer  
+		    WHERE 1=1   
+            AND board_seq = #{searchWord}
+		)B           
+    </select>
+    
+    <insert id="doSave" parameterType="Answer">
+        INSERT INTO answer (
+		    board_seq,
+		    contents,
+		    reg_id,
+		    mod_id
+		) VALUES (
+		    #{board_seq},
+		    #{contents},
+		    #{regId},
+		    #{regId}
+		)
+    </insert>
+    
+    <delete id="doDelete" parameterType="Answer">
+        DELETE FROM answer
+        WHERE answer_seq = #{answerSeq}
+    </delete>
+    
+    <update id="doUpdate" parameterType="Answer">
+        UPDATE answer
+        SET
+            contents = #{contents},
+            mod_id = #{modId},
+            mod_dt = SYSDATE
+        WHERE answer_seq = #{answerSeq}
+    </update>
+    
+    <!-- 테스트용 코드 시작 -->
+    <select id="getSequence" resultType = "int">
+        SELECT MAX(answer_seq)     
+        FROM answer      
+    </select>    
+    <!-- 테스트용 코드 끝 -->
+    
+</mapper>

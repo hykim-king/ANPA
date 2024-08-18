@@ -46,10 +46,10 @@ public class BoardMapperTest implements PLog{
 		log.debug("└───────────────────────────");	
 		
 		boards = Arrays.asList(
-				new Board(999, "제목01", 0, "내용이지1", "20", "admin", "안씀", "admin", "안씀"),
-				new Board(1000, "제목02", 0, "내용이지2", "20", "admin", "안씀", "admin", "안씀"),
-				new Board(1001, "제목03", 0, "내용이지3", "20", "admin", "안씀", "admin", "안씀"),
-				new Board(1002, "제목04", 0, "내용이지4", "20", "admin", "안씀", "admin", "안씀")
+				new Board(999, "제목01", 0, "내용이지1", "20"),
+				new Board(1000, "제목02", 0, "내용이지2", "20"),
+				new Board(1001, "제목03", 0, "내용이지3", "20"),
+				new Board(1002, "제목04", 0, "내용이지4", "20")
 		);
 		
 		boardMapper.deleteAll();
@@ -159,7 +159,7 @@ public class BoardMapperTest implements PLog{
 		assertEquals(boardIn.getTitle(), boardOut.getTitle());
 		assertEquals(boardIn.getReadCnt(), boardOut.getReadCnt());
 		assertEquals(boardIn.getContents(), boardOut.getContents());
-		assertEquals(boardIn.getDiv(), boardOut.getDiv());
+		assertEquals(boardIn.getDivYn(), boardOut.getDivYn());
 //		assertEquals(boardIn.getRegId(), boardOut.getRegId());
 		assertEquals(boardIn.getModId(), boardOut.getModId());
 	}

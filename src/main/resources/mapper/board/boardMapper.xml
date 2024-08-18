@@ -4,7 +4,10 @@
     
     <resultMap type="Board" id="boardMap">
         <result column="board_seq" property="boardSeq" />
+        <result column="title" property="title" />
         <result column="read_cnt" property="readCnt" />
+        <result column="contents" property="contents" />
+        <result column="div" property="divYn" />
         <result column="reg_id" property="regId" />
         <result column="reg_dt" property="regDt" />
         <result column="mod_id" property="modId" />
@@ -97,7 +100,7 @@
 		) VALUES (
 		    #{title},
 		    #{contents},
-		    #{div},
+		    #{divYn},
 		    #{regId},
 		    #{regId}
 		)
@@ -112,9 +115,8 @@
         UPDATE board
         SET
             title = #{title},
-            read_cnt = #{readCnt},
             contents = #{contents},
-            div = #{div},
+            div = #{divYn},
             mod_id = #{modId},
             mod_dt = SYSDATE
         WHERE board_seq = #{boardSeq}
