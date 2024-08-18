@@ -47,6 +47,7 @@
         WHERE user_id = #{userId}
     </select>
 
+    <!-- 회원가입 -->
     <insert id="signUp" parameterType="Member">
         INSERT INTO member(
              user_id, 
@@ -67,15 +68,22 @@
              #{userName}, 
              #{email}, 
              #{emailYn}, 
-             #{adminYn}, 
+             0, 
              #{subCity}, 
              #{tel},
              #{modId},
-             sysdate,
+             SYSDATE,
              #{regId},
-             sysdate
+             SYSDATE 
          )
     </insert>
+
+    <!-- 아이디 중복 체크 -->
+    <select id="idDuplicateCheck" parameterType="Member" resultType="int">
+        SELECT COUNT(*)
+        FROM member
+        WHERE user_id = #{userId}
+    </select>
 
     <!-- 모든 데이터 삭제 (테스트 용도) -->
     <delete id="deleteAll">

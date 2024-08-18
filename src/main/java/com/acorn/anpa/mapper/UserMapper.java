@@ -56,6 +56,15 @@ public interface UserMapper extends WorkDiv<Member> {
 	 * @throws SQLException
 	 */
 	int signUp(Member member) throws SQLException;
+	
+	/**
+	 * id중복 체크 
+	 * @param inVO
+	 * @return 1(사용불가)/0(사용가능)
+	 * @throws SQLException
+	 */
+	int idDuplicateCheck(Member inVO) throws SQLException;
+
 
 	/**
 	 * 아이디 찾기

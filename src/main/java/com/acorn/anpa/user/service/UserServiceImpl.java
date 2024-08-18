@@ -9,7 +9,7 @@ import com.acorn.anpa.cmn.PLog;
 import com.acorn.anpa.member.domain.Member;
 import com.acorn.anpa.mapper.UserMapper; 
 
-@Service
+@Service("userServiceImpl")
 public class UserServiceImpl implements UserService, PLog {
 
     @Autowired
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService, PLog {
 		log.debug("1. param :"+inVO);
 		int status = 0;
 		
-		//1. idCheck호출 : 1 성공/0 실패 -> 10
+		// idCheck : 1 성공/0 실패 -> 10
 		
 		int loginCnt = userMapper.idCheck(inVO);
 		if(0 == loginCnt) {
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService, PLog {
 			return status;
 		}
 		
-		//2. 비번확인 : 1 성공/0 실패 -> 20
+		// passwordCheck : 1 성공/0 실패 -> 20
 		int passwordCnt = userMapper.passwordCheck(inVO);
 		if(0 == passwordCnt) {
 			status = 20;
@@ -58,40 +58,38 @@ public class UserServiceImpl implements UserService, PLog {
         Member loginInfo = userMapper.loginInfo(inVO);
         log.debug("2. loginInfo :" + loginInfo);
         return loginInfo;
-    }
-
-	/*
-	 * @Override public int signUp(Member member) throws SQLException {
-	 * log.debug("1. param :" + member); int result = userMapper.signUp(member);
-	 * log.debug("2. signUp result :" + result); return result; }
-	 * 
-	 * @Override public boolean idCheck(String userId) throws SQLException {
-	 * log.debug("1. param :" + userId); int count = userMapper.idCheck(userId);
-	 * log.debug("2. idCheck count :" + count); return count > 0; }
-	 * 
-	 */
+    }	
     
+
     @Override
+    public int signUp(Member member) throws SQLException {
+        int flag = 0;
+        log.debug(member);
+        flag = userMapper.signUp(member);
+        log.debug("flag:" + flag);
+        return flag;
+    }
+	
+
+	@Override
+	public int idDuplicateCheck(Member inVO) throws SQLException {
+		log.debug("1. param :"+inVO);
+		
+		int count = userMapper.idDuplicateCheck(inVO);
+		
+		log.debug("2. count :"+count);
+		return count;
+	}
+	
+	@Override
+	public void deleteUser(String userId) {
+		
+	}
+	
+	@Override
     public void deleteAll() throws SQLException {
         log.debug("Deleting all members.");
         userMapper.deleteAll();
     }
 
-	@Override
-	public int signUp(Member member) throws SQLException {
-
-		return 0;
-	}
-
-	@Override
-	public boolean idCheck(String userId) throws SQLException {
-
-		return false;
-	}
-
-	@Override
-	public void deleteUser(String userId) {
-		// TODO Auto-generated method stub
-		
-	}
 }

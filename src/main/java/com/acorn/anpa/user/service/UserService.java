@@ -41,13 +41,13 @@ public interface UserService {
 	 */
 	int signUp(Member member) throws SQLException;
     
-    /**
-     * ID 중복 체크
-     * @param userId
-     * @return boolean true(중복됨)/false(사용 가능)
-     * @throws SQLException
-     */
-    boolean idCheck(String userId) throws SQLException;
+	/**
+	 * id중복 체크 
+	 * @param inVO
+	 * @return 1(사용불가)/0(사용가능)
+	 * @throws SQLException
+	 */
+	int idDuplicateCheck(Member inVO) throws SQLException;
 
 
     /**
@@ -57,4 +57,5 @@ public interface UserService {
     void deleteAll() throws SQLException;
 
 	void deleteUser(String userId);
+
 }

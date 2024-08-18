@@ -18,103 +18,92 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <title>ANPA | 회원가입</title>
     <script>
-    $(document).ready(function(){
-        
-        // 변수 선언 시작
-        const cBselect = document.querySelector("#cBselect");
-        const cMselect = document.querySelector("#cMselect");
-        // 변수 선언 끝
-        
-        cBselect.addEventListener("change",function(){
-	        cityCodeSet("", cBselect, cMselect);        
-	        const subCityMidNm = sessionStorage.getItem("cMselectValue");
-	        if (subCityMidNm != null && subCityMidNm !== '') {
-	        	   sessionStorage.removeItem("cMselectValue"); // 삭제   
-	        } 
-    }); 
-        
-    function cityCodeSet(subCityMidNm, cBselect, cMselect) {   
-        const cityCode = cBselect.value;
-        const url = "/ehr/manage/doSelectCode.do";
-        const type = "GET";
-        
-        if (cBselect.value === "") {
-            cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
-        } else {
-            const param1 = "masterCode=city"
-            const param2 = "&subCode=" + encodeURIComponent(cityCode);
-            
-            const xhr = new XMLHttpRequest();
-            xhr.open(type, url + "?" + param1 + param2, false); // `false` for synchronous requests
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            
-            xhr.onload = function() {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    const optionCodeData = JSON.parse(xhr.responseText);
-                    console.log(optionCodeData);
-                    cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
-                    optionCodeData.forEach(function(item) {
-                        const option = document.createElement("option");
-                        option.value = item.subCode;
-                        if (subCityMidNm == item.subCode) {
-                            option.selected = true;
-                        }else{
-                            option.selected = false;                            
-                        } 
-                        option.text = item.midList;
-                        cMselect.appendChild(option);
-                    });
-                } else {
-                    console.error("Request failed with status: " + xhr.status);
-                }
-            };
-            
-            xhr.onerror = function() {
-                console.error("Request error");
-            };
-            
-            xhr.send();
+    class Member {
+        constructor(userId, password, userName, email, emailYn, tel) {
+            this.userId = userId;         // 회원 아이디
+            this.password = password;     // 비밀번호
+            this.userName = userName;     // 회원 이름
+            this.email = email;           // 이메일
+            this.emailYn = emailYn;       // 이메일 수신 여부 (0 or 1)
+            this.tel = tel;               // 전화번호
         }
     }
+    
+    $(document).ready(function(){
+    	
+        //시군구 코드
+        const cBselect = document.querySelector("#cBselect");
+        const cMselect = document.querySelector("#cMselect");
+        let idDuplicatedClick = 0; // 변수 초기화
         
-        console.log("document ready!");
-    
-        let idDuplicatedClick = 0; // ID 중복 체크 클릭 여부 (1/0)
-    
+        cBselect.addEventListener("change",function(){
+            cityCodeSet("", cBselect, cMselect);        
+            const subCityMidNm = sessionStorage.getItem("cMselectValue");
+            if (subCityMidNm != null && subCityMidNm !== '') {
+                   sessionStorage.removeItem("cMselectValue"); // 삭제   
+            } 
+        }); 
+        
+        function cityCodeSet(subCityMidNm, cBselect, cMselect) {   
+            const cityCode = cBselect.value;
+            const url = "/ehr/manage/doSelectCode.do";
+            
+            if (cBselect.value === "") {
+                cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
+            } else {
+                const param1 = "masterCode=city"
+                const param2 = "&subCode=" + encodeURIComponent(cityCode);
+                
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    data: param1 + param2,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function(response) {
+                        const optionCodeData = JSON.parse(response);
+                        console.log(optionCodeData);
+                        cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
+                        optionCodeData.forEach(function(item) {
+                            const option = document.createElement("option");
+                            option.value = item.subCode;
+                            option.selected = subCityMidNm == item.subCode;
+                            option.text = item.midList;
+                            cMselect.appendChild(option);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Request failed with status: " + xhr.status);
+                    }
+                });
+            }
+        }
+        
+        console.log("회원가입 준비완!");
+        
         // 아이디 중복 체크
         $("#idDuplicateCheck").on("click", function(event){
-            event.preventDefault(); // 이벤트 버블링 방지
-            console.log("idDuplicateCheck click");
+            event.preventDefault(); 
             idDuplicateCheck();
         });
-    
+
         function idDuplicateCheck(){
-            console.log("idDuplicateCheck()");
-    
             let userIdInput = $("#userId").val();
-    
+
             if(isEmpty(userIdInput)){
                 alert("아이디를 입력하세요.");
                 $("#userId").focus();
                 return;
             }
-    
-            // 비동기 통신
-            let type = "GET";  
+
             let url = "${CP}/user/idDuplicateCheck.do";
-            let async = true;
-            let dataType = "json";
-    
-            let params = { 
-                "userId" : userIdInput
-            };
-    
-            PClass.pAjax(url, params, dataType, type, async, function(data){
-                if(data){
-                    try{
-                        console.log("message.messagId:" + data.messageId);
-                        console.log("message.messageContents:" + data.messageContents);
-    
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: { "userId": userIdInput },
+                dataType: "json",
+                success: function(data) {
+                    if(data){
                         if(data.messageId === 1){ 
                             alert(data.messageContents); // 사용 불가
                             $("#userId").focus();
@@ -123,27 +112,36 @@
                             alert(data.messageContents);
                             idDuplicatedClick = 1;
                         }  
-                    }catch(e){
-                        console.error("data가 null 혹은 undefined 입니다.", e);
-                        alert("data가 null 혹은 undefined 입니다.");     
-                    }           
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("아이디 중복체크 오류 발생: " + error);
+                    alert("아이디 중복체크 오류 발생: " + error);
                 }
             });
         }
-    
-        // 회원가입 버튼 클릭
-        $("#signup").on("click", function(event){
+        
+        
+        // 회원가입 
+        $("#signUp").on("click", function(event){
             event.preventDefault();         
-            console.log("signup click");        
-            doSave();
+            console.log("signUp click");        
+            signUp();
         });
-    
-        function doSave(){
-            console.log("signup()");
-    
+        
+        function signUp(){
+            console.log("signUp()");
+        
             // 필수 입력 처리
             if(isEmpty($("#userName").val())){
                 alert("이름을 입력하세요.");
+                $("#userName").focus();
+                return;
+            }
+            
+            const namePattern = /^[a-zA-Z가-힣]+$/;
+            if (!namePattern.test($("#userName").val())) {
+                alert("이름은 한글과 영문자만 입력 가능합니다.");
                 $("#userName").focus();
                 return;
             }
@@ -153,21 +151,30 @@
                 $("#userId").focus();
                 return;
             }
-    
+            
+            const userIdPattern = /^[a-z0-9]+$/;
+            if (!userIdPattern.test($("#userId").val())) {
+                alert("아이디는 영문소문자 및 숫자만 사용 가능합니다.");
+                $("#userId").focus();
+                return;
+            }
+
             if(idDuplicatedClick === 0){
                 alert("아이디 중복 체크를 하세요.");
                 $("#idDuplicateCheck").focus();
                 return;
             }
-    
+        
             if(isEmpty($("#email").val())){
                 alert("이메일을 입력하세요.");
                 $("#email").focus();
                 return;
             }
             
-            if (!$("#agreeEmail").is(":checked")) {
-                alert("이메일 수신 동의 여부를 체크하세요.");
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test($("#email").val())) {
+                alert("유효한 이메일 주소를 입력하세요.");
+                $("#email").focus();
                 return;
             }
             
@@ -176,62 +183,99 @@
                 $("#tel").focus();
                 return;
             }      
-    
+
+            const telPattern = /^[0-9]+$/;
+            if (!telPattern.test($("#tel").val())) {
+                alert("전화번호는 숫자만 입력 가능합니다.");
+                $("#tel").focus();
+                return;
+            }
+
             if(isEmpty($("#password").val())){
                 alert("비밀번호를 입력하세요.");
                 $("#password").focus();
                 return;
             }        
-    
+            
+            const passwordPattern = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;"'<>,.?\/|`~\-]+$/;
+            if (!passwordPattern.test($("#password").val())) {
+                alert("비밀번호는 영문자, 숫자, 특수문자만 사용할 수 있습니다.");
+                $("#password").focus();
+                return;
+            }
+        
             if(isEmpty($("#confirmPassword").val())){
                 alert("비밀번호를 재입력하세요.");
                 $("#confirmPassword").focus();
                 return;
             }
-    
+        
             if($("#confirmPassword").val() != $("#password").val()){
                 alert("비밀번호가 서로 다릅니다.");
                 $("#confirmPassword").focus();
                 return;
             }
-    
+            
+            // cBselect와 cMselect 선택 여부 확인
+            if (cBselect.value === "") {
+                alert("시도를 선택하세요.");
+                cBselect.focus();
+                return;
+            }
+
+            if (cMselect.value === "") {
+                alert("시군구를 선택하세요.");
+                cMselect.focus();
+                return;
+            }
+            console.log( $("#userName").val());
+            console.log( $("#userId").val());
+            
+            
             // 회원가입 요청 비동기 통신
-            let type = "POST";  
             let url = "${CP}/user/signup.do";
-            let async = true;
-            let dataType = "json";
-    
-            let params = { 
-                "userName"   : $("#userName").val(),
-                "userId"     : $("#userId").val(),
-                "email"      : $("#email").val(),
-                "agreeMarketing": $("#agreeMarketing").is(":checked") ? "Y" : "N",
-                "tel"        : $("#tel").val(),
-                "password"   : $("#password").val()
-            };
-    
-            if(confirm("회원가입을 하시겠습니까?") === false) return;
-    
-            PClass.pAjax(url, params, dataType, type, async, function(data){
-                if(data){
-                    try{
-                        console.log("message.messagId:" + data.messageId);
+            let params = new Member(
+            		                $("#userId").val(), 
+            		                $("#password").val(), 
+            		                $("#userName").val(), 
+            		                $("#email").val(), 
+            		                $("#emailYn").val(), 
+            		                $("#tel").val()
+            );         
+        
+            if(confirm("모든 회원가입 준비를 마쳤습니다!") === false) return;
+        
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(params),
+                contentType: "application/json",
+                dataType: "json",
+                success: function(data) {
+                    if(data){
+                        console.log("message.messageId:" + data.messageId);
                         console.log("message.messageContents:" + data.messageContents);
-    
+        
                         if(data.messageId === 1){   
                             alert(data.messageContents);
                             window.location.href = "${CP}/user/login.do";
                         }else{
                             alert(data.messageContents);
-                        }          
-                    }catch(e){
-                        console.error("데이터가 null 혹은 undefined 입니다", e);
-                        alert("데이터가 null 혹은 undefined 입니다");     
-                    }         
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error occurred: " + error);
+                    alert("Error occurred: " + error);
                 }
             });
         }    
+        
+        function isEmpty(value) {
+            return value == null || value.trim() === '';
+        }
     });
+
     </script>
      <style>
         body {
@@ -379,8 +423,8 @@
             <div class="form-group d-flex align-items-center checkbox-group">
                 <input type="email" class="form-control" id="email" name="email" 
                        placeholder="이메일"  maxlength="320" required="required">
-                <input type="checkbox" id="agreeEmail" name="agreeEmail">
-                <label for="agreeEmail">수신동의</label>
+                <input type="checkbox" id="emailYn" name="emailYn">
+                <label for="emailYn">수신동의</label>
             </div>
             <div class="form-group">
                 <input type="tel" class="form-control" id="tel" name="tel" 
@@ -410,7 +454,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-success w-100" id="doSave">회원가입</button>
+                <button type="submit" class="btn btn-success w-100" id="signUp">회원가입</button>
             </div>
         </form>
     </div>

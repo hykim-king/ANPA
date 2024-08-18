@@ -9,8 +9,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -48,7 +52,7 @@ public class UserController implements PLog{
         return "user/login"; 
     }
 
-    // 로그인 처리
+    // 로그인
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     @ResponseBody
 	public String loginInfo(Member inVO, HttpSession httpSession) throws SQLException {
@@ -81,12 +85,29 @@ public class UserController implements PLog{
 	}
     
     
-    // 로그아웃 처리
+    // 로그아웃
     @RequestMapping(value = "/logout.do", method = RequestMethod.GET)
-    public String logout(HttpServletRequest request) {
-        request.getSession().invalidate();
-        return "redirect:/user/login.do"; 
+    @ResponseBody
+    public String logout(HttpSession httpSession) {
+    	String jsonString = "";
+		log.debug("logout()");
+		
+		String loginOutMessage = "로그아웃";
+		int flag = 0;
+		if( null != httpSession.getAttribute("user")) {
+			httpSession.invalidate();
+					
+			loginOutMessage = "로그아웃 되었습니다.";
+			flag = 1;
+		}
+		
+		Message message=new Message(flag, loginOutMessage);
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(message);
+		log.debug("3.jsonString:" + jsonString);		
+		
+		return jsonString;
     }
+
     
     // 회원가입 페이지 이동
     @RequestMapping(value = "/signup.do", method = RequestMethod.GET)
@@ -101,54 +122,57 @@ public class UserController implements PLog{
 		return "user/signup"; 
     }
 
-    // 회원가입 처리
+    // 회원가입 
     @RequestMapping(value = "/signup.do", method = RequestMethod.POST)
-    public String signup(HttpServletRequest request, Model model) {
-        String userId = request.getParameter("userId");
-        String password = request.getParameter("password");
-        String userName = request.getParameter("userName");
-        String email = request.getParameter("email");
-        int emailYn = Integer.parseInt(request.getParameter("emailYn"));
-        int adminYn = Integer.parseInt(request.getParameter("adminYn"));
-        int subCity = Integer.parseInt(request.getParameter("subCity"));
-        String tel = request.getParameter("tel");
-        
-        Member newMember = new Member(userId, password, userName, email, 
-                                       emailYn, adminYn, subCity, tel);
-        
-        try {
-            if (userService.idCheck(userId)) {
-                model.addAttribute("errorMsg", "User ID already exists.");
-                return "user/signup.do"; // ID 중복 시 회원가입 페이지로
-            }
-            int result = userService.signUp(newMember);
-            if (result == 1) {
-                return "redirect:/user/login.do"; // 회원가입 성공 시 로그인 페이지로 리다이렉트
-            } else {
-                model.addAttribute("errorMsg", "Sign up failed. Please try again.");
-                return "user/signup.do"; // 실패 시 다시 회원가입 페이지로
-            }
-        } catch (SQLException e) {
-            model.addAttribute("errorMsg", "Error during sign up. Please try again.");
-            return "user/signup.do"; // 에러 시 다시 회원가입 페이지로
-        }
+    @ResponseBody
+    public String signUp(@RequestBody Member member) throws SQLException {
+    	String jsonString = "";
+
+		// 1.
+		log.debug("1.param user:" + member);
+
+		int flag = userService.signUp(member);
+
+		// 2.
+		log.debug("2.flag:" + flag);
+
+		String message = "";
+
+		if (1 == flag) {
+			message = member.getUserId() + " 님 안전파수꾼 가입을 환영합니다!";
+		} else {
+			message = member.getUserId() + " 님 회원가입을 실패하였습니다";
+		}
+
+		Message messageObj = new Message(flag, message);
+
+		Gson gson = new Gson();
+		jsonString = gson.toJson(messageObj);
+		// 3.
+		log.debug("3.jsonString:" + jsonString);
+
+		return jsonString;
     }
 
-    // ID 중복 체크 처리
-    @RequestMapping(value = "/checkUserId.do", method = RequestMethod.POST)
-    public String checkUserId(HttpServletRequest request, Model model) {
-        String userId = request.getParameter("userId");
-        
-        try {
-            boolean exists = userService.idCheck(userId);
-            model.addAttribute("exists", exists);
-            return "user/checkUserId"; // ID 중복 체크 결과 페이지로 이동
-        } catch (SQLException e) {
-            model.addAttribute("errorMsg", "Error during ID check. Please try again.");
-            return "user/signup.do"; // 에러 시 다시 회원가입 페이지로
-        }
-    }
-
-    
+    // ID 중복 체크 
+    @RequestMapping(value = "/idDuplicateCheck.do", method = RequestMethod.GET)
+    @ResponseBody
+    public String idDuplicateCheck(Member inVO) throws SQLException {
+    	String jsonString = "";
+		log.debug("1. param: " + inVO);
+		
+		int flag = userService.idDuplicateCheck(inVO);
+		String message = "";
+		if(1==flag) {
+			message =  inVO.getUserId()+" 사용 불가 아이디입니다";
+		}else {
+			message =  inVO.getUserId()+" 아이디 중복체크가 완료되었습니다!";
+		}
+		jsonString = new Gson().toJson(new Message(flag, message));
+		log.debug("3.jsonString:" + jsonString);
+		
+		
+		return jsonString;
+	}	
 
 }

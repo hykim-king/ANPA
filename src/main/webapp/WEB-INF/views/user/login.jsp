@@ -59,13 +59,14 @@
                 data: params,
                 dataType: dataType,
                 async: async,
-                success: function(data) {
+                success: function (data) {
                     if (data) {
                         if (data.messageId === 30) {  // 로그인 성공
+                            alert("환영합니다 안전파수꾼 입니다!");
                             window.location.href = "/ehr/main/index.do";
                         } else {  // 로그인 실패
                             alert(data.messageContents);
-                            userIdInput.focus(); 
+                            userIdInput.focus();
                         }
                     }
                 },
