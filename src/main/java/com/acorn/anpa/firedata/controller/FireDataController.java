@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 @RequestMapping("firedata")
 public class FireDataController implements PLog {
 	
-	//@Autowired
+	@Autowired
 	FireDataService fireDataService;
 	
 	@Autowired
@@ -78,6 +78,22 @@ public class FireDataController implements PLog {
 		return jsonString;
 	}
 	
+	@RequestMapping(value = "/totalDataList.do"
+			, method = RequestMethod.GET
+			, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String totalDataList(Search search) throws SQLException{
+		String jsonString = "";
+		log.debug("param: " + search);
+		
+		List<Firedata> totalDataList = fireDataService.totalDataList(search);
+		
+		jsonString = new Gson().toJson(totalDataList);
+		log.debug("jsonString: "+jsonString);
+
+		return jsonString;
+	}
+	
 	
 	@RequestMapping(value = "/cityList.do"
 			, method = RequestMethod.GET
@@ -87,12 +103,7 @@ public class FireDataController implements PLog {
 		String jsonString = "";
 		log.debug("param: " + search);
 		
-		
-		//----------------------------------------------------------------------
 		List<Code> cityList = codeService.codeList(search);
-		
-		
-		//----------------------------------------------------------------------
 		
 		jsonString = new Gson().toJson(cityList);
 		log.debug("jsonString: "+jsonString);

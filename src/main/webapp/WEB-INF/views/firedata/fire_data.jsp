@@ -58,13 +58,20 @@ document.addEventListener('DOMContentLoaded', function() {
     let now = new Date();
 	let year = now.getFullYear();
 	let month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-	let lastmonth = String(now.getMonth()).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+	let lastmonth = String(now.getMonth()).padStart(2, '0'); 
 	let day = String(now.getDate()).padStart(2, '0'); // 날짜는 1부터 시작
 	
     let currentDate = year+'-'+month+'-'+day;
 	let lastMonthDate = year+'-'+lastmonth+'-'+day;
     fRdateEnd.value = currentDate;
     fRdateStart.value = lastMonthDate;
+    
+    //검색 조건들
+    let bigListText = '';
+    let midListText = '';
+    let sidoText = '';
+    let sigungoText = '';
+    let searchDiv = '';
     //이벤트
     
     //지도 선택시 시도 선택
@@ -115,7 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
     //조회버튼
     doRetrieveBtn.addEventListener("click",function(event){
     	
-    	doData();
+    	//doData();
+    	
+    	doDataList();
     	
     });
     
@@ -272,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
         midListText = midList.options[midList.selectedIndex].textContent
         sidoText = sido.options[sido.selectedIndex].textContent
         sigungoText = sigungo.options[sigungo.selectedIndex].textContent
-        let searchDiv = '';
+        searchDiv = '';
         
         console.log('workDiv: '+workDiv);
         console.log('fRdateStart: '+fRdateStart.value);
@@ -301,7 +310,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if(sigungoText === '전체') sigungoText = '';
         console.log('sigungoText: '+sigungoText);
         
-        if(workDiv == '' ) alert('카테고리를 선택하세요');
+        if(workDiv == '' ){
+        	alert('카테고리를 선택하세요');
+        	return;
+        }
         
         let url = '/ehr/firedata/totalData.do';
         let params = {
@@ -342,6 +354,55 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
         });//아작스
+    }
+    
+    function doDataList(){
+    	let url = '/ehr/firedata/totalDataList.do';
+        let params = {
+            "searchDateStart": fRdateStart.value,
+            "searchDateEnd" : fRdateEnd.value,
+            "BigNm" : bigListText,
+            "MidNm" : midListText,
+            "subCityBigNm" : sidoText,
+            "subCityMidNm" : sigungoText,
+            "searchDiv" : searchDiv
+        };
+        dataType = 'json';
+        type = 'GET';
+        async = 'true';
+        
+        PClass.pAjax(url, params,dataType,type,async,function(response){
+        	if(response){
+                try{
+                    let data = response;
+                    console.log('List:'+data);
+                    const table = document.querySelector('#table');
+                    console.log('table:'+table);
+                    
+                    let headerHtml = '<tr><th>구분</th><th>합계</th><th>총 인명피해</th><th>사망자</th><th>부상자</th> <th>재산피해</th></tr>';
+                        
+                    table.innerHTML += headerHtml;
+                    
+                    
+                    data.forEach(function(item){
+                    	let html = '<tr>';
+                    	
+                    	
+                    	html += '</tr>';
+                    });
+                    
+        	
+                }catch(e){
+                    console.error("data가 null혹은, undefined 입니다.",e);
+                    alert("data가 null혹은, undefined 입니다.");  
+                }
+        	}else{
+                console.error("통신실패!");
+                alert("통신실패!");
+            }
+        	
+        });
+    	
     }
     
     function pieChart(totalData, data, id, title,tooltip) {
@@ -577,7 +638,6 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- 통계 테이블 -->
 <div>
     <table id="table">
-    
     
     </table>
 </div>
