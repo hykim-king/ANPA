@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
 </script>
 <style>
-
     .nav { 
         flex-grow: 1;
         font-size: 1.2rem; 

@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <jsp:include page="/WEB-INF/views/header.jsp" />
 
 <section class="container-fluid content align-items-center">
-    <div class="mainGraphBox">    
+    <div class="mainGraphBox mt-3">    
 	    <div class="main">
 	        <img src="https://image.ytn.co.kr/general/jpg/2017/1030/201710301151127152_d.jpg" alt="#fire">
 	        <div class="main_title_box">
@@ -350,44 +350,40 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     
     <div class="preventBox container-fluid">
-        <div class="m-0 mt-2 row g-1">
-            <div class="mt-0 col-md-3">
+        <div class="m-0 mt-3 p-0">
+            <div>
                 <strong>소화기 사용요령</strong>
-                <span>User Guide of
+                <span>User Guide of<br>
 Fire Extinguisher</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
-            <div class="mt-0 col-md-3">
+            <div>
                 <strong>
-				심폐소생술<br>
-				행동 요령
+				심폐소생술 행동 요령
                 </strong>
                 <span>How to Perform CPR</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
-            <div class="mt-0 col-md-3">
+            <div>
                 <strong>
-		                자동심장충격기<br>
-		                행동요령
+		                  자동심장충격기 행동요령
 				</strong>
                 <span>How to Perform AED</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
-            <div class="mt-0 col-md-3">
+            <div>
                 <strong>
-				옥내소화전<br>
-                                    사용방법
+				옥내소화전 사용방법
                 </strong>
-                <span>Operation of Fire Wall
-Cabinet</span>
+                <span>Operation of<br> Fire Wall<br>Cabinet</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
         </div>
     </div>
 
     <div class="rankBox container-fluid">
-        <div class="m-0 mt-2 row g-1">
-            <div class="mt-0 col-md-4">
+        <div class="m-0 mt-4">
+            <div>
 				<c:choose>
 					<c:when test="${rankLbData.size() >0 }">
 					  <c:forEach var="item" items="${rankLbData}">
@@ -402,7 +398,7 @@ Cabinet</span>
 					</c:otherwise>
 				</c:choose>
             </div>
-            <div class="mt-0 col-md-4">
+            <div>
                 <c:choose>
                     <c:when test="${rankLmData.size() >0 }">
                       <c:forEach var="item" items="${rankLmData}">
@@ -417,7 +413,7 @@ Cabinet</span>
                     </c:otherwise>
                 </c:choose>
             </div>
-            <div class="mt-0 col-md-4">
+            <div>
                 <c:choose>
                     <c:when test="${rankFmData.size() >0 }">
                       <c:forEach var="item" items="${rankFmData}">
@@ -436,7 +432,7 @@ Cabinet</span>
     </div>
     
     <div class="subGraphBox container-fluid">
-        <div class="m-0 mt-2 row g-1">
+        <div class="m-0 mt-3 row g-1">
             <div id="graphBox2"></div>
         </div>
     </div>

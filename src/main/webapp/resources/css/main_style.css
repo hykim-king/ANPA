@@ -59,7 +59,7 @@
 
 .graph{
 	text-align: center;
-    width: calc(100% - 680px);
+    width: calc(100% - 685px);
     height: 352px;
     margin: 0 20px 0 0;
     background-color: white;
@@ -105,37 +105,102 @@
     min-height : 264px;
     display: inline-block;
 }
+/* 예방법 영역 */
 .preventBox{
 	padding : 0 20px;
 	width : auto;
-    height : 250px;	
+    height : auto;	
 }
 .preventBox > div{
     width : auto;	
-	height: 100%;
+	height: auto;
+	display: flex;
+	flex-wrap: wrap;
+    justify-content: space-between;
 }
 .preventBox > div > div{
     border-radius: 5px;
     box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
+    position : relative;
+    flex: 1 1 22%;
+    margin: 0 .8%;
+    height: 250px;
+    padding : 15px;
+    z-index: 1;
+    overflow: hidden;
+}
+.preventBox > div > div:nth-child(1){margin-left: 0;}
+.preventBox > div > div:nth-child(4){margin-right: 0;}
+.preventBox > div > div::before {
+    content: ""; 
+	display : inline-block;
+	position : absolute;	
+    max-width : 300px;
+    width : 100%;
+    height: 100%;
     background-repeat : no-repeat;
     background-position: right 5px bottom 15px;
-}
-.preventBox > div > div:nth-child(1){
+    top : 0;
+    left : 0;
+    z-index: -1;
+}    
+.preventBox > div > div:nth-child(1)::before{
 	background-image : url("https://nfds.go.kr/images/common/link_comp_01.png");
     background-size: 96%;
 }
-.preventBox > div > div:nth-child(2){
+.preventBox > div > div:nth-child(2)::before{
 	background-image : url("https://nfds.go.kr/images/common/link_comp_02.png");
 	background-size: 60%;
 }
-.preventBox > div > div:nth-child(3){
+.preventBox > div > div:nth-child(3)::before{
 	background-image : url("https://nfds.go.kr/images/common/link_comp_03.png");
-	background-size: 90%;
+	background-size: 80%;
 }
-.preventBox > div > div:nth-child(4){
+.preventBox > div > div:nth-child(4)::before{
 	background-image : url("https://nfds.go.kr/images/common/link_comp_04.png");
 	background-size: 50%;
 }
+.preventBox > div > div strong{
+	display : block;
+    height : auto;	
+}
+.preventBox > div > div span{
+    margin-top : 5px;
+	display : block;
+}
+.preventBox > div > div button{
+    margin-top : 10px;
+	display : block;
+}
+
+/* 순위 박스 시작 */
+.rankBox{
+    padding : 0 20px;
+    width : auto;
+    height : auto;  
+}
+.rankBox > div{
+    width : auto;   
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.rankBox > div > div{
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
+    position : relative;
+    flex: 1 1 31%;
+    margin: 0 .8%;
+    height: 250px;
+    padding : 15px;
+    z-index: 1;
+    overflow: hidden;
+}
+.rankBox > div > div:nth-child(1){margin-left: 0;}
+.rankBox > div > div:nth-child(3){margin-right: 0;}
+/* 순위 박스 끝 */
+.subGraphBox{padding : 0 20px;}
 
 @media screen and (max-width: 1000px) {
     .content .main,
@@ -155,9 +220,28 @@
         background-color: white;
         border: 1px solid #e2e2e2;
     }
+    .preventBox > div > div {
+        flex: .8 1 48%;
+    }
+    .preventBox > div > div:nth-child(2){margin-right: 0;}
+    .preventBox > div > div:nth-child(3){margin-left: 0;}
+    .preventBox > div > div:nth-child(3),
+    .preventBox > div > div:nth-child(4){margin-top: 15px;}
+    
+    .rankBox > div > div {
+        flex: 1 1 98%;
+        margin: 0;
+    }
+    .rankBox > div > div:nth-child(2),
+    .rankBox > div > div:nth-child(3){margin-top: 15px;}
 }
 
-/* 순위 박스 시작 */
-
-/* 순위 박스 끝 */
+@media (max-width: 800px) {
+    .preventBox > div > div {
+        flex: 1 1 98%;
+        margin: 0;
+    }
+    .preventBox > div > div:nth-child(2),
+    .preventBox > div > div:nth-child(3){margin-top: 25px;}
+}
 /* 영역 끝 */
