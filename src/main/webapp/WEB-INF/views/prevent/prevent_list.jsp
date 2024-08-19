@@ -99,7 +99,7 @@
     </style>
 </head>
 <body>
-<script>
+<script>  
 function pageRetrieve(url,pageNo){
     const frm = document.querySelector("#preventFrm");
     frm.pageNo.value = pageNo;
@@ -108,6 +108,21 @@ function pageRetrieve(url,pageNo){
     frm.action = url;    
     frm.submit();
 }
+document.addEventListener("DOMContentLoaded", function(){
+	const doRetrieveBtn = document.querySelector("#doRetrieveBtn");
+	doRetrieveBtn.addEventListener("click",function(event){
+        event.stopPropagation();
+        doRetrieve();
+    });
+	
+   function doRetrieve(){
+       console.log("doRetrieve()");
+       const frm      = document.querySelector("#preventFrm");
+       
+       frm.action = "/ehr/prevent/doRetrieve.do";
+       frm.submit();
+   } 
+});
 </script>
 
     <jsp:include page="/WEB-INF/views/header.jsp" />
@@ -119,17 +134,18 @@ function pageRetrieve(url,pageNo){
             <form action="${CP}/prevent/search.do" method="get" class="row g-2 align-items-center mb-4" id="preventFrm">
                 <input type="text" class="d-none" id="pageNo" name="pageNo">
                 <div class="col-sm-3">
-                    <select name="searchType" class="form-select">
-                        <option value="">제목 및 내용 전체 검색</option>
-                        <option value="title">제목</option>
-                        <option value="content">내용</option>
+                    <select name="searchType" class="form-select" name="searchDiv" id="searchDiv">
+                        <option value="">전체</option>
+		                <c:forEach var="item" items="${BOARD_SEARCH}">
+		                   <option value="${item.subCode}"  <c:if test="${item.subCode == search.searchDiv}">selected</c:if>    >${item.midList}</option>
+		                </c:forEach>
                     </select>
                 </div>
                 <div class="col-sm-6">
-                    <input type="search" name="searchWord" class="form-control" placeholder="검색어 입력" required>
+                    <input type="search" name="searchWord" id="searchWord" class="form-control" placeholder="검색어 입력" required>
                 </div>
                 <div class="col-sm-3">
-                    <button type="submit" class="btn btn-custom">검색</button>
+                    <button id="doRetrieveBtn" type="button" class="btn btn-custom">검색</button>
                 </div>
             </form>
             <!-- 페이지 정보 -->
@@ -160,19 +176,8 @@ function pageRetrieve(url,pageNo){
                     </c:otherwise>
                 </c:choose> 
             </div>
-<%--             <!-- 페이지 네비게이션 -->
-            <div class="pagination">
-                <c:if test="${currentPage > 1}">
-                    <a href="${CP}/prevent/search.do?pageNo=${currentPage - 1}">&laquo;</a>
-                </c:if>
-                <c:forEach var="page" begin="1" end="${totalPages}">
-                    <a href="${CP}/prevent/search.do?pageNo=${page}" class="<c:if test='${page == currentPage}'>active</c:if>">${page}</a>
-                </c:forEach>
-                <c:if test="${currentPage < totalPages}">
-                    <a href="${CP}/prevent/search.do?pageNo=${currentPage + 1}">&raquo;</a>
-                </c:if>
-            </div> --%>
-            
+          
+           
         <!-- pagenation -->
         <div class="text-center">
           <div id="page-selection" class="text-center page">
