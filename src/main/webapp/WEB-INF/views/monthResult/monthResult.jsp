@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
                    
 
                    if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
-                       //alert(allMessage.messageContents);
+                      
                    }else{
                        alert("에러야"+allMessage.messageContents);
                    }
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
                    });
 
                }catch(e){
-                   //alert("연도 데이터가 없습니다.");
+                 
                }
                
            }
@@ -506,11 +506,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <section class="content content2 content3 align-items-center">
     <h3>한 눈에 보는 화재 현황</h3>
 
-    <form name = "mRfrm" id = "mRfrm" class="row g-1">
+    <form name = "mRfrm" id = "mRfrm"style="height: 50px;">
         <input type = "hidden" name = "work_div" id = "work_div">
         <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
         <input type = "hidden" name = "seq" id = "seq">
-        <div class="col-md-4 d-grid gap-2 d-md-flex" style="width: 300px; padding: 10px;">                   
+        <div class="col-md-4 d-grid gap-2 d-md-flex" style="width: 300px; padding: 10px; float:left">                   
             <!-- 연 / 월  -->
             <select class="form-control" id="yearSelect">
             </select>  
@@ -521,13 +521,13 @@ document.addEventListener('DOMContentLoaded', function() {
             <input class="form-control" type="button" id="selectBtn" name="selectBtn" value="조회"
        style="width: 100px; padding: 5px; background-color:#f2f2f2">     
         </div>
-		  <div class="col-md-7 d-flex justify-content-end mRsysdate">
+		  <div class="col-md-7 d-flex justify-content-end mRsysdate" style="float: right">
 		    <%
 		       Date date = new Date();
 		       SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
 		       String strDate = simpleDate.format(date);
 		    %>
-		    <div style="text-align: right; margin-left: 50px;"> <!-- margin-left로 변경 -->
+		    <div style="text-align: right; padding: 10px; margin-left: 50px;"> <!-- margin-left로 변경 -->
 		        <p style="margin-right: 5px; display: inline; margin: 0;">오늘은</p>
 		        <p style="color:#4169E1; display: inline; margin: 0;"> <%= strDate %> </p>
 		        <p style="margin-left: 5px; display: inline; margin: 0;">입니다</p>

@@ -1,7 +1,9 @@
 @charset "UTF-8";
 
 /* 영역 시작 */
-#mRfrm{margin-top: 30px;}
+#mRfrm{margin-top: 30px;
+        height:50px;
+}
 #mRselect,
 #mRselect option{
     border-radius: 50px;
@@ -19,7 +21,6 @@
 .mRsysdate {
     height: 40px;
     padding-top: 5px;
-    padding-right: 80px; /* 오른쪽으로 이동시키기 */
 }
 .mRsysdate div {
     text-align: right;

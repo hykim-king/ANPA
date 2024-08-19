@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 </a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-                <a class="nav-link" aria-current="page" href="#">화재 통계</a>
+                <a class="nav-link" aria-current="page" href="${CP}/monthfiredata/monthFireData.do">화재 통계</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
                 <a class="nav-link" href="#">화재 현황</a>
