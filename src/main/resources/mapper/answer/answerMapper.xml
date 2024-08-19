@@ -20,7 +20,6 @@
 		            SELECT  *
 		            FROM    answer
 		            WHERE 1=1
-                    AND board_seq = #{searchWord}
 		            ORDER BY mod_dt DESC
 		        ) T1
 		        WHERE ROWNUM <![CDATA[<= (#{pageSize} * (#{pageNo} - 1) + #{pageSize})]]> 
@@ -32,7 +31,6 @@
 		    SELECT COUNT(*) totalCnt                                                                                                                             
 		    FROM answer  
 		    WHERE 1=1   
-            AND board_seq = #{searchWord}
 		)B           
     </select>
     
@@ -43,7 +41,7 @@
 		    reg_id,
 		    mod_id
 		) VALUES (
-		    #{board_seq},
+		    #{boardSeq},
 		    #{contents},
 		    #{regId},
 		    #{regId}

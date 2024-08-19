@@ -22,6 +22,9 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+	const test = "${search}";
+	console.log(test.div);
+	console.log(test);
     // .nav 클래스의 4번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(5) .nav-link');
 
@@ -31,8 +34,21 @@ document.addEventListener('DOMContentLoaded', function() {
     rowClick(); // 게시글 선택
     
     // 변수 선언 시작
+    const doRetrieveBtn = document.querySelector('#searchBtn');    
+    
+    // 클릭 이벤트 시작
+    doRetrieveBtn.addEventListener('click', function(event) {
+        doRetrieve();
+        event.stopPropagation(); // 이벤트 버블링 방지
+    });
     
     // 함수 시작
+    function doRetrieve(){
+    	const frm = document.querySelector("#bRfrm");
+    	
+        frm.action = "/ehr/board/10.do";    
+        frm.submit();
+    }
     function rowClick(){
         const rows = document.querySelectorAll("#boardTable tbody tr");
         rows.forEach(function(row){
@@ -66,18 +82,25 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
-
 <section class="board_con content content2 content3 align-items-center">
     <h3>${blTitle}</h3>
     <div class="row g-1 align-items-center">
         <form name="bRfrm" id="bRfrm" class="col-md-4">
             <div class="row g-1">
                 <input type="hidden" name="work_div" id="work_div">
-                <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
+                <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
                 <input type="hidden" name="seq" id="seq">
                 <input type="hidden" name="regId" id="regId">
 
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <select class="form-select mt-3" name="pageSize" id="pageSize">
+                        <c:forEach var="item" items="${pageSearch}">
+                           <option value="${item.subCode}" <c:if test="${search.pageSize == item.subCode}">selected</c:if>>${item.midList}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                
+                <div class="col-md-3">
                     <select class="form-select mt-3" name="searchDiv" id="searchDiv">
                         <option value="">전체</option>
                         <c:forEach var="item" items="${boardSearch}">
@@ -86,14 +109,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <input class="form-control mt-3" type="search" name="searchWord" id="searchWord" placeholder="검색어 입력" value="${search.searchWord}">
                 </div>
             </div>
         </form>
 
         <div class="col-md-1 d-flex">
-            <button type="button" class="btn btn-dark mt-3">
+            <button id="searchBtn" type="button" class="btn btn-dark mt-3">
                 <i class="bi bi-search"></i>
             </button>
         </div>
@@ -137,27 +160,27 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     
     <!-- pagenation -->
-    <div class="text-center">
+<%--     <div class="text-center">
       <div id="page-selection" class="text-center page">
-        <%
-    //총글수 :
-    int maxNum = (int) request.getAttribute("totalCnt");
-    
-    Search search = (Search) request.getAttribute("search");
-    //페이지 번호:
-    int currentPageNo = search.getPageNo();
-    //페이지 사이즈:
-    int rowPerPage = search.getPageSize();
-    //바닥글 :
-    int bottomCount = search.BOTTOM_COUNT;
-    
-    String url = "/ehr/board/{div}";
-    String scriptName = "pageRetrieve";
-    
-    out.print(StringUtil.renderingPaging(maxNum, currentPageNo, rowPerPage, bottomCount, url, scriptName));
-    %>      
+	    <%
+	    //총글수 :
+	    int maxNum = (int) request.getAttribute("totalCnt");
+	    
+	    Search search = (Search) request.getAttribute("search");
+	    //페이지 번호:
+	    int currentPageNo = search.getPageNo();
+	    //페이지 사이즈:
+	    int rowPerPage = search.getPageSize();
+	    //바닥글 :
+	    int bottomCount = search.BOTTOM_COUNT;
+	    
+	    String url = "/ehr/board/{div}";
+	    String scriptName = "pageRetrieve";
+	    
+	    out.print(StringUtil.renderingPaging(maxNum, currentPageNo, rowPerPage, bottomCount, url, scriptName));
+	    %>      
       </div>
-    </div> 
+    </div>  --%>
     <!--// pagenation -->
 </section>
 

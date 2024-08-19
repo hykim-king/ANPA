@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.acorn.anpa.answer.domain.Answer;
+import com.acorn.anpa.answer.service.AnswerService;
 import com.acorn.anpa.board.domain.Board;
 import com.acorn.anpa.board.service.BoardService;
 import com.acorn.anpa.cmn.Message;
@@ -29,6 +31,9 @@ import com.acorn.anpa.member.domain.Member;
 public class BoardController implements PLog{
 	@Autowired
 	BoardService boardService;
+
+	@Autowired
+	AnswerService answerService;
 	
 	@Autowired
 	CodeService codeService;
@@ -43,9 +48,10 @@ public class BoardController implements PLog{
 		    value = "/doSelectOne.do",
 		    method = RequestMethod.GET
 		)
-		public String doSelectOne(Board inVO, Model model, HttpServletRequest req) throws SQLException {
+		public String doSelectOne(Model model, HttpServletRequest req) throws SQLException {
 		    String viewName = "board/board_info";
-
+		    Board inVO = new Board();
+		    
 		    // 요청 파라미터에서 boardSeq 값을 가져와서 int로 변환
 		    int boardSeq = Integer.parseInt(StringUtil.nvl(req.getParameter("seq"), "0"));
 		    inVO.setBoardSeq(boardSeq);
@@ -54,17 +60,22 @@ public class BoardController implements PLog{
 		    HttpSession session = req.getSession(false); // false: 세션이 존재하지 않으면 새로 생성하지 않음
 		    
 		    // 로그인 사용자 정보 가져오기
-		    Member loginUser = null;
-		    if (session != null) {
-		        loginUser = (Member) session.getAttribute("user");
-		    }
-		    
 		    String regId = "";
-		    if (loginUser != null) {
-		        regId = loginUser.getUserId(); // 로그인된 사용자 ID를 regId에 저장
+		    if (session != null) {
+		    	Member loginUser = (Member) session.getAttribute("user");
+		        if (loginUser != null) {
+		            regId = loginUser.getUserId(); // 로그인된 사용자 ID를 regId에 저장
+		        }
 		    }
 		    inVO.setRegId(regId);
 
+
+			Search search = new Search();
+
+			search.setSearchWord(boardSeq + "");
+			List<Answer> list = answerService.doRetrieve(search);
+			model.addAttribute("list", list);
+			
 		    // 게시글 조회
 		    Board outVO = boardService.doSelectOne(inVO);
 		    log.debug("outVO : " + outVO);
@@ -124,14 +135,17 @@ public class BoardController implements PLog{
 		log.debug("list : " + list);
 		
 		model.addAttribute("list", list);
-		model.addAttribute("search", search);
-		
+		model.addAttribute("search", search);		
 		
 		//============================================
 		Code code = new Code();
 		code.setMasterCode("BOARD_SEARCH");
 		List<Code> boardSearch = codeService.doRetrieve(code);
-		model.addAttribute("boardSearch", boardSearch);		
+		model.addAttribute("boardSearch", boardSearch);	
+		
+		code.setMasterCode("COM_PAGE_SIZE");
+		List<Code> pageSearch = codeService.doRetrieve(code);
+		model.addAttribute("pageSearch", pageSearch);		
 		//============================================
 		return viewName;
 	}

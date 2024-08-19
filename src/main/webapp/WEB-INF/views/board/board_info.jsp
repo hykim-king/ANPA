@@ -57,12 +57,23 @@ document.addEventListener('DOMContentLoaded', function() {
         <p class="table-btn btn btn-success">수정</p>                
         <p class="table-btn btn btn-danger">삭제</p>   
     </div>
+    
     <table class="table table-bordered" id="answerTable">
-        <tr>
-			<th class="table-dark col-md-2">등록자</th>
-			<td class="col-md-7">내용</td>           
-			<td class="col-md-3 text-center">YY/MM/DD hh:mm:ss</td>           
-        </tr>
+		<!-- boardSeq 값을 변수에 저장 -->
+		<c:set var="boardSeq" value="${board.boardSeq}" />
+		
+		<!-- list 배열에서 boardSeq와 일치하는 항목만 출력 -->
+		<c:forEach var="answer" items="${list}">
+		    <c:if test="${answer.boardSeq == boardSeq}">
+		        <!-- 일치하는 항목을 출력 -->
+				<tr>
+				    <th class="table-dark col-md-2">${answer.modId}</th>
+				    <td class="col-md-7">${answer.contents}</td>           
+				    <td class="col-md-3 text-center">${answer.modDt}</td>           
+				</tr>
+		    </c:if>
+		</c:forEach>
+
         <tr>
 			<th class="table-dark col-md-2 text-center" colspan="3">댓글 등록</th>   
         </tr>

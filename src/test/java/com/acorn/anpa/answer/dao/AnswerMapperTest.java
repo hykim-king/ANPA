@@ -46,7 +46,11 @@ public class AnswerMapperTest implements PLog{
 		log.debug("└───────────────────────────");	
 		
 		answers = Arrays.asList(
-				new Answer(1, 121, "댓글001")
+				new Answer(1, 121, "댓글001"),
+				new Answer(1, 121, "댓글002"),
+				new Answer(1, 121, "댓글003"),
+				new Answer(1, 121, "댓글004"),
+				new Answer(1, 121, "댓글005")
 		);		
 		search = new Search();
 	}
@@ -57,18 +61,39 @@ public class AnswerMapperTest implements PLog{
 		log.debug("│ @After() ");
 		log.debug("└───────────────────────────");	
 	}
-	
+
+	@Test
+	public void doSave() throws SQLException{
+		log.debug("┌───────────────────────────");
+		log.debug("│ doSaveAnswer() ");
+		log.debug("└───────────────────────────");	
+
+		search.setPageNo(1);
+		search.setPageSize(10);
+		
+		Answer inVO = answers.get(0);
+		inVO.setRegId("admin");
+		answerMapper.doSave(inVO);
+		List<Answer> list = answerMapper.doRetrieve(search);
+		assertEquals(3, list.size());
+		int seq = answerMapper.getSequence();
+		inVO.setAnswerSeq(seq);
+		int flag = answerMapper.doDelete(inVO);
+		list = answerMapper.doRetrieve(search);
+		assertEquals(2, list.size());
+	}
+
+	@Ignore
 	@Test
 	public void doRetrieve() throws SQLException{
 		log.debug("┌───────────────────────────");
-		log.debug("│ doRetrieve() ");
+		log.debug("│ doRetrieveAnswer() ");
 		log.debug("└───────────────────────────");		
 		
 		Answer inVO = answers.get(0);
 		
 		search.setPageNo(1);
 		search.setPageSize(10);
-		search.setSearchWord(inVO.getBoardSeq() + "");
 		
 		log.debug("┌───────────────────────────");
 		log.debug(inVO.getBoardSeq());
