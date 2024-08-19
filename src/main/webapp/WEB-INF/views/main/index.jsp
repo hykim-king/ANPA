@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
  // 데이터 포인트를 정의하는 함수
     function getMarkerSymbol(value, data) {
         var highest = Math.max.apply(Math, data);
-        return value === highest ? 'url(https://www.highcharts.com/samples/graphics/sun.png)' : 'circle';
+        return value === highest ? 'url(${CP}/resources/img/fire.png)' : 'circle';
     }
 
     // 데이터 포인트를 배열로 설정
@@ -137,6 +137,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     // 서브 차트 함수 끝
     
+    sessionStorage.removeItem("tFCntSess"); // 삭제
+    
     //비동기 통신
     function doRetrieveAjax(){
         
@@ -155,16 +157,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     const todayAmount = jsonObj.todayAmount;
                     const monthFireCount = jsonObj.monthFireCount;
                     const monthInjured = jsonObj.monthInjured;
-                    const monthAmount = jsonObj.monthAmount;
-                                        
+                    const monthAmount = jsonObj.monthAmount;   
+                    
+                    // 세션에서 가져온 값이 null이면 0으로 초기화
+                    let tFCntSessValue = sessionStorage.getItem("tFCntSess");
+                    if (tFCntSessValue !== null) {
+                        tFCntSessValue = Number(tFCntSessValue); // 문자열을 숫자로 변환
+                    } else {
+                        tFCntSessValue = 0; // 초기 값
+                    }
+                    
                     if(jsonObj !== null && jsonObj !== undefined || jsonObj || Object.keys(jsonObj).length > 0){
-                    	updateMainTitleBox(todayFireCount, todayInjured, todayAmount);
-                    	updateGraph(todayFireCount, todayInjured, todayAmount, monthFireCount, monthInjured, monthAmount);
+                    	if (todayFireCount != tFCntSessValue) {							
+	                    	updateMainTitleBox(todayFireCount, todayInjured, todayAmount);
+	                    	updateGraph(todayFireCount, todayInjured, todayAmount, monthFireCount, monthInjured, monthAmount);
+						}else{
+							console.log("nothing to happen");
+						}
                     }else{ //데이터 없는 경우
                     	updateMainTitleBox(0, 0, 0);
                         updateGraph(0, 0, 0, 0, 0, 0);
                         alert("데이터 확인 불가");
                     }                   
+                    
+                    sessionStorage.setItem("tFCntSess", todayFireCount); // 세션에 저장
+                    console.log("todayCnt : " + sessionStorage.getItem("tFCntSess"));
                         
                 }catch(e){
                     console.error("실시간 데이터 오류입니다. 관리자에게 문의 주세요");
