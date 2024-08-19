@@ -53,6 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let workDiv = '';
     //검색조건
     const searchConditions = document.querySelector('#searchConditions');
+    //CSV 파일 다운로드
+    const CSVBtn = document.querySelector('#CSV');
     
     // 시작, 끝 날짜 디폴트 값
     let now = new Date();
@@ -72,15 +74,102 @@ document.addEventListener('DOMContentLoaded', function() {
     let sidoText = '';
     let sigungoText = '';
     let searchDiv = '';
+    
+    //총 계
+    let totalCnt = '';
+    let injuredSum = '';
+    let dead = '';
+    let injured = '';
+    let amount = '';
     //이벤트
+    CSVBtn.addEventListener("click",function(event){
+    	getCSV('fireData'+div+'.csv');
+    	
+    });
+    
+    function downloadCSV(csv, filename) {
+        let csvFile;
+        let downloadLink;
+
+        // CSV 파일을 위한 Blob 만들기
+        csvFile = new Blob([csv], {type: "text/csv"});
+
+        // Download link를 위한 a 엘리먼스 생성
+        downloadLink = document.createElement("a");
+
+        // 다운받을 csv 파일 이름 지정하기
+        downloadLink.download = filename;
+
+        // 위에서 만든 blob과 링크를 연결
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+
+        // 링크가 눈에 보일 필요는 없으니 숨겨줍시다.
+        downloadLink.style.display = "none";
+
+        // HTML 가장 아래 부분에 링크를 붙여줍시다.
+        document.body.appendChild(downloadLink);
+
+        // 클릭 이벤트를 발생시켜 실제로 브라우저가 '다운로드'하도록 만들어줍시다.
+        downloadLink.click();
+    }
+
+    function getCSV(filename) {
+    	const csv = [];
+        const rows = document.querySelectorAll("#table tr");
+        const numCols = Array.from(rows[0].querySelectorAll("td, th")).length;
+        
+        rows.forEach(function(row, rowIndex){
+            const rowData = [];
+            const cols = row.querySelectorAll("td, th");
+            
+            let colIndex = 0;
+
+            cols.forEach(function(cell){
+                const colspan = parseInt(cell.getAttribute('colspan') || 1, 10);
+                const rowspan = parseInt(cell.getAttribute('rowspan') || 1, 10);
+
+                // colspan을 위한 빈 셀 추가
+                for (let i = 0; i < colspan; i++) {
+                    if (colIndex < rowData.length) {
+                        rowData[colIndex] = escapeCSVValue(cell.innerText);
+                    } else {
+                        rowData.push(escapeCSVValue(cell.innerText));
+                    }
+                    colIndex++;
+                }
+
+                // 필요 시, colspan에 대한 빈 셀 추가
+                if (colIndex < numCols) {
+                    for (let i = colIndex; i < numCols; i++) {
+                        if (rowData[i] === undefined) {
+                            rowData[i] = ''; // colspan을 위한 빈 문자열로 채우기
+                        }
+                    }
+                }
+            });
+
+            csv.push(rowData.join(","));
+        });
+
+        // Download CSV
+        downloadCSV(csv.join("\n"), filename);
+    }
+    
+    function escapeCSVValue(value) {
+        // 큰따옴표와 줄바꿈을 이스케이프하고 큰따옴표로 감싸기
+        if (value.includes('"') || value.includes(',') || value.includes('\n')) {
+            value = '"' + value.replace(/"/g, '""') + '"';
+        }
+        return value;
+    }
     
     //지도 선택시 시도 선택
     lands.forEach(function(land){
     	land.addEventListener("click",function(event){
-    		console.log('click'+event.target);
+    		//console.log('click'+event.target);
     		
     		let title = event.target.getAttribute('title');
-    		console.log('title:'+title);
+    		//console.log('title:'+title);
     		
     		sido.value = title;
     		
@@ -122,9 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //조회버튼
     doRetrieveBtn.addEventListener("click",function(event){
     	
-    	//doData();
-    	
-    	doDataList();
+    	doData();
     	
     });
     
@@ -283,32 +370,33 @@ document.addEventListener('DOMContentLoaded', function() {
         sigungoText = sigungo.options[sigungo.selectedIndex].textContent
         searchDiv = '';
         
-        console.log('workDiv: '+workDiv);
-        console.log('fRdateStart: '+fRdateStart.value);
-        console.log('fRdateEnd: '+fRdateEnd.value);
-        console.log('bigListText: '+bigListText);
-        console.log('div: '+div);
-        console.log('bigList.value: '+bigList.value);
-        console.log('midList.value: '+midList.value);
-        console.log('sido.value: '+sido.value);
-        console.log('sigungo.value: '+sigungo.value);
+        //console.log('workDiv: '+workDiv);
+        //console.log('fRdateStart: '+fRdateStart.value);
+        //console.log('fRdateEnd: '+fRdateEnd.value);
+        //console.log('bigListText: '+bigListText);
+        //console.log('div: '+div);
+        //console.log('bigList.value: '+bigList.value);
+        //console.log('midList.value: '+midList.value);
+        //console.log('sido.value: '+sido.value);
+        //console.log('sigungo.value: '+sigungo.value);
         
-        if(workDiv == 'factor' && midList.value == '' ){
+        if(workDiv == 'factor' && bigList.value != '' ){
             searchDiv = '10';
         }else if(workDiv == 'factor' && midList.value != ''){
             searchDiv = '20';
-        }else if(workDiv == 'location' && midList.value == ''){
+        }else if(workDiv == 'location' && bigList.value != ''){
             searchDiv = '30';
         }else if(workDiv == 'location' && midList.value != ''){
             searchDiv = '40';
         }
         
-        console.log('searchDiv: '+searchDiv);
-        console.log('midListText: '+midListText);
+        //console.log('searchDiv: '+searchDiv);
+        if(bigList.value == '') bigListText = '';
+        //console.log('midListText: '+midListText);
         if(sido.value == '') sidoText = '';
-        console.log('sidoText: '+sidoText);
+        //console.log('sidoText: '+sidoText);
         if(sigungoText === '전체') sigungoText = '';
-        console.log('sigungoText: '+sigungoText);
+        //console.log('sigungoText: '+sigungoText);
         
         if(workDiv == '' ){
         	alert('카테고리를 선택하세요');
@@ -333,14 +421,22 @@ document.addEventListener('DOMContentLoaded', function() {
             if(response){
                 try{
                     let data = response;
-                    console.log('data[0].totalCnt:'+data[0].totalCnt);
-                    console.log('data[1].totalCnt:'+data[1].totalCnt);
+                    //console.log('data[0].totalCnt:'+data[0].totalCnt);
+                    //console.log('data[0].totalCnt:'+data[1].totalCnt);
+                    //console.log('data[0].amount:'+data[0].amount);
+                    //console.log('data[1].amount:'+data[1].amount);
+                    
+                    totalCnt = data[1].totalCnt;
+                    injuredSum = data[1].injuredSum;
+                    dead = data[1].dead;
+                    injured = data[1].injured;
+                    amount = data[1].amount;
                     
                     let tooltip = bigListText + '-' + midListText;
                     
                     columnChart(data[0],data[1]);
                     pieChart(data[0].totalCnt,data[1].totalCnt,fireCnt,'화재건수',tooltip);
-                    pieChart(data[0].amount,data[1].amount,amount,'재산피해(천원)',tooltip);
+                    pieChart(data[0].amount,data[1].amount,fireAmount,'재산피해(천원)',tooltip);
                                         
                 }catch(e){
                     console.error("data가 null혹은, undefined 입니다.",e);
@@ -354,6 +450,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             
         });//아작스
+        
+        doDataList();
     }
     
     function doDataList(){
@@ -365,7 +463,8 @@ document.addEventListener('DOMContentLoaded', function() {
             "MidNm" : midListText,
             "subCityBigNm" : sidoText,
             "subCityMidNm" : sigungoText,
-            "searchDiv" : searchDiv
+            "searchDiv" : searchDiv,
+            "div" : workDiv
         };
         dataType = 'json';
         type = 'GET';
@@ -375,21 +474,42 @@ document.addEventListener('DOMContentLoaded', function() {
         	if(response){
                 try{
                     let data = response;
-                    console.log('List:'+data);
-                    const table = document.querySelector('#table');
-                    console.log('table:'+table);
+                    //console.log('List:'+data);
+                    const thead = document.querySelector('#thead');
+                    const tbody = document.querySelector('#tbody');
+                    //console.log('table:'+table);
                     
-                    let headerHtml = '<tr><th>구분</th><th>합계</th><th>총 인명피해</th><th>사망자</th><th>부상자</th> <th>재산피해</th></tr>';
+                    let headerHtml = '<tr><th colspan="2">구분</th><th>화재 건수</th><th>총 인명피해</th><th>사망자</th><th>부상자</th> <th>재산피해</th></tr>';
                         
-                    table.innerHTML += headerHtml;
+                    thead.innerHTML = headerHtml;
                     
+                    
+                    let bodyhtml = '<tr>';
+                    bodyhtml += '<td colspan="2">합계</td>';
+                    bodyhtml += '<td>'+totalCnt+'</td>';
+                    bodyhtml += '<td>'+injuredSum+'</td>';
+                    bodyhtml += '<td>'+dead+'</td>';
+                    bodyhtml += '<td>'+injured+'</td>';
+                    bodyhtml += '<td>'+amount+'</td>';
+                    bodyhtml += '</tr>';
+                    
+                    tbody.innerHTML = bodyhtml;
                     
                     data.forEach(function(item){
                     	let html = '<tr>';
                     	
+                    	html += '<td>'+item.subFactorBigNm+'</td>';
+                    	html += '<td>'+item.subFactorMidNm+'</td>';
+                    	html += '<td>'+item.totalCnt+'</td>';
+                    	html += '<td>'+item.injuredSum+'</td>';
+                    	html += '<td>'+item.dead+'</td>';
+                    	html += '<td>'+item.injured+'</td>';
+                    	html += '<td>'+item.amount+'</td>';
                     	
                     	html += '</tr>';
+                    	tbody.innerHTML += html;
                     });
+                    
                     
         	
                 }catch(e){
@@ -631,14 +751,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		</svg>
     </div>
     <div name = "fireCnt" id = "fireCnt" class="row g-1"></div>
-    <div name = "amount" id = "amount" class="row g-1"></div>
+    <div name = "fireAmount" id = "fireAmount" class="row g-1"></div>
     <div name = "result" id = "result" class="row g-1"></div>
 </section>
 
+<button type="button" id="CSV" class="btn btn-download me-1">CSV파일</button>
 <!-- 통계 테이블 -->
 <div>
-    <table id="table">
-    
+    <table id="table" class="table table-bordered table-striped table-hover table-sm">
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
     </table>
 </div>
 

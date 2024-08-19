@@ -20,3 +20,15 @@
     max-width : 500px;
     height: auto;
 }
+.btn-download {
+    background-color: #007bff; /* 부트스트랩의 primary 색상 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.btn-download:hover {
+    background-color: #0056b3; /* Hover 색상 */
+}
