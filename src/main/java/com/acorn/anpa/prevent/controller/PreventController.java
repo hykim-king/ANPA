@@ -225,7 +225,7 @@ public class PreventController  {
 		search.setSearchWord(searchWord);
 		
 		//브라우저에서 숫자 : 문자로 들어 온다.	
-		String pageSize = StringUtil.nvl(req.getParameter("pageSize"),"10");
+		String pageSize = StringUtil.nvl(req.getParameter("pageSize"),"8");
 		String pageNo = StringUtil.nvl(req.getParameter("pageNo"),"1");
 		
 		search.setPageSize(Integer.parseInt(pageSize));

@@ -1,7 +1,8 @@
+<%@page import="com.acorn.anpa.cmn.StringUtil"%>
+<%@page import="com.acorn.anpa.cmn.Search"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="CP" value="${pageContext.request.contextPath}" />
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -98,15 +99,25 @@
     </style>
 </head>
 <body>
-    <jsp:include page="/WEB-INF/views/header.jsp" />
+<script>
+function pageRetrieve(url,pageNo){
+    const frm = document.querySelector("#preventFrm");
+    frm.pageNo.value = pageNo;
+    console.log("pageNo: "+pageNo);
+    
+    frm.action = url;    
+    frm.submit();
+}
+</script>
 
+    <jsp:include page="/WEB-INF/views/header.jsp" />
     <div class="container">
         <!-- 제목 -->
         <section class="board_con content content2 content3 align-items-center">
             <h3>화재예방법</h3>
-
             <!-- 검색 폼 -->
             <form action="${CP}/prevent/search.do" method="get" class="row g-2 align-items-center mb-4" id="preventFrm">
+                <input type="text" class="d-none" id="pageNo" name="pageNo">
                 <div class="col-sm-3">
                     <select name="searchType" class="form-select">
                         <option value="">제목 및 내용 전체 검색</option>
@@ -121,20 +132,23 @@
                     <button type="submit" class="btn btn-custom">검색</button>
                 </div>
             </form>
-
             <!-- 페이지 정보 -->
             <div class="page-info mb-4">
                 <span>전체 ${totalCount}건</span>, <span>${currentPage}/${totalPages}페이지</span>
             </div>
-
             <!-- 카드 리스트 -->
             <div class="card-list">
                 <c:choose>
                     <c:when test="${list.size() > 0}">
                         <c:forEach var="vo" items="${list}">
                             <div class="card">
-                                <p><a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>" >${vo.preventSeq}</a> </p>
-                                <img src="<c:url value='/resources/img/${vo.imgSrc}'/>" alt="이미지">
+                                <p class="d-none"><a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>" >${vo.preventSeq}</a> </p>
+                                 <!-- 이미지에 대한 링크 -->
+                                <a
+                                    href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>">
+                                    <img src="<c:url value='/resources/img/${vo.imgSrc}'/>"
+                                    alt="이미지">
+                                </a>
                                 <h4>${vo.title}</h4>
                                 <p>${vo.contents}</p>
                                 <p>${vo.modDt} 조회수: ${vo.readCnt}</p>
@@ -146,8 +160,7 @@
                     </c:otherwise>
                 </c:choose> 
             </div>
-
-            <!-- 페이지 네비게이션 -->
+<%--             <!-- 페이지 네비게이션 -->
             <div class="pagination">
                 <c:if test="${currentPage > 1}">
                     <a href="${CP}/prevent/search.do?pageNo=${currentPage - 1}">&laquo;</a>
@@ -158,10 +171,33 @@
                 <c:if test="${currentPage < totalPages}">
                     <a href="${CP}/prevent/search.do?pageNo=${currentPage + 1}">&raquo;</a>
                 </c:if>
-            </div>
+            </div> --%>
+            
+        <!-- pagenation -->
+        <div class="text-center">
+          <div id="page-selection" class="text-center page">
+            <%
+        //총글수 :
+        int maxNum = (int) request.getAttribute("totalCnt");
+        
+        Search search = (Search) request.getAttribute("search");
+        //페이지 번호:
+        int currentPageNo = search.getPageNo();
+        //페이지 사이즈:
+        int rowPerPage = search.getPageSize();
+        //바닥글 :
+        int bottomCount = search.BOTTOM_COUNT;
+        
+        String url = "/ehr/prevent/doRetrieve.do";
+        String scriptName = "pageRetrieve";
+        
+        out.print(StringUtil.renderingPaging(maxNum, currentPageNo, rowPerPage, bottomCount, url, scriptName));
+        %>       
+          </div>
+        </div> 
+        <!--// pagenation -->
         </section>
     </div>
-
     <jsp:include page="/WEB-INF/views/footer.jsp" />
     <script src="${CP}/resources/js/bootstrap.bundle.min.js"></script>
 </body>
