@@ -17,18 +17,7 @@
     <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <title>ANPA | 회원가입</title>
-    <script>
-    class Member {
-        constructor(userId, password, userName, email, emailYn, tel) {
-            this.userId = userId;         // 회원 아이디
-            this.password = password;     // 비밀번호
-            this.userName = userName;     // 회원 이름
-            this.email = email;           // 이메일
-            this.emailYn = emailYn;       // 이메일 수신 여부 (0 or 1)
-            this.tel = tel;               // 전화번호
-        }
-    }
-    
+    <script>  
     $(document).ready(function(){
     	
         //시군구 코드
@@ -139,9 +128,9 @@
                 return;
             }
             
-            const namePattern = /^[a-zA-Z가-힣]+$/;
+            const namePattern = /^[가-힣]+$/;
             if (!namePattern.test($("#userName").val())) {
-                alert("이름은 한글과 영문자만 입력 가능합니다.");
+                alert("이름은 한글만 입력 가능합니다.");
                 $("#userName").focus();
                 return;
             }
@@ -152,9 +141,10 @@
                 return;
             }
             
-            const userIdPattern = /^[a-z0-9]+$/;
+            // 아이디 필수 입력 처리 - 4글자 이상, 영어 소문자 및 숫자만 허용
+            const userIdPattern = /^[a-z0-9]{4,}$/;
             if (!userIdPattern.test($("#userId").val())) {
-                alert("아이디는 영문소문자 및 숫자만 사용 가능합니다.");
+                alert("아이디는 4글자 이상, 영문소문자 및 숫자만 사용 가능합니다.");
                 $("#userId").focus();
                 return;
             }
@@ -197,12 +187,14 @@
                 return;
             }        
             
-            const passwordPattern = /^[a-zA-Z0-9!@#$%^&*()_+{}\[\]:;"'<>,.?\/|`~\-]+$/;
+            // 비밀번호 조건: 8자리 이상, 영문자, 숫자, 특수문자
+            const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;"'<>,.?\/|~\-]).{8,}$/;
             if (!passwordPattern.test($("#password").val())) {
-                alert("비밀번호는 영문자, 숫자, 특수문자만 사용할 수 있습니다.");
+                alert("비밀번호는 8자리 이상이며 영문자, 숫자, 특수문자를 포함해야 합니다.");
                 $("#password").focus();
                 return;
             }
+
         
             if(isEmpty($("#confirmPassword").val())){
                 alert("비밀번호를 재입력하세요.");
@@ -216,7 +208,6 @@
                 return;
             }
             
-            // cBselect와 cMselect 선택 여부 확인
             if (cBselect.value === "") {
                 alert("시도를 선택하세요.");
                 cBselect.focus();
@@ -234,14 +225,21 @@
             
             // 회원가입 요청 비동기 통신
             let url = "${CP}/user/signup.do";
-            let params = new Member(
-            		                $("#userId").val(), 
-            		                $("#password").val(), 
-            		                $("#userName").val(), 
-            		                $("#email").val(), 
-            		                $("#emailYn").val(), 
-            		                $("#tel").val()
-            );         
+            let params = {
+            	    userId: $("#userId").val(),       
+            	    password: $("#password").val(),   
+            	    userName: $("#userName").val(),   
+            	    email: $("#email").val(),         
+            	    emailYn: $("#emailYn").is(":checked") ? 1 : 0,  
+            	    amdinYn: 0,
+            	    subCity: $("#cMselect").val(),
+            	    tel: $("#tel").val(),                                 
+            	    modId: $("#userId").val(), 
+            	    modDt: new Date().toISOString(),
+            	    regId: $("#userId").val(),                       
+            	    regDt: new Date().toISOString()
+            };
+   
         
             if(confirm("모든 회원가입 준비를 마쳤습니다!") === false) return;
         
