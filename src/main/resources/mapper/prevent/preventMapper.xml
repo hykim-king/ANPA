@@ -95,6 +95,13 @@
         </choose>
     </sql>
 
+    <update id="readCntUpdate" parameterType="Prevent">
+        UPDATE prevent
+        SET    read_cnt = read_cnt + 1
+        WHERE  prevent_seq = #{preventSeq}
+        AND    reg_id <![CDATA[ <> ]]> #{regId}
+    </update>
+
     <select id="getSequence" resultType="int">
         SELECT MAX(prevent_seq) prevent_seq
         FROM prevent

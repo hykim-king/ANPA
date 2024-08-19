@@ -73,15 +73,15 @@ public class PreventserviceImpl implements PreventService, PLog {
 		
  
 		int flag = 0;
-//		if(outVO!=null) {
-//			flag = preventMapper.readCntUpdate(inVO);
-//			log.debug("3. 조회 Count 증가 : " + flag);
-//			
-//			if (1==flag) {
-//				outVO.setReadCnt(outVO.getReadCnt()+1);
-//			}
-//			
-//		}
+		if(outVO!=null) {
+			flag = preventMapper.readCntUpdate(inVO);
+			log.debug("3. 조회 Count 증가 : " + flag);
+			
+			if (1==flag) {
+				outVO.setReadCnt(outVO.getReadCnt()+1);
+			}
+			
+		}
 		
 		return outVO;
 	}

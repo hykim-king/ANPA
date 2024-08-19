@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.acorn.anpa.prevent.domain.Prevent;
+import com.acorn.anpa.board.domain.Board;
 import com.acorn.anpa.cmn.Search;
 import com.acorn.anpa.cmn.WorkDiv;
 
@@ -44,5 +45,12 @@ public interface PreventMapper extends WorkDiv<Prevent> {
     List<Prevent> doSelectpre(Search search) throws SQLException;
 
 	int getTotalCount(Search search);
-
+	
+	/**
+	 * 조회시 조회수 증가                          
+	 * @return
+	 * @throws SQLException
+	 */
+	int readCntUpdate(Prevent inVO) throws SQLException;
+	
 }

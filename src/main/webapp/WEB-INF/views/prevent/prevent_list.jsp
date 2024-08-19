@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", function(){
             <form action="${CP}/prevent/search.do" method="get" class="row g-2 align-items-center mb-4" id="preventFrm">
                 <input type="text" class="d-none" id="pageNo" name="pageNo">
                 <div class="col-sm-3">
-                    <select name="searchType" class="form-select" name="searchDiv" id="searchDiv">
+                    <select class="form-select" name="searchDiv" id="searchDiv">
                         <option value="">전체</option>
 		                <c:forEach var="item" items="${BOARD_SEARCH}">
 		                   <option value="${item.subCode}"  <c:if test="${item.subCode == search.searchDiv}">selected</c:if>    >${item.midList}</option>
