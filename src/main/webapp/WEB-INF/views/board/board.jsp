@@ -1,3 +1,4 @@
+<%@page import="com.acorn.anpa.member.domain.Member"%>
 <%@page import="com.acorn.anpa.cmn.StringUtil"%>
 <%@page import="com.acorn.anpa.cmn.Search"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -35,11 +36,36 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 변수 선언 시작
     const doRetrieveBtn = document.querySelector('#searchBtn');    
+    const frm = document.querySelector('#bRfrm');    
+    
+    const moveToReg = document.querySelector('#moveToReg');
+    
+    const DivValue = document.querySelector('input[name="DivValue"]');
+    console.log('DivValue'+DivValue.value);
+    
+    //세션
+    const userId = '${user.userId}';
+    console.log('userId: '+userId);
     
     // 클릭 이벤트 시작
-    doRetrieveBtn.addEventListener('click', function(event) {
-        doRetrieve();
+    moveToReg.addEventListener('click', function(event) {
         event.stopPropagation(); // 이벤트 버블링 방지
+        
+        if(userId === ''){
+        	alert('로그인 해야 가능한 기능 입니다.');
+        	window.location.href = '/ehr/user/login.do';
+        	return;
+        }
+        
+        frm.divYn.value = DivValue.value;
+        
+        frm.action = "/ehr/board/boardReg.do";
+        frm.submit();
+    });
+    
+    doRetrieveBtn.addEventListener('click', function(event) {
+        event.stopPropagation(); // 이벤트 버블링 방지
+        doRetrieve();
     });
     
     // 함수 시작
@@ -91,6 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
                 <input type="hidden" name="seq" id="seq">
                 <input type="hidden" name="regId" id="regId">
+                <input type="hidden" name="divYn" id="divYn">
 
                 <div class="col-md-3">
                     <select class="form-select mt-3" name="pageSize" id="pageSize">
@@ -120,6 +147,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <i class="bi bi-search"></i>
             </button>
         </div>
+        <div class="col-md-1 d-flex">
+            <button id="moveToReg" type="button" class="btn btn-dark mt-3">등록</button>
+        </div>
     </div>
 
     <div class="table-outset mt-2">
@@ -142,8 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	                    </th>
 	                    <td class="table-light">
 	                        <div class="row-content">
+	                            <input type="hidden" name="DivValue" id="DivValue" value="${item.divYn }">
 	                            <div class="title">${item.title}</div>
-	                            <div class="details">수정자 : ${item.modId} 조회수 : ${item.readCnt}</div>
+	                            <div class="details">수정자 : ${item.modId} 조회수 : ${item.readCnt} 수정일: ${item.modDt }</div>
 	                        </div>
 	                    </td>
 	                </tr>

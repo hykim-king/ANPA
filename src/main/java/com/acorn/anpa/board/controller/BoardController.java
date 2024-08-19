@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.acorn.anpa.answer.domain.Answer;
 import com.acorn.anpa.answer.service.AnswerService;
@@ -25,6 +26,7 @@ import com.acorn.anpa.cmn.StringUtil;
 import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.code.service.CodeService;
 import com.acorn.anpa.member.domain.Member;
+import com.google.gson.GsonBuilder;
 
 @Controller
 @RequestMapping("board")
@@ -44,61 +46,97 @@ public class BoardController implements PLog{
 		log.debug("└─────────────────────────");	
 	}
 	
-	@RequestMapping(
-		    value = "/doSelectOne.do",
-		    method = RequestMethod.GET
-		)
-		public String doSelectOne(Model model, HttpServletRequest req) throws SQLException {
-		    String viewName = "board/board_info";
-		    Board inVO = new Board();
-		    
-		    // 요청 파라미터에서 boardSeq 값을 가져와서 int로 변환
-		    int boardSeq = Integer.parseInt(StringUtil.nvl(req.getParameter("seq"), "0"));
-		    inVO.setBoardSeq(boardSeq);
+	@RequestMapping(value = "/doSave.do"
+			, method = RequestMethod.POST
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doSave(Board inVO) throws SQLException{
+		String jsonString = "";
+		
+		int flag = boardService.doSave(inVO);
+		log.debug("2.flag:" + flag);
+		
+		String message = "";
 
-		    // HttpSession 객체를 얻어오기
-		    HttpSession session = req.getSession(false); // false: 세션이 존재하지 않으면 새로 생성하지 않음
-		    
-		    // 로그인 사용자 정보 가져오기
-		    String regId = "";
-		    if (session != null) {
-		    	Member loginUser = (Member) session.getAttribute("user");
-		        if (loginUser != null) {
-		            regId = loginUser.getUserId(); // 로그인된 사용자 ID를 regId에 저장
-		        }
-		    }
-		    inVO.setRegId(regId);
-
-
-			Search search = new Search();
-
-			search.setSearchWord(boardSeq + "");
-			List<Answer> list = answerService.doRetrieve(search);
-			model.addAttribute("list", list);
-			
-		    // 게시글 조회
-		    Board outVO = boardService.doSelectOne(inVO);
-		    log.debug("outVO : " + outVO);
-
-		    String message = "";
-		    int flag = 0;
-
-		    if (outVO != null) {
-		        message = outVO.getTitle() + " 게시글이 조회되었습니다.";
-		        flag = 1;
-		    } else {
-		        message = "조회 실패!";
-		    }
-
-		    // Message 객체 생성
-		    Message messageObj = new Message(flag, message);
-
-		    // 모델에 데이터 추가
-		    model.addAttribute("board", outVO);
-		    model.addAttribute("message", messageObj);
-
-		    return viewName;
+		if (1 == flag) {
+			message = inVO.getTitle() + " 게시글이 등록되었습니다.";
+		} else {
+			message = inVO.getTitle() + " 등록 실패!";
 		}
+		
+		Message messageObj = new Message(flag, message);
+		
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
+	
+	
+	@GetMapping(value = "/doSelectOne.do")
+	public String doSelectOne(Model model, HttpServletRequest req) throws SQLException {
+	    String viewName = "board/board_info";
+	    Board inVO = new Board();
+	    
+	    // 요청 파라미터에서 boardSeq 값을 가져와서 int로 변환
+	    int boardSeq = Integer.parseInt(StringUtil.nvl(req.getParameter("seq"), "0"));
+	    inVO.setBoardSeq(boardSeq);
+
+	    // HttpSession 객체를 얻어오기
+	    HttpSession session = req.getSession(false); // false: 세션이 존재하지 않으면 새로 생성하지 않음
+	    
+	    // 로그인 사용자 정보 가져오기
+	    String regId = "";
+	    if (session != null) {
+	    	Member loginUser = (Member) session.getAttribute("user");
+	        if (loginUser != null) {
+	            regId = loginUser.getUserId(); // 로그인된 사용자 ID를 regId에 저장
+	        }
+	    }
+	    inVO.setRegId(regId);
+
+
+		Search search = new Search();
+
+		search.setSearchWord(boardSeq + "");
+		List<Answer> list = answerService.doRetrieve(search);
+		model.addAttribute("list", list);
+		
+	    // 게시글 조회
+	    Board outVO = boardService.doSelectOne(inVO);
+	    log.debug("outVO : " + outVO);
+
+	    String message = "";
+	    int flag = 0;
+
+	    if (outVO != null) {
+	        message = outVO.getTitle() + " 게시글이 조회되었습니다.";
+	        flag = 1;
+	    } else {
+	        message = "조회 실패!";
+	    }
+
+	    // Message 객체 생성
+	    Message messageObj = new Message(flag, message);
+
+	    // 모델에 데이터 추가
+	    model.addAttribute("board", outVO);
+	    model.addAttribute("message", messageObj);
+
+	    return viewName;
+	}
+	
+	@GetMapping("/boardReg.do")
+	public String boardReg(Model model, HttpServletRequest req) throws SQLException {
+		String viewName = "board/board_reg";
+		
+		String divYn = StringUtil.nvl(req.getParameter("divYn"),"");
+		
+		model.addAttribute("divYn",divYn);
+		
+		return viewName;
+	}
+	
 	
 	@GetMapping("/{div}")
 	public String doRetrieve(@PathVariable("div")String div, Model model, HttpServletRequest req) throws SQLException {

@@ -21,9 +21,18 @@
 document.addEventListener('DOMContentLoaded', function() {
     // .nav 클래스의 4번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(5) .nav-link');
+    const doUpdate = document.querySelector('#doUpdate');
+    const doDelete = document.querySelector('#doDelete');
 
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
+    
+    //이벤트
+    doUpdate.addEventListener("click", function(event){
+    	
+    	
+    });
+   
 });   
 </script>
 </head>
@@ -54,8 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
         </tbody>
     </table>
     <div class="d-flex justify-content-end">             
-        <p class="table-btn btn btn-success">수정</p>                
-        <p class="table-btn btn btn-danger">삭제</p>   
+        <p class="table-btn btn btn-success" id="doUpdate">수정</p>                
+        <p class="table-btn btn btn-danger" id="doDelete">삭제</p>   
     </div>
     
     <table class="table table-bordered" id="answerTable">

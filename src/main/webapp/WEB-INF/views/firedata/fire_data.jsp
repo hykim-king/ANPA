@@ -604,7 +604,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     	    subtitle: {
     	        text: '비교 기준 : 전국'
-    	    },
+    	    },credits: {
+                enabled: false
+            },
 
     	    legend: {
     	        align: 'right',
