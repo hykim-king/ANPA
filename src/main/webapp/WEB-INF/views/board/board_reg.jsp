@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function(){
 <body>
 <!-- container -->
 <div class="container">
-  
+  ${user }
   <!-- 제목 -->
   <div class="page-header">
       <h2>

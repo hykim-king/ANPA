@@ -41,7 +41,8 @@
             password,
             user_name AS userName,
             email,
-            tel
+            tel,
+            admin_yn AS adminYn
         FROM
             member
         WHERE user_id = #{userId}
