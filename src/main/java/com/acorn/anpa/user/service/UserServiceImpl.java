@@ -92,4 +92,14 @@ public class UserServiceImpl implements UserService, PLog {
         userMapper.deleteAll();
     }
 
+	@Override
+	public String findUserId(String userName, String email) throws SQLException {
+		return null;
+	}
+
+	@Override
+	public String findPassword(String userId, String userName, String email) throws SQLException {
+		return null;
+	}
+
 }

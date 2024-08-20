@@ -174,5 +174,60 @@ public class UserController implements PLog{
 		
 		return jsonString;
 	}	
+    
+    // ID 찾기 페이지 이동
+    @RequestMapping(value = "/findId.do", method = RequestMethod.GET)
+    public String findIDPage() {
+        return "user/findId"; // findId.jsp로 이동
+    }
+
+    // ID 찾기 처리
+    @RequestMapping(value = "/findId.do", method = RequestMethod.POST)
+    public String findID(HttpServletRequest request, Model model) {
+        String userName = request.getParameter("userName");
+        String email = request.getParameter("email");
+        
+        try {
+            String userId = userService.findUserId(userName, email);
+            if (userId != null) {
+                model.addAttribute("userId", userId);
+                return "user/findID_result"; // ID 찾기 결과 페이지로 이동
+            } else {
+                model.addAttribute("errorMsg", "No matching user found.");
+                return "user/findID"; // 실패 시 다시 ID 찾기 페이지로
+            }
+        } catch (SQLException e) {
+            model.addAttribute("errorMsg", "Error during ID search. Please try again.");
+            return "user/findID"; // 에러 시 다시 ID 찾기 페이지로
+        }
+    }
+
+    // 비밀번호 찾기 페이지 이동
+    @RequestMapping(value = "/findPw.do", method = RequestMethod.GET)
+    public String findPwPage() {
+        return "user/findPw"; // findPw.jsp로 이동
+    }
+
+    // 비밀번호 찾기 처리
+    @RequestMapping(value = "/findPw.do", method = RequestMethod.POST)
+    public String findPw(HttpServletRequest request, Model model) {
+        String userId = request.getParameter("userId");
+        String userName = request.getParameter("userName");
+        String email = request.getParameter("email");
+        
+        try {
+            String password = userService.findPassword(userId, userName, email);
+            if (password != null) {
+                model.addAttribute("password", password);
+                return "user/findPw_result"; // 비밀번호 찾기 결과 페이지로 이동
+            } else {
+                model.addAttribute("errorMsg", "No matching user found.");
+                return "user/findPw"; // 실패 시 다시 비밀번호 찾기 페이지로
+            }
+        } catch (SQLException e) {
+            model.addAttribute("errorMsg", "Error during password search. Please try again.");
+            return "user/findPw"; // 에러 시 다시 비밀번호 찾기 페이지로
+        }
+    }
 
 }

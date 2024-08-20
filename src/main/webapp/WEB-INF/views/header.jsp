@@ -25,33 +25,34 @@ document.addEventListener("DOMContentLoaded", function(){
 
     function logout() {
         console.log("logout()");
-        let type = "GET";     
-        let url = "/ehr/user/logout.do";
-        let async = "true";
-        let dataType = "json";
-        
-        let params = {};
-        
-        PClass.pAjax(url, params, dataType, type, async, function(data) {
-            if (data) {
-                try {
-                    const message = JSON.parse(data);
-                    console.log(message);
-                    if (message.messageId === 1) { // 로그아웃 성공
-                        alert(message.messageContents);
-                        window.location.href = "/ehr/main/index.do"; // 메인 페이지로 리다이렉트
-                    } else {
-                        alert(message.messageContents); // 오류 메시지 출력
+        $.ajax({
+            type: "GET",
+            url: "/ehr/user/logout.do",
+            dataType: "json",
+            async: true,
+            success: function(data) {
+                if (data) {
+                    try {
+                        const message = data;
+                        console.log(message);
+                        if (message.messageId === 1) { // 로그아웃 성공
+                            alert(message.messageContents);
+                            window.location.href = "/ehr/main/index.do"; // 메인 페이지로 리다이렉트
+                        } else {
+                            alert(message.messageContents); // 오류 메시지 출력
+                        }
+                    } catch (e) {
+                        alert("잘못된 데이터 형식입니다.");
                     }
-                } catch (e) {
-                    alert("잘못된 데이터 형식입니다.");
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error: ", status, error);
+                alert("로그아웃 요청에 실패했습니다.");
             }
-        });  
+        });
     }    
 });
-
-
 </script>
 <style>
     .nav { 
@@ -73,11 +74,12 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     .login-btn {
+        font-weight: bold;
         color: #000; 
         background: none; 
         border: none; 
         padding: 10px 15px; 
-        font-size: 1rem; 
+        font-size: 1.1rem; 
         text-decoration: none; 
         display: flex;
         align-items: center; 
@@ -96,21 +98,27 @@ document.addEventListener("DOMContentLoaded", function(){
     .user-info {
         display: flex;
         align-items: center;
+        gap: 10px;
     }
 
     .user-name {
-        margin-right: 15px;
         font-weight: bold;
+	    font-size: 1.2rem; /* 필요에 따라 폰트 크기 조정 */
+	    margin-right: 10px; /* logout-btn과의 간격 */
     }
 
     .logout-btn {
-        color: #000;
-        background: none;
-        border: none;
-        padding: 10px 15px;
-        font-size: 1rem;
-        text-decoration: none;
-    }
+        font-weight: bold;
+	    color: #000;
+	    background: none;
+	    border: none;
+	    padding: 8px 15px; /* 패딩을 조정하여 시각적 일관성 유지 */
+	    font-size: 1rem;
+	    text-decoration: none;
+	    cursor: pointer;
+	    margin-left: auto; /* 오른쪽 정렬 */
+	    margin: 0;
+	}
 
     .logout-btn:hover {
         text-decoration: underline;
@@ -146,30 +154,23 @@ document.addEventListener("DOMContentLoaded", function(){
                     <li><a class="dropdown-item" href="#">건의사항</a></li>
                 </ul>
             </li>
-           <!-- 로그인 / 사용자 정보 영역 -->
-            <li class="nav-item d-flex align-items-center">
-                <c:choose>
-                    <c:when test="${not empty sessionScope.user}">
-                        <!-- 로그인 상태 -->
-                        <div class="user">
-                            <span class="user">${sessionScope.userId}</span>
-                            <a id="logoutBtn" class="logout-btn">로그아웃</a>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <!-- 로그아웃 상태 -->
-                        <a id="loginBtn" class="login-btn" href="${CP}/user/login.do">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#000000">
-                                <path d="M10.09 15.59L8.67 14.17 11.5 11.34H2V9.34H11.5L8.67 6.5L10.09 5.08L15.17 10.16L10.09 15.59ZM19 3H5C3.9 3 3 3.9 3 5V8H5V5H19V19H5V16H3V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z"/>
-                            </svg>
-                            로그인 / 회원가입
-                        </a>
-                    </c:otherwise>
-                </c:choose>
-            </li>
         </ul>
         <!-- 네비게이션 바 끝 -->
 
+        <!-- 유저 정보 및 로그아웃 버튼 -->
+        <c:choose>
+            <c:when test="${not empty sessionScope.user}">
+                <div class="user-info">
+                    <span class="user-name">${sessionScope.user.userName}님</span>
+                    <a id="logoutBtn" class="logout-btn">🔥 로그아웃</a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <a id="loginBtn" class="login-btn" href="${CP}/user/login.do">
+                                                    🔥로그인 / 회원가입
+                </a>
+            </c:otherwise>
+        </c:choose>
         <!-- 앱 메뉴 섹션 -->
         <div class="text-center top_header_il_obj appmenu">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#dfdfdf">
