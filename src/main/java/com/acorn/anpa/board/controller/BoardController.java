@@ -72,6 +72,57 @@ public class BoardController implements PLog{
 		return jsonString;
 	}
 	
+	@RequestMapping(value = "/doUpdate.do"
+			, method = RequestMethod.POST
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doUpdate(Board inVO) throws SQLException{
+		String jsonString = "";
+		
+		int flag = boardService.doUpdate(inVO);
+		log.debug("2.flag:" + flag);
+		
+		String message = "";
+
+		if (1 == flag) {
+			message = inVO.getTitle() + " 게시글이 수정 되었습니다.";
+		} else {
+			message = inVO.getTitle() + " 수정 실패!";
+		}
+		
+		Message messageObj = new Message(flag, message);
+		
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
+	
+	@RequestMapping(value = "/doDelete.do"
+			, method = RequestMethod.GET
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doDelete(Board inVO) throws SQLException{
+		String jsonString = "";
+		
+		int flag = boardService.doDelete(inVO);
+		log.debug("2.flag:" + flag);
+		
+		String message = "";
+
+		if (1 == flag) {
+			message = inVO.getTitle() + " 게시글이 삭제 되었습니다.";
+		} else {
+			message = inVO.getTitle() + " 삭제 실패!";
+		}
+		
+		Message messageObj = new Message(flag, message);
+		
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
 	
 	@GetMapping(value = "/doSelectOne.do")
 	public String doSelectOne(Model model, HttpServletRequest req) throws SQLException {
@@ -126,6 +177,28 @@ public class BoardController implements PLog{
 	    return viewName;
 	}
 	
+	
+	@RequestMapping(value = "/doRetrieveAjax.do"
+			, method = RequestMethod.GET
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doRetrieveAjax(Search search) throws SQLException {
+		log.debug("search : " + search);
+		log.debug("search : " + search);
+		log.debug("search : " + search);
+		log.debug("search : " + search);
+		log.debug("search : " + search);
+		String jsonString = "";
+		
+		List<Board> list = boardService.doRetrieve(search);
+		log.debug("list : " + list);
+		
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(list);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
+	
 	@GetMapping("/boardReg.do")
 	public String boardReg(Model model, HttpServletRequest req) throws SQLException {
 		String viewName = "board/board_reg";
@@ -136,7 +209,6 @@ public class BoardController implements PLog{
 		
 		return viewName;
 	}
-	
 	
 	@GetMapping("/{div}")
 	public String doRetrieve(@PathVariable("div")String div, Model model, HttpServletRequest req) throws SQLException {

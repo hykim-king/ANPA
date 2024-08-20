@@ -15,24 +15,126 @@
 <!-- bootstrap icon -->
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 <link rel="stylesheet" href="${CP}/resources/css/board_style.css">
+<script src="${CP}/resources/js/common.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<%-- simplemde --%>
+<link rel="stylesheet" href="${CP}/resources/css/simplemde.min.css">
+<script src="${CP}/resources/js/simplemde.min.js"></script>
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const doUpdateBtn = document.querySelector('#doUpdate');
+    const doDeleteBtn = document.querySelector('#doDelete');
+    const titleInput = document.querySelector('#title');
+    const moveList = document.querySelector('#moveList');
+
     // .nav 클래스의 4번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(5) .nav-link');
-    const doUpdate = document.querySelector('#doUpdate');
-    const doDelete = document.querySelector('#doDelete');
-
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
     
     //이벤트
-    doUpdate.addEventListener("click", function(event){
-    	
-    	
+    doDeleteBtn.addEventListener("click", function(event){
+        event.stopPropagation();
+        doDelete();
+    });
+    
+    moveList.addEventListener("click", function(event){
+    	event.stopPropagation();
+    	window.location.href = `/ehr/board/${board.divYn}.do`;
+    });
+    
+    doUpdateBtn.addEventListener("click", function(event){
+    	event.stopPropagation();
+    	doUpdate();
     });
    
+    //함수
+    function doDelete(){
+        if(confirm('삭제 하시겠습니까?') === false) return;
+        
+        //비동기 통신
+        let type= "GET";  
+        let url = "/ehr/board/doDelete.do";
+        let async = "true";
+        let dataType = "json";
+        
+        //markdown getter : simplemde.value()
+        let params = {
+        	'title' : titleInput.value,
+            "boardSeq" : '${board.boardSeq}'
+        }
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            if(data){
+                try{
+                    if(isEmpty(data) === false && 1 === data.messageId){
+                        alert(data.messageContents);
+                        window.location.href = `/ehr/board/${board.divYn}.do`;
+                    }else{
+                        alert("에러: "+data.messageContents);
+                    }
+                    
+                }catch(e){
+                     alert("data를 확인 하세요.");     
+                }
+                
+            }
+            
+        });
+    }
+    
+    function doUpdate(){
+        if(isEmpty(titleInput.value) == true){
+            alert('제목을 입력 하세요.')
+            titleInput.focus();
+            return;
+        }
+        
+        //markdown getter : simplemde.value()
+        if(isEmpty(simplemde.value()) == true){
+            alert('내용을 입력 하세요.')
+            simplemde.codemirror.focus();
+            return;
+        }  
+        
+        console.log("simplemde",simplemde.value());
+        if(confirm('수정 하시겠습니까?') === false) return;
+        
+        //비동기 통신
+        let type= "POST";  
+        let url = "/ehr/board/doUpdate.do";
+        let async = "true";
+        let dataType = "json";
+        
+        //markdown getter : simplemde.value()
+        let params = { 
+            "title": titleInput.value,
+            "modId": '${user.userId}',  
+            "contents": simplemde.value(),
+            "divYn": '${board.divYn}',
+            "boardSeq" : '${board.boardSeq}'
+        }
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            if(data){
+                try{
+                    if(isEmpty(data) === false && 1 === data.messageId){
+                        alert(data.messageContents);
+                        window.location.href = `/ehr/board/${board.divYn}.do`;
+                    }else{
+                        alert("에러: "+data.messageContents);
+                    }
+                    
+                }catch(e){
+                     alert("data를 확인 하세요.");     
+                }
+                
+            }
+            
+        });
+        
+    }
 });   
 </script>
 </head>
@@ -41,31 +143,67 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <section class="board_info content content2 content3 align-items-center">
     <h3>공지사항</h3>
-    
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th style="display: none;">${board.boardSeq}</th>           
-                <th class="table-dark col-md-2">제목</th>
-                <td colspan="3">${board.title}</td>                
-            </tr>
-        </thead>
-        <tbody>
-            <tr>   
-                <th class="table-dark col-md-2">수정자</th>
-                <td class="col-md-auto">${board.modId}</td>
-                <th class="table-dark col-md-2">수정일</th>
-                <td class="col-md-auto">${board.modDt}</td>
-            </tr>
-            <tr>
-               <td class="table_info" colspan="4">${board.contents}</td> 
-            </tr>        
-        </tbody>
-    </table>
+    ${board }
+    ${user }
     <div class="d-flex justify-content-end">             
-        <p class="table-btn btn btn-success" id="doUpdate">수정</p>                
-        <p class="table-btn btn btn-danger" id="doDelete">삭제</p>   
+        <p class="table-btn btn btn-success" id="moveList">목록</p>                
     </div>
+    <c:choose>
+        <c:when test="${board.regId == user.userId || user.adminYn == '1'}">
+            <table class="table table-bordered">
+		        <thead>
+		            <tr>
+		                <th style="display: none;">${board.boardSeq}</th>           
+		                <th class="table-dark col-md-2">제목</th>
+		                <td colspan="3"><input id="title" type="text" value="${board.title}"></td>                
+		            </tr>
+		        </thead>
+		        <tbody>
+		            <tr>   
+		                <th class="table-dark col-md-2">수정자</th>
+		                <td class="col-md-auto">${board.modId}</td>
+		                <th class="table-dark col-md-2">수정일</th>
+		                <td class="col-md-auto">${board.modDt}</td>
+		            </tr>
+		            <tr>
+		               <td class="table_info" colspan="4">
+		                  <textarea style="height: 200px"  class="form-control" id="contents" name="contents">${board.contents}</textarea>
+		               </td> 
+		            </tr>        
+		        </tbody>
+		    </table>
+            <div class="d-flex justify-content-end">             
+                <p class="table-btn btn btn-success" id="doUpdate">수정</p>                
+                <p class="table-btn btn btn-danger" id="doDelete">삭제</p>   
+            </div>
+        </c:when>
+        <c:otherwise>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="display: none;">${board.boardSeq}</th>           
+                        <th class="table-dark col-md-2">제목</th>
+                        <td colspan="3">${board.title}</td>                
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>   
+                        <th class="table-dark col-md-2">수정자</th>
+                        <td class="col-md-auto">${board.modId}</td>
+                        <th class="table-dark col-md-2">수정일</th>
+                        <td class="col-md-auto">${board.modDt}</td>
+                    </tr>
+                    <tr>
+                       <td class="table_info" colspan="4">${board.contents}</td> 
+                    </tr>        
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end">             
+		        <p class="table-btn btn btn-success d-none" id="doUpdate">수정</p>                
+		        <p class="table-btn btn btn-danger d-none" id="doDelete">삭제</p>   
+		    </div>
+        </c:otherwise>
+    </c:choose>
     
     <table class="table table-bordered" id="answerTable">
 		<!-- boardSeq 값을 변수에 저장 -->
@@ -96,7 +234,9 @@ document.addEventListener('DOMContentLoaded', function() {
         </tr>
     </table>
 </section>
-
+<script>
+    var simplemde = new SimpleMDE({ element: document.getElementById("contents")})
+</script>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>     
 </body>

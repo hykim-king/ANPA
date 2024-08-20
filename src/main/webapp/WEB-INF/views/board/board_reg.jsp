@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function(){
 <body>
 <!-- container -->
 <div class="container">
-  ${user }
+  
   <!-- 제목 -->
   <div class="page-header">
       <h2>
@@ -143,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function(){
       </h2>  
   </div>
   <!--// 제목 end ------------------------------------------------------------->
-  divYn : ${divYn }
+  
   <!-- 버튼 -->
   <div class="mb-2 d-grid gap-2 d-md-flex justify-content-md-end">
       <input type="button" value="목록" class="btn btn-primary" onclick="window.location.href ='/ehr/board/'+${divYn}+'.do'">

@@ -24,7 +24,6 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 	const test = "${search}";
-	console.log(test.div);
 	console.log(test);
     // .nav 클래스의 4번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(5) .nav-link');
@@ -36,16 +35,29 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 변수 선언 시작
     const doRetrieveBtn = document.querySelector('#searchBtn');    
-    const frm = document.querySelector('#bRfrm');    
-    
+    const frm = document.querySelector('#bRfrm');                                                                                                                             
+    const searchWordInput = document.querySelector('#searchWord');    
+    const pageSize = document.querySelector('#pageSize');    
+    const searchDiv = document.querySelector('#searchDiv');    
     const moveToReg = document.querySelector('#moveToReg');
+    const table = document.querySelector('#boardTable tbody');
+    console.log('table'+table);
+    //페이징
+    let url = '/ehr/board/doRetrieveAjax.do';
+    let maxNum = '${list[0].totalCnt}';
+    renderingPaging(maxNum,1,pageSize.value,10, url, 'doRetrieve');
     
-    const DivValue = document.querySelector('input[name="DivValue"]');
+    
+    let DivValue = '${list[0].divYn}';
     console.log('DivValue'+DivValue.value);
     
     //세션
     const userId = '${user.userId}';
     console.log('userId: '+userId);
+    const adminYn = '${user.adminYn}';
+    console.log('adminYn: '+adminYn);
+    console.log('${list[0].divYn}');
+    console.log('${user.adminYn }');
     
     // 클릭 이벤트 시작
     moveToReg.addEventListener('click', function(event) {
@@ -57,59 +69,42 @@ document.addEventListener('DOMContentLoaded', function() {
         	return;
         }
         
-        frm.divYn.value = DivValue.value;
+        frm.divYn.value = '${list[0].divYn}';
         
         frm.action = "/ehr/board/boardReg.do";
         frm.submit();
     });
     
+    //조회
     doRetrieveBtn.addEventListener('click', function(event) {
         event.stopPropagation(); // 이벤트 버블링 방지
-        doRetrieve();
+        doRetrieve(url,1);
     });
     
     // 함수 시작
-    function doRetrieve(){
+    /* function doRetrieve(){
     	const frm = document.querySelector("#bRfrm");
     	
-        frm.action = "/ehr/board/10.do";    
+        frm.action = `/ehr/board/${list[0].divYn}.do`;    
         frm.submit();
-    }
-    function rowClick(){
-        const rows = document.querySelectorAll("#boardTable tbody tr");
-        rows.forEach(function(row){
-            row.addEventListener("click",function(event){
-                
-                let boardSeq = this.querySelector(".tbseq input").value;
-                console.log("seq: "+boardSeq);
-                
-                if(confirm('게시글을 조회하시겠습니까?') ==false) return;
-                
-                doSelectOne(boardSeq);
-            });
-            
-        });//단건 선택 
-    }
-    function doSelectOne(boardSeq){
-	    console.log("doSelectOne seq: "+boardSeq);
-	    
-	    const frm = document.querySelector("#bRfrm");
-	    
-	    frm.seq.value = boardSeq;
-	    
-	    frm.action = "/ehr/board/doSelectOne.do";
-	    frm.submit();
-	    event.stopPropagation();
-	}
-    // 함수 끝
-
+    } */
+    //검색박스 엔터 적용
+    searchWordInput.addEventListener("keydown",function(event){
+        console.log("searchWordInput keydown");
+        if(event.key === 'Enter' && event.keyCode === 13){
+            event.stopPropagation();
+            doRetrieve(url,1);
+        }
+        
+    });
+    
 });   
 </script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <section class="board_con content content2 content3 align-items-center">
-    <h3>${blTitle}</h3>
+    <h3>추후 변경 공지사항 or 소통마당</h3>
     <div class="row g-1 align-items-center">
         <form name="bRfrm" id="bRfrm" class="col-md-4">
             <div class="row g-1">
@@ -141,15 +136,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         </form>
-
+        ${list }
         <div class="col-md-1 d-flex">
             <button id="searchBtn" type="button" class="btn btn-dark mt-3">
                 <i class="bi bi-search"></i>
             </button>
         </div>
-        <div class="col-md-1 d-flex">
-            <button id="moveToReg" type="button" class="btn btn-dark mt-3">등록</button>
-        </div>
+        <c:choose>
+            <c:when test="${list[0].divYn == '20' && user.adminYn == '1'}">
+		        <div class="col-md-1 d-flex">
+		            <button id="moveToReg" type="button" class="btn btn-dark mt-3">등록</button>
+		        </div>
+            </c:when>
+            <c:when test="${list[0].divYn == '10'}">
+                <div class="col-md-1 d-flex">
+                    <button id="moveToReg" type="button" class="btn btn-dark mt-3">등록</button>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="col-md-1 d-flex d-none">
+                    <button id="moveToReg" type="button" class="btn btn-dark mt-3">등록</button>
+                </div>
+            </c:otherwise>
+        </c:choose>
     </div>
 
     <div class="table-outset mt-2">
@@ -159,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <c:when test="${list.size() >0 }">
                   <c:forEach var="item" items="${list}">
 	                <tr class="table-row">
-	                    <th class="tbseq" style="display: none;"><input type="password" value="${item.boardSeq}"></th>
+	                    <th class="tbseq" style="display: none;"><input type="text" value="${item.boardSeq}"></th>
 	                    <th class="table-dark text-center align-middle col-2">	                    
 						<c:choose>
 						    <c:when test="${item.divYn eq '20' || item.divYn == 20}">
@@ -172,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	                    </th>
 	                    <td class="table-light">
 	                        <div class="row-content">
-	                            <input type="hidden" name="DivValue" id="DivValue" value="${item.divYn }">
 	                            <div class="title">${item.title}</div>
 	                            <div class="details">수정자 : ${item.modId} 조회수 : ${item.readCnt} 수정일: ${item.modDt }</div>
 	                        </div>
@@ -185,47 +193,197 @@ document.addEventListener('DOMContentLoaded', function() {
 				    <td class="text-center" colspan="99" >데이터가 없습니다.</td>
 				  </tr>
 				</c:otherwise>
-              </c:choose>  
+              </c:choose> 
             </tbody>                      
         </table>
     </div>
     
     <!-- pagenation -->
-<%--     <div class="text-center">
-      <div id="page-selection" class="text-center page">
-	    <%
-	    //총글수 :
-	    int maxNum = (int) request.getAttribute("totalCnt");
+    <div class="text-center">
+	    <div id="page-selection" class="text-center page">
 	    
-	    Search search = (Search) request.getAttribute("search");
-	    //페이지 번호:
-	    int currentPageNo = search.getPageNo();
-	    //페이지 사이즈:
-	    int rowPerPage = search.getPageSize();
-	    //바닥글 :
-	    int bottomCount = search.BOTTOM_COUNT;
-	    
-	    String url = "/ehr/board/{div}";
-	    String scriptName = "pageRetrieve";
-	    
-	    out.print(StringUtil.renderingPaging(maxNum, currentPageNo, rowPerPage, bottomCount, url, scriptName));
-	    %>      
-      </div>
-    </div>  --%>
+	    </div>
+    </div>
     <!--// pagenation -->
 </section>
+<script>
+//페이징
+function doRetrieve(url, pageNo){
+	const pageSize = document.querySelector('#pageSize'); 
+	const searchDiv = document.querySelector('#searchDiv'); 
+	const searchWordInput = document.querySelector('#searchWord');
+	const table = document.querySelector('#boardTable tbody');
+	let DivValue = '${list[0].divYn}';
+    console.log("pageSize:"+pageSize.value);
+    console.log("searchDiv:"+searchDiv.value);
+    console.log("searchWord:"+searchWordInput.value);
+    console.log("div:"+DivValue);
+    console.log("url:"+url);
+    
+    let type= "GET";  
+    let async = "true";
+    let dataType = "json";
+    
+    let params = {
+        'pageNo' : pageNo,
+        "pageSize" : pageSize.value,
+        "searchDiv" : searchDiv.value,
+        "searchWord" : searchWordInput.value,
+        "div" : DivValue
+    }
+    
+    PClass.pAjax(url,params,dataType,type,async,function(data){
+        let html = '';
+        if(isEmpty(data) === false){
+            try{
+                data.forEach(function(item){
+                    html += '<tr class="table-row">';
+                    html += '<th class="tbseq" style="display: none;"><input type="text" value="'+item.boardSeq+'"></th>';
+                    html += '<th class="table-dark text-center align-middle col-2">';
+                    if(item.divYn == 20){
+                        html += '공지사항';
+                    }else{
+                        html += '건의사항 / 소통';
+                    }
+                    html += '</th>';
+                    html += '<td class="table-light">';
+                    html += '<div class="row-content">';
+                    html += '<div class="title">'+item.title+'</div>';
+                    html += '<div class="details">수정자 : '+item.modId+' 조회수 : '+item.readCnt+' 수정일: '+item.modDt+'</div>';
+                    html += '</div>';
+                    html += '</td>';
+                    html += '</tr>';
+                    
+                    
+                });//for
+                
+                
+            }catch(e){
+                 alert("data를 확인 하세요.");     
+            }
+            
+        }else{
+            html = '<tr><td class="text-center" colspan="99" >데이터가 없습니다.</td></tr>';
+        }
+        
+        table.innerHTML = html;
+        
+        renderingPaging(data[0].totalCnt,1,pageSize.value,10, url, 'doRetrieve');
+        rowClick();
+    });  
+}
+    
+function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scriptName){
+    console.log('maxNum: '+maxNum);
+    console.log('currentPageNo: '+currentPageNo);
+    console.log('rowPerPage: '+rowPerPage);
+    console.log('bottomCount: '+bottomCount);
+    console.log('url: '+url);
+    console.log('scriptName: '+scriptName);
+    console.log(`scriptName : {scriptName}`);
+    
+    
+    
+    const pagenation = document.querySelector('#page-selection');    
+    let html = '';
+    pagenation.innerHTML = '';
 
+    // 페이지 계산
+    let maxPageNo = Math.ceil(maxNum / rowPerPage);
+    let startPageNo = Math.floor((currentPageNo - 1) / bottomCount) * bottomCount + 1;
+    let endPageNo = Math.min(startPageNo + bottomCount - 1, maxPageNo);
+
+    let nowBlocNo = Math.floor((currentPageNo - 1) / bottomCount) + 1;
+    let maxBlockNo = Math.ceil(maxPageNo / bottomCount);
+
+    // 페이징 HTML 생성
+    html += '<ul class="pagination justify-content-center">';
+
+    // <<
+    if (nowBlocNo > 1 && nowBlocNo <= maxBlockNo) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', 1);">`;
+        html += '<span aria-hidden="true">&laquo;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    // <
+    if (startPageNo > 1) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${startPageNo - bottomCount});">`;
+        html += '<span aria-hidden="true">&lt;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    // 1 2 3 ... 10
+    for (let inx = startPageNo; inx <= maxPageNo && inx <= endPageNo; inx++) {
+        if (inx === currentPageNo) {
+            html += '<li class="page-item">';
+            html += '<a class="page-link active" href="#">';
+            html += inx;
+            html += '</a>';
+            html += '</li>';
+        } else {
+            html += '<li class="page-item">';
+            html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${inx});">`;
+            html += inx;
+            html += '</a>';
+            html += '</li>';
+        }
+    }
+
+    // >
+    if (maxPageNo > endPageNo) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${endPageNo + 1});">`;
+        html += '<span aria-hidden="true">&gt;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    // >>
+    if (maxPageNo > endPageNo) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${maxPageNo});">`;
+        html += '<span aria-hidden="true">&raquo;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    html += '</ul>';
+    pagenation.innerHTML = html;
+}
+
+function rowClick(){
+    const rows = document.querySelectorAll("#boardTable tbody tr");
+    rows.forEach(function(row){
+        row.addEventListener("click",function(event){
+            
+            let boardSeq = this.querySelector(".tbseq input").value;
+            console.log("seq: "+boardSeq);
+            
+            if(confirm('게시글을 조회하시겠습니까?') ==false) return;
+            
+            doSelectOne(boardSeq);
+        });
+        
+    });//단건 선택 
+}
+function doSelectOne(boardSeq){
+    console.log("doSelectOne seq: "+boardSeq);
+    
+    const frm = document.querySelector("#bRfrm");
+    
+    frm.seq.value = boardSeq;
+    
+    frm.action = "/ehr/board/doSelectOne.do";
+    frm.submit();
+    event.stopPropagation();
+}
+</script>
 <jsp:include page="/WEB-INF/views/footer.jsp" />
 <script src = "${CP}/resources/js/bootstrap.bundle.min.js"></script>   
-<script>
-function pageRetrieve(url,pageNo){
-    const frm = document.querySelector("#bRfrm");
-    frm.pageNo.value = pageNo;
-    console.log("pageNo: "+pageNo);
-    
-    frm.action = url;    
-    frm.submit();
-}
-</script>   
 </body>
 </html>

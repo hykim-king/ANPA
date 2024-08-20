@@ -16,7 +16,9 @@ public class Search extends DTO{
 	
 	private String div; //게시판 구분
 	
-	public Search() {	}
+	public Search() {
+		
+	}
 
 	public String getSearchDiv() {
 		return searchDiv;
