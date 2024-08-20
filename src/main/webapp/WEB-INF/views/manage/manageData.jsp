@@ -22,7 +22,20 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() { 
+	// 관리자 여부 확인 시작
+	function adminCheck(){
+	    const isAdmin = "${sessionScope.user.adminYn}";
+	    if(isAdmin != 1 && isAdmin != "1"){
+	      window.location.replace("/ehr/main/index.do");
+	      alert("관리자가 아닙니다");
+	    }   		
+	}
 	
+    setInterval(function() {
+    	adminCheck();
+    }, 2500);    
+    // 관리자 여부 확인 끝
+    
 	// 변수 선언
 	const popUp = document.querySelector(".popup");
 	const doSaveDataBtn = document.querySelector("#doSaveData");
@@ -281,6 +294,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }else{
                     alert(message.messageContents);
                 }
+            }else{
+            	alert("개발자에게 문의하세요. 확인 불가능한 오류입니다");
             }
 
         }); 
@@ -461,6 +476,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }catch(error){
                     alert("널 혹은 언디파인드임");
                 }
+            }else{
+            	alert("개발자에게 문의하세요. 확인 불가능한 오류입니다");
             }
 
         }); 

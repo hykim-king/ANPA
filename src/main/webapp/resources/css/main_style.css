@@ -8,7 +8,6 @@
     margin: 0 0 0 20px;
     display: inline-block;
     float: left;
-    border-radius: 5px;
     overflow: hidden;
 
     -webkit-user-drag: none; /* Safari 및 구형 브라우저 대응 */
@@ -66,7 +65,6 @@
     display: inline-block;
     border: 1px solid #e2e2e2;
     float: right;
-    border-radius: 5px;
     overflow: hidden;
     box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
     padding: 20px;
@@ -119,7 +117,6 @@
     justify-content: space-between;
 }
 .preventBox > div > div{
-    border-radius: 5px;
     box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
     position : relative;
     flex: 1 1 22%;
@@ -128,6 +125,7 @@
     padding : 15px;
     z-index: 1;
     overflow: hidden;
+    border-radius : 0;
 }
 .preventBox > div > div:nth-child(1){margin-left: 0;}
 .preventBox > div > div:nth-child(4){margin-right: 0;}
@@ -187,21 +185,34 @@
     justify-content: space-between;
 }
 .rankBox > div > div{
-    border-radius: 5px;
     box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);
     position : relative;
     flex: 1 1 31%;
-    margin: 0 .8%;
-    height: 250px;
+    margin: 0 1%;
+    height: auto;
     padding : 15px;
     z-index: 1;
     overflow: hidden;
+    border-radius : 0;
 }
 .rankBox > div > div:nth-child(1){margin-left: 0;}
 .rankBox > div > div:nth-child(3){margin-right: 0;}
+.rankBox > div > div h5{
+	border-bottom : 1px solid rgba(0, 0, 0, 0.175);
+    padding-bottom : 15px;	
+}
+.rankBox > div > div p{margin : 0;}
+.rankBox > div > div > div{padding : 5px 0;}
+.rankBox > div > div > div > p:nth-child(2){
+	margin : 5px 0;
+	padding-left : 22px;
+}
 /* 순위 박스 끝 */
-.subGraphBox{padding : 0 20px;}
-
+.subGraphBox{
+	padding : 0 20px;
+	margin-top : 25px;
+}	
+.subGraphBox > div{box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);}
 @media screen and (max-width: 1000px) {
     .content .main,
     .graph{
@@ -222,18 +233,19 @@
     }
     .preventBox > div > div {
         flex: .8 1 48%;
+        margin: 0 1.6%;
     }
     .preventBox > div > div:nth-child(2){margin-right: 0;}
     .preventBox > div > div:nth-child(3){margin-left: 0;}
     .preventBox > div > div:nth-child(3),
-    .preventBox > div > div:nth-child(4){margin-top: 15px;}
+    .preventBox > div > div:nth-child(4){margin-top: 22px;}
     
     .rankBox > div > div {
         flex: 1 1 98%;
         margin: 0;
     }
     .rankBox > div > div:nth-child(2),
-    .rankBox > div > div:nth-child(3){margin-top: 15px;}
+    .rankBox > div > div:nth-child(3){margin-top: 25px;}
 }
 
 @media (max-width: 800px) {
@@ -243,5 +255,6 @@
     }
     .preventBox > div > div:nth-child(2),
     .preventBox > div > div:nth-child(3){margin-top: 25px;}
+    .subGraphBox{margin-top : 20px;}
 }
 /* 영역 끝 */

@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 
-    <div class="container mt-3 p-0 text-center">
+    <div class="mt-3 p-0 text-center">
         <div class="table-responsive">
         <table id="manageDataTable" class="table table-bordered full-width-table">
             <thead>

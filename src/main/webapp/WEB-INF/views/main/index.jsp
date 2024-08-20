@@ -351,27 +351,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="preventBox container-fluid">
         <div class="m-0 mt-3 p-0">
-            <div>
+            <div class="card">
                 <strong>소화기 사용요령</strong>
                 <span>User Guide of<br>
 Fire Extinguisher</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
-            <div>
+            <div class="card">
                 <strong>
 				심폐소생술 행동 요령
                 </strong>
                 <span>How to Perform CPR</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
-            <div>
+            <div class="card">
                 <strong>
 		                  자동심장충격기 행동요령
 				</strong>
                 <span>How to Perform AED</span>
                 <button class="btn btn-danger">바로가기</button>
             </div>
-            <div>
+            <div class="card">
                 <strong>
 				옥내소화전 사용방법
                 </strong>
@@ -381,14 +381,28 @@ Fire Extinguisher</span>
         </div>
     </div>
 
+<!--     <div class="card">
+        <div class="card-body" id="LocBig">
+            <h5 class="card-title">화재 장소</h5>
+            <hr>
+            <b><i class="bi bi-1-square-fill"></i> 비주거 0건</b>
+            <p class="card-text">평균 0 건</p>
+            <b><i class="bi bi-2-square-fill"></i> 주거 0건</b>
+            <p class="card-text">평균 0 건</p>
+            <b><i class="bi bi-3-square-fill"></i> 차량 0건</b>
+            <p class="card-text">평균 0 건</p>
+        </div>
+    </div> -->
+
     <div class="rankBox container-fluid">
         <div class="m-0 mt-4">
-            <div>
+            <div class="card">
+            <h5>화재 장소 - 대분류</h5>
 				<c:choose>
 					<c:when test="${rankLbData.size() >0 }">
 					  <c:forEach var="item" items="${rankLbData}">
 					   <div>
-						   <p>${item.subLocBigNm} : ${item.monthFireCount} 건</p>
+						   <p><i class="bi bi-1-square-fill"></i>  ${item.subLocBigNm} : ${item.monthFireCount} 건</p>
 						   <p>평균 : ${item.monthAvg} 건</p>
 					   </div>
 					  </c:forEach>
@@ -398,12 +412,13 @@ Fire Extinguisher</span>
 					</c:otherwise>
 				</c:choose>
             </div>
-            <div>
+            <div class="card">
+            <h5>화재 장소 - 중분류</h5>
                 <c:choose>
                     <c:when test="${rankLmData.size() >0 }">
                       <c:forEach var="item" items="${rankLmData}">
                        <div>
-                           <p>${item.subLocMidNm} : ${item.monthFireCount} 건</p>
+                           <p><i class="bi bi-2-square-fill"></i> ${item.subLocMidNm} : ${item.monthFireCount} 건</p>
                            <p>평균 : ${item.monthAvg} 건</p>
                        </div>
                       </c:forEach>
@@ -413,12 +428,13 @@ Fire Extinguisher</span>
                     </c:otherwise>
                 </c:choose>
             </div>
-            <div>
+            <div class="card">
+            <h5>화재 요인 - 중분류</h5>
                 <c:choose>
                     <c:when test="${rankFmData.size() >0 }">
                       <c:forEach var="item" items="${rankFmData}">
                        <div>
-                           <p>${item.subFactorMidNm} : ${item.monthFireCount} 건</p>
+                           <p><i class="bi bi-3-square-fill"></i> ${item.subFactorMidNm} : ${item.monthFireCount} 건</p>
                            <p>평균 : ${item.monthAvg} 건</p>
                        </div>
                       </c:forEach>

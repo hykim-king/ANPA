@@ -10,16 +10,29 @@
 <script>
 document.addEventListener("DOMContentLoaded", function(){
     console.log("DOMContentLoaded");    
-                           
-    if(document.querySelector("#logoutBtn")){
-        const logoutAnker = document.querySelector("#logoutBtn");
-        console.log("logoutAnker",logoutAnker);
-        
-        logoutAnker.addEventListener("click", function(event){
-            console.log("logoutAnker click", event);
-            event.stopPropagation();
-            if (confirm('로그아웃 하시겠습니까?') === false) return;
-            logout();
+    const appmenuWrapBtn = document.querySelector("#appmenuWrapBtn");                 
+    const appmenuWrap = document.querySelector(".appmenuWrap");                 
+    const appmenu = document.querySelector(".appmenu");                 
+    
+    appmenuWrapBtn.addEventListener("click",function(event){
+    	appmenuWrap.classList.toggle('hide');
+        event.stopPropagation(); // 이벤트 버블링 방지        
+    });    
+    appmenu.addEventListener("click",function(event){
+    	appmenuWrap.classList.toggle('hide');
+        event.stopPropagation(); // 이벤트 버블링 방지        
+    });    
+    
+    if(document.querySelector(".logout-btn")){
+        const logoutAnkers = document.querySelectorAll(".logout-btn");
+        console.log("logoutAnkers",logoutAnkers);
+        logoutAnkers.forEach(function(logoutAnker){
+            logoutAnker.addEventListener("click", function(event){
+                console.log("logoutAnker click", event);
+                event.stopPropagation();
+                if (confirm('로그아웃 하시겠습니까?') === false) return;
+                logout();
+            });
         });
     }
 
@@ -54,89 +67,19 @@ document.addEventListener("DOMContentLoaded", function(){
     }    
 });
 </script>
-<style>
-    .nav { 
-        flex-grow: 1;
-        font-size: 1.2rem; 
-    }
-
-    .top_logo {
-        height: auto;
-        margin-right: 20px;
-    }
-
-    .top_logo img {
-        height: 75px; 
-    }
-
-    .nav-item {
-        margin: 0 20px; 
-    }
-
-    .login-btn {
-        font-weight: bold;
-        color: #000; 
-        background: none; 
-        border: none; 
-        padding: 10px 15px; 
-        font-size: 1.1rem; 
-        text-decoration: none; 
-        display: flex;
-        align-items: center; 
-    }
-
-    .login-btn:hover {
-        text-decoration: underline; 
-    }
-
-    .login-btn svg {
-        margin-right: 8px; 
-        fill: #000; 
-    }
-    
-     /* 사용자 정보 및 로그아웃 버튼 스타일 */
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .user-name {
-        font-weight: bold;
-	    font-size: 1.2rem; /* 필요에 따라 폰트 크기 조정 */
-	    margin-right: 10px; /* logout-btn과의 간격 */
-    }
-
-    .logout-btn {
-        font-weight: bold;
-	    color: #000;
-	    background: none;
-	    border: none;
-	    padding: 8px 15px; /* 패딩을 조정하여 시각적 일관성 유지 */
-	    font-size: 1rem;
-	    text-decoration: none;
-	    cursor: pointer;
-	    margin-left: auto; /* 오른쪽 정렬 */
-	    margin: 0;
-	}
-
-    .logout-btn:hover {
-        text-decoration: underline;
-    }
-</style>
 </head>
 <body>
 <header id="top_header">
-    <div class="d-flex justify-content-between align-items-center top_header_il">
+    <div class="d-flex nav-tabs justify-content-between align-items-center top_header_il">
 
+        <!-- 로고를 첫 번째 항목으로 추가 -->
+        <div class="nav-item d-flex align-items-center top_logo">
+            <a href="${CP}/main/index.do">
+            <img src="${CP}/resources/img/logo_x.png" alt="#logo">
+            </a>
+        </div>
         <!-- 네비게이션 바 시작 -->
         <ul class="nav nav-tabs text-center justify-content-center">
-            <!-- 로고를 첫 번째 항목으로 추가 -->
-            <li class="nav-item d-flex align-items-center top_logo">
-                <a href="${CP}/main/index.do">
-                <img src="${CP}/resources/img/logo_x.png" alt="#logo">
-                </a>
-            </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
                 <a class="nav-link" aria-current="page" href="${CP}/monthfiredata/monthFireData.do">화재 통계</a>
             </li>
@@ -179,5 +122,37 @@ document.addEventListener("DOMContentLoaded", function(){
         </div>
     </div>
 </header>
+<div class="appmenuWrap text-center hide">
+    <div>
+    <p><button id="appmenuWrapBtn" class="btn btn-danger">X</button></p>
+    <div class="row">
+        <div class="subRow"><a href="/ehr/firedata/firedata.do">화재 통계</a></div>
+        <div class="subRow"><a href="/ehr/monthfiredata/monthFireData.do">화재 현황</a></div>
+        <div class="subRow"><a href="/ehr/prevent/doRetrieve.do">화재 예방법</a></div>
+        <div class="subRow"><a href="/ehr/board/.do">알림마당</a></div>
+        <div class="subRow"><a href="/ehr/board/20.do">공지사항</a></div>
+        <div class="subRow"><a href="/ehr/board/10.do">건의사항</a></div>
+        <c:choose>
+            <c:when test="${not empty sessionScope.user}">
+                <div class="subRow">
+                    <span class="user-name">${sessionScope.user.userName}님</span>
+                    <a id="logoutBtn2" class="logout-btn">🔥 로그아웃</a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="subRow">
+                <a id="loginBtn2" class="login-btn" href="${CP}/user/login.do">
+                                                    🔥로그인 / 회원가입
+                </a>
+                </div>    
+            </c:otherwise>
+        </c:choose>
+		<c:if test="${not empty sessionScope.user && (sessionScope.user.adminYn == 1 || sessionScope.user.adminYn == '1')}">
+		    <div class="subRow"><a href="/ehr/manage/doRetrieveMember.do">🔥회원 관리</a></div>
+		    <div class="subRow"><a href="/ehr/manage/doRetrieveData.do">🔥데이터 관리</a></div>
+		</c:if>
+    </div>    
+    </div>
+</div>
 </body>
 </html>

@@ -81,6 +81,14 @@ public class ManageController implements PLog{
 	)		// produces : 화면으로 전송할 때 encoding
 	@ResponseBody
 	public String doDeleteMember(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		Member user = (Member) request.getSession().getAttribute("user");
+        // 관리자 여부 확인
+        if (user == null || !(user.getAdminYn() == 1 || "1".equals(user.getAdminYn()))) {
+            // 관리자 권한이 없으면 리디렉션
+            String targetURL = "/ehr/main/index.do";
+            response.sendRedirect(targetURL); // 클라이언트를 지정된 URL로 리디렉션합니다
+        }
+		
 		String jsonString = "";
 		
 		// HTTP 요청에서 bookCodes를 받아옵니다.
@@ -126,7 +134,15 @@ public class ManageController implements PLog{
 	}
 	
 	@GetMapping("/doRetrieveMember.do")
-	public String doRetrieveMember(Model model, HttpServletRequest req) throws SQLException {
+	public String doRetrieveMember(Model model, HttpServletRequest req, HttpServletResponse response) throws SQLException, IOException {
+		Member user = (Member) req.getSession().getAttribute("user");
+        // 관리자 여부 확인
+        if (user == null || !(user.getAdminYn() == 1 || "1".equals(user.getAdminYn()))) {
+            // 관리자 권한이 없으면 리디렉션
+            String targetURL = "/ehr/main/index.do";
+            response.sendRedirect(targetURL); // 클라이언트를 지정된 URL로 리디렉션합니다
+        }
+        
 		String viewName = "manage/manageMember";
 		
 		Search search = new Search();	
@@ -184,7 +200,15 @@ public class ManageController implements PLog{
 	}
 	
 	@GetMapping("/doRetrieveData.do")
-	public String doRetrieveData(Model model, HttpServletRequest req) throws SQLException {
+	public String doRetrieveData(Model model, HttpServletRequest req, HttpServletResponse response) throws SQLException, IOException {
+		Member user = (Member) req.getSession().getAttribute("user");
+        // 관리자 여부 확인
+        if (user == null || !(user.getAdminYn() == 1 || "1".equals(user.getAdminYn()))) {
+            // 관리자 권한이 없으면 리디렉션
+            String targetURL = "/ehr/main/index.do";
+            response.sendRedirect(targetURL); // 클라이언트를 지정된 URL로 리디렉션합니다
+        }
+		
 		String viewName = "manage/manageData";
 		
 		Search search = new Search();	
@@ -278,7 +302,15 @@ public class ManageController implements PLog{
 			produces = "text/plain;charset=UTF-8"
 	)		// produces : 화면으로 전송할 때 encoding
 	@ResponseBody
-	public String doSaveData(Firedata inVO) throws SQLException {
+	public String doSaveData(Firedata inVO, HttpServletRequest req, HttpServletResponse response) throws SQLException, IOException {
+		Member user = (Member) req.getSession().getAttribute("user");
+        // 관리자 여부 확인
+        if (user == null || !(user.getAdminYn() == 1 || "1".equals(user.getAdminYn()))) {
+            // 관리자 권한이 없으면 리디렉션
+            String targetURL = "/ehr/main/index.do";
+            response.sendRedirect(targetURL); // 클라이언트를 지정된 URL로 리디렉션합니다
+        }
+		
 		String jsonString = "";
 		
 		log.debug("param FireData" + inVO);
@@ -306,7 +338,15 @@ public class ManageController implements PLog{
 			produces = "text/plain;charset=UTF-8"
 	)		// produces : 화면으로 전송할 때 encoding
 	@ResponseBody
-	public String doUpdateData(Firedata inVO) throws SQLException {
+	public String doUpdateData(Firedata inVO, HttpServletRequest req, HttpServletResponse response) throws SQLException, IOException {
+		Member user = (Member) req.getSession().getAttribute("user");
+        // 관리자 여부 확인
+        if (user == null || !(user.getAdminYn() == 1 || "1".equals(user.getAdminYn()))) {
+            // 관리자 권한이 없으면 리디렉션
+            String targetURL = "/ehr/main/index.do";
+            response.sendRedirect(targetURL); // 클라이언트를 지정된 URL로 리디렉션합니다
+        }
+        
 		String jsonString = "";
 		
 		log.debug("param FireData : " + inVO);
@@ -345,6 +385,14 @@ public class ManageController implements PLog{
 	)		// produces : 화면으로 전송할 때 encoding
 	@ResponseBody
 	public String doDeleteData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		Member user = (Member) request.getSession().getAttribute("user");
+        // 관리자 여부 확인
+        if (user == null || !(user.getAdminYn() == 1 || "1".equals(user.getAdminYn()))) {
+            // 관리자 권한이 없으면 리디렉션
+            String targetURL = "/ehr/main/index.do";
+            response.sendRedirect(targetURL); // 클라이언트를 지정된 URL로 리디렉션합니다
+        }
+		
 		String jsonString = "";
 		
 		// HTTP 요청에서 bookCodes를 받아옵니다.
