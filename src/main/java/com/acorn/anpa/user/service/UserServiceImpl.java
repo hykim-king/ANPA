@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService, PLog {
         return loginInfo;
     }	
     
-
     @Override
     public int signUp(Member member) throws SQLException {
         int flag = 0;
@@ -70,7 +69,6 @@ public class UserServiceImpl implements UserService, PLog {
         return flag;
     }
 	
-
 	@Override
 	public int idDuplicateCheck(Member inVO) throws SQLException {
 		log.debug("1. param :"+inVO);
@@ -80,6 +78,26 @@ public class UserServiceImpl implements UserService, PLog {
 		log.debug("2. count :"+count);
 		return count;
 	}
+
+	 @Override
+	    public String findUserId(Member member) {
+	        try {
+	            return userMapper.findUserId(member);
+	        } catch (SQLException e) {
+	            // 예외 처리를 위한 로깅이나 사용자 정의 예외 발생
+	            throw new RuntimeException("아이디 찾기 중 오류 발생", e);
+	        }
+	    }
+
+	    @Override
+	    public String findPassword(Member member) {
+	        try {
+	            return userMapper.findPassword(member);
+	        } catch (SQLException e) {
+	            // 예외 처리를 위한 로깅이나 사용자 정의 예외 발생
+	            throw new RuntimeException("비밀번호 찾기 중 오류 발생", e);
+	        }
+	    }
 	
 	@Override
 	public void deleteUser(String userId) {
@@ -91,15 +109,5 @@ public class UserServiceImpl implements UserService, PLog {
         log.debug("Deleting all members.");
         userMapper.deleteAll();
     }
-
-	@Override
-	public String findUserId(String userName, String email) throws SQLException {
-		return null;
-	}
-
-	@Override
-	public String findPassword(String userId, String userName, String email) throws SQLException {
-		return null;
-	}
 
 }

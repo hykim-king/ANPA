@@ -71,23 +71,22 @@ public interface UserMapper extends WorkDiv<Member> {
 	 * 
 	 * @param userName
 	 * @param email
+	 * @param tel 
 	 * @return String
 	 * @throws SQLException
 	 */
-	  String findUserId(@Param("userName") String userName, @Param("email") String  email) throws SQLException;
+	String findUserId(Member inVO) throws SQLException;
 		
-	   /**
-		 * 비밀번호 찾기
-		 * 
-		 * @param userId
-		 * @param userName
-		 * @param email
-		 * @return String
-		 * @throws SQLException
-		 */
-	  String findPassword(@Param("userId") String userId, @Param("userName") String userName, @Param("email") String email) throws SQLException;
-			 
-			 
+   /**
+	 * 비밀번호 찾기
+	 * 
+	 * @param userId
+	 * @param userName
+	 * @param email
+	 * @return String
+	 * @throws SQLException
+	 */
+	String findPassword(Member inVO) throws SQLException;	 
 
 	/**
 	 * 모든 회원 정보 삭제 (테스트용)

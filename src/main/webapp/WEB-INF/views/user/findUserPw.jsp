@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <title>ANPA | 비밀번호찾기</title>
+<script>
+
+</script>
 </head>
 <body>
     <!-- 헤더 포함 -->

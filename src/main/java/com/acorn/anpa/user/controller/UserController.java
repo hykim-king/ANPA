@@ -1,12 +1,16 @@
 package com.acorn.anpa.user.controller;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -83,8 +87,7 @@ public class UserController implements PLog{
 
 		return jsonString;
 	}
-    
-    
+       
     // 로그아웃
     @RequestMapping(value = "/logout.do", method = RequestMethod.GET)
     @ResponseBody
@@ -141,7 +144,7 @@ public class UserController implements PLog{
 		if (1 == flag) {
 			message = member.getUserId() + " 님 안전파수꾼 가입을 환영합니다!";
 		} else {
-			message = member.getUserId() + " 님 회원가입을 실패하였습니다";
+			message = member.getUserId() + " 님 회원가입에 실패하였습니다";
 		}
 
 		Message messageObj = new Message(flag, message);
@@ -175,59 +178,55 @@ public class UserController implements PLog{
 		return jsonString;
 	}	
     
+    
     // ID 찾기 페이지 이동
-    @RequestMapping(value = "/findId.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/findUserId.do", method = RequestMethod.GET)
     public String findIDPage() {
-        return "user/findId"; // findId.jsp로 이동
+        return "user/findUserId"; 
     }
 
     // ID 찾기 처리
-    @RequestMapping(value = "/findId.do", method = RequestMethod.POST)
-    public String findID(HttpServletRequest request, Model model) {
-        String userName = request.getParameter("userName");
-        String email = request.getParameter("email");
-        
-        try {
-            String userId = userService.findUserId(userName, email);
-            if (userId != null) {
-                model.addAttribute("userId", userId);
-                return "user/findID_result"; // ID 찾기 결과 페이지로 이동
-            } else {
-                model.addAttribute("errorMsg", "No matching user found.");
-                return "user/findID"; // 실패 시 다시 ID 찾기 페이지로
-            }
-        } catch (SQLException e) {
-            model.addAttribute("errorMsg", "Error during ID search. Please try again.");
-            return "user/findID"; // 에러 시 다시 ID 찾기 페이지로
-        }
+    @PostMapping("/findUserId.do")
+    @ResponseBody
+    public String findUserId(Member inVO) throws SQLException {
+
+    	 log.debug("1. param: " + inVO);
+
+    	    // 사용자 아이디 찾기
+    	    String foundUserId = userService.findUserId(inVO);
+    	    String message;
+    	    int flag;
+
+    	    if (foundUserId != null && !foundUserId.isEmpty()) {
+    	        message = "회원님의 아이디는 " + foundUserId + "입니다.";
+    	        flag = 1;  // 성공
+    	    } else {
+    	        message = "해당 정보와 일치하는 아이디가 없습니다.";
+    	        flag = 0;  // 실패
+    	    }
+
+    	    Message messageObj = new Message(flag, message);
+    	    String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+
+    	    log.debug("3. jsonString: " + jsonString);
+
+    	    return jsonString;
     }
 
+    
     // 비밀번호 찾기 페이지 이동
-    @RequestMapping(value = "/findPw.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/findUserPw.do", method = RequestMethod.GET)
     public String findPwPage() {
-        return "user/findPw"; // findPw.jsp로 이동
+        return "user/findUserPw"; // findPw.jsp로 이동
     }
 
     // 비밀번호 찾기 처리
-    @RequestMapping(value = "/findPw.do", method = RequestMethod.POST)
-    public String findPw(HttpServletRequest request, Model model) {
-        String userId = request.getParameter("userId");
-        String userName = request.getParameter("userName");
-        String email = request.getParameter("email");
-        
-        try {
-            String password = userService.findPassword(userId, userName, email);
-            if (password != null) {
-                model.addAttribute("password", password);
-                return "user/findPw_result"; // 비밀번호 찾기 결과 페이지로 이동
-            } else {
-                model.addAttribute("errorMsg", "No matching user found.");
-                return "user/findPw"; // 실패 시 다시 비밀번호 찾기 페이지로
-            }
-        } catch (SQLException e) {
-            model.addAttribute("errorMsg", "Error during password search. Please try again.");
-            return "user/findPw"; // 에러 시 다시 비밀번호 찾기 페이지로
-        }
+    @RequestMapping(value = "/findUserPw.do", method = RequestMethod.POST)
+    @ResponseBody
+    public String findUserPassword(Member inVO) throws SQLException {
+    	
+        return null;
     }
+    
 
 }
