@@ -209,8 +209,8 @@
             </div>
         </form>
         <div class="text-center mt-3">
-            <a href="${CP}/user/findId.do" class="me-2">아이디 찾기</a> |
-            <a href="${CP}/user/findPw.do" class="ms-2">비밀번호 찾기</a>
+            <a href="${CP}/user/findUserId.do" class="me-2">아이디 찾기</a> |
+            <a href="${CP}/user/findUserPw.do" class="ms-2">비밀번호 찾기</a>
         </div>
         <hr>
         <div class="info-message text-center">

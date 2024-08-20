@@ -57,7 +57,7 @@ public interface UserService {
      * @return String 찾은 아이디
      * @throws SQLException
      */
-    String findUserId(String userName, String email) throws SQLException;
+	String findUserId(Member inVO) throws SQLException;
 
     /**
      * 비밀번호 찾기
@@ -68,9 +68,8 @@ public interface UserService {
      * @return String 찾은 비밀번호(보안상 권장되지 않음)
      * @throws SQLException
      */
-    String findPassword(String userId, String userName, String email) throws SQLException;
+	String findPassword(Member inVO) throws SQLException;
 	
-
     /**
      * 모든 회원 삭제 (테스트 용도)
      * @throws SQLException

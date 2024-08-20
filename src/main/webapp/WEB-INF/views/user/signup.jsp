@@ -110,7 +110,37 @@
             });
         }
         
-        
+      //전화번호 000-1234-5678 형식으로 입력
+        function formatPhoneNumber(value) {
+            // 숫자만 추출
+            value = value.replace(/\D/g, '');
+            
+            if (value.length < 4) return value;
+            if (value.length < 7) return value.slice(0, 3) + '-' + value.slice(3);
+            return value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+        }
+
+        $('#tel').on('input', function() {
+            let formattedValue = formatPhoneNumber($(this).val());
+            $(this).val(formattedValue);
+        });
+
+        // backspace와 delete 키 처리
+        $('#tel').on('keydown', function(event) {
+            const key = event.key;
+            const cursorPos = this.selectionStart;
+            const currentValue = $(this).val();
+            
+            // backspace 또는 delete 키가 눌린 경우는 포맷을 적용하지 않음
+            if (key === 'Backspace' || key === 'Delete') {
+                if (key === 'Backspace' && currentValue[cursorPos - 1] === '-') {
+                    this.setSelectionRange(cursorPos - 1, cursorPos - 1); // 하이픈을 넘어 커서 이동
+                } else if (key === 'Delete' && currentValue[cursorPos] === '-') {
+                    this.setSelectionRange(cursorPos + 1, cursorPos + 1); // 하이픈을 넘어 커서 이동
+                }
+            }
+        });
+               
         // 회원가입 
         $("#signUp").on("click", function(event){
             event.preventDefault();         
@@ -174,9 +204,9 @@
                 return;
             }      
 
-            const telPattern = /^[0-9]+$/;
+            const telPattern = /^(\d{3})-(\d{3,4})-(\d{4})$/;
             if (!telPattern.test($("#tel").val())) {
-                alert("전화번호는 숫자만 입력 가능합니다.");
+                alert("전화번호는 000-1234-5678 형식으로 입력하세요.");
                 $("#tel").focus();
                 return;
             }
@@ -194,8 +224,7 @@
                 $("#password").focus();
                 return;
             }
-
-        
+      
             if(isEmpty($("#confirmPassword").val())){
                 alert("비밀번호를 재입력하세요.");
                 $("#confirmPassword").focus();
@@ -239,9 +268,8 @@
             	    regId: $("#userId").val(),                       
             	    regDt: new Date().toISOString()
             };
-   
-        
-            if(confirm("모든 회원가입 준비를 마쳤습니다!") === false) return;
+           
+            if(confirm("모든 회원가입 준비를 마쳤습니다") === false) return;
         
             $.ajax({
                 url: url,

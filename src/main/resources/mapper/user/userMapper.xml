@@ -85,6 +85,25 @@
         FROM member
         WHERE user_id = #{userId}
     </select>
+    
+    <!-- 아이디 찾기 -->
+	<select id="findUserId" parameterType="Member" resultType="String">
+	    SELECT user_id AS userId
+	    FROM member
+	    WHERE user_name = #{userName}
+	      AND tel = #{tel}
+	      AND email = #{email}
+	</select>
+	
+	<!-- 비밀번호 찾기 -->
+	<select id="findPassword" parameterType="Member" resultType="String">
+	    SELECT password
+	    FROM member
+	    WHERE user_id = #{userId}
+	      AND tel = #{tel}
+	      AND email = #{email}
+	      AND user_name = #{userName}      
+	</select>
 
     <!-- 모든 데이터 삭제 (테스트 용도) -->
     <delete id="deleteAll">
