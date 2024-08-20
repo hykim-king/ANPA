@@ -24,16 +24,16 @@
         padding: 20px;
     }
     .container {
-        width: 80%;
+        width: 70%; /* 흰색 박스 크기 줄이기 */
         margin: 0 auto;
         background-color: #fff;
-        padding: 20px;
+        padding: 15px; /* 내부 여백 조정 */
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     h1 {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 15px; /* 제목 마진 조정 */
     }
     .content-section {
         margin-bottom: 20px;
@@ -65,7 +65,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const firstNavLink = document.querySelector('.nav .nav-item:nth-child(3) .nav-link');
-        firstNavLink.classList.add('active');
+        if (firstNavLink) {
+            firstNavLink.classList.add('active');
+        }
     });
 </script>
 </head>
@@ -79,11 +81,10 @@
         <p><strong>작성일:</strong> ${vo.regDt} | <strong>조회수:</strong> ${vo.readCnt}</p>
         <hr>
         <img src="<c:url value='/resources/page/${vo.contents}'/>" alt="예방법 이미지" style="width: 100%; height: auto; margin-bottom: 20px;">
-        
     </section>
 
     <div class="content-footer">
-        <a href="http://localhost:8080/ehr/prevent/doRetrieve.do" class="btn">목록으로 돌아가기</a>
+        <a href="${CP}/prevent/doRetrieve.do" class="btn">목록으로 돌아가기</a>
     </div>
 </div>
 

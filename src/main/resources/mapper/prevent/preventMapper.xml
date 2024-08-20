@@ -95,7 +95,7 @@
         </choose>
     </sql>
 
-    <update id="readCntUpdate" parameterType="Prevent">
+    <update id="readCntUpdate" parameterType="Prevent"> <!-- 조회수 -->
         UPDATE prevent
         SET    read_cnt = read_cnt + 1
         WHERE  prevent_seq = #{preventSeq}
