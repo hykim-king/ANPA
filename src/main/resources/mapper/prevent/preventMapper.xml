@@ -99,7 +99,7 @@
         UPDATE prevent
         SET    read_cnt = read_cnt + 1
         WHERE  prevent_seq = #{preventSeq}
-        AND    reg_id <![CDATA[ <> ]]> #{regId}
+       
     </update>
 
     <select id="getSequence" resultType="int">

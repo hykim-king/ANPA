@@ -89,7 +89,7 @@ public class PreventController  {
 		String view = "prevent/prevent_page";///WEB-INF/views/+board/board_mng+.jsp ->/WEB-INF/views/board/board_mng.jsp
 		log.debug("┌───────────────────────────────────┐");
 		log.debug("│ doSelectOne                       │");
-		log.debug("│ BoardVO                           │"+inVO);
+		log.debug("│PreventVO                           │"+inVO);
 		log.debug("└───────────────────────────────────┘");			
 		if(0 == inVO.getPreventSeq() ) {
 			log.debug("============================");
