@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <input type = "hidden" name = "work_div" id = "work_div">
         <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
         <input type = "hidden" name = "seq" id = "seq">
-        <div class="col-md-4 d-grid gap-2 d-md-flex" style="width: 300px; padding: 10px; float:left">                   
+        <div class="col-md-4 d-grid gap-2 d-md-flex" style="width: 300px; float:left">                   
             <!-- 연 / 월  -->
             <select class="form-control" id="yearSelect">
             </select>  
@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		       SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
 		       String strDate = simpleDate.format(date);
 		    %>
-		    <div style="text-align: right; padding: 10px; margin-left: 50px;"> <!-- margin-left로 변경 -->
+		    <div style="text-align: right; padding: 5px; margin-left: 50px;"> <!-- margin-left로 변경 -->
 		        <p style="margin-right: 5px; display: inline; margin: 0;">오늘은</p>
 		        <p style="color:#4169E1; display: inline; margin: 0;"> <%= strDate %> </p>
 		        <p style="margin-left: 5px; display: inline; margin: 0;">입니다</p>

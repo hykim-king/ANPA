@@ -20,7 +20,7 @@
 .mRsysdate{padding-top: 5px;} */
 .mRsysdate {
     height: 40px;
-    padding-top: 5px;
+    /* padding-top: 5px; */
 }
 .mRsysdate div {
     text-align: right;
