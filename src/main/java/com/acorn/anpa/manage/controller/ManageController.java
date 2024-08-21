@@ -91,7 +91,7 @@ public class ManageController implements PLog{
 		
 		String jsonString = "";
 		
-		// HTTP 요청에서 bookCodes를 받아옵니다.
+		// HTTP 요청에서 userIds를 받아옵니다.
     	String userIdsJson = request.getParameter("userIds");
     	log.debug("userIdsJson" + userIdsJson);
 		
@@ -104,7 +104,7 @@ public class ManageController implements PLog{
         int totalDeleted = 0;
         int flag = 0;
         if (userIds != null && userIds.length > 0) {
-        	// 각 bookCode에 대해 삭제 작업을 수행합니다.
+        	// 각 userId에 대해 삭제 작업을 수행합니다.
             for (String userId : userIds) {
             	Member inVO = new Member();
             	inVO.setUserId(userId.trim()); // 공백 제거 후 화면에서 가져온 userId 부여
@@ -395,7 +395,7 @@ public class ManageController implements PLog{
 		
 		String jsonString = "";
 		
-		// HTTP 요청에서 bookCodes를 받아옵니다.
+		// HTTP 요청에서 fireSeqs를 받아옵니다.
     	String fireSeqsJson = request.getParameter("fireSeqs");
     	log.debug("fireSeqsJson" + fireSeqsJson);
 		
@@ -408,7 +408,7 @@ public class ManageController implements PLog{
         int totalDeleted = 0;
         int flag = 0;
         if (fireSeqs != null && fireSeqs.length > 0) {
-        	// 각 bookCode에 대해 삭제 작업을 수행합니다.
+        	// 각 fireSeqs에 대해 삭제 작업을 수행합니다.
             for (String fireSeq : fireSeqs) {
             	Firedata inVO = new Firedata();
             	inVO.setFireSeq(Integer.parseInt(fireSeq.trim())); // 공백 제거 후 화면에서 가져온 fireSeq 부여

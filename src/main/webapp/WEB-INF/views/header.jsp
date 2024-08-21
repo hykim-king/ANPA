@@ -129,7 +129,6 @@ document.addEventListener("DOMContentLoaded", function(){
         <div class="subRow"><a href="/ehr/firedata/firedata.do">화재 통계</a></div>
         <div class="subRow"><a href="/ehr/monthfiredata/monthFireData.do">화재 현황</a></div>
         <div class="subRow"><a href="/ehr/prevent/doRetrieve.do">화재 예방법</a></div>
-        <div class="subRow"><a href="/ehr/board/.do">알림마당</a></div>
         <div class="subRow"><a href="/ehr/board/20.do">공지사항</a></div>
         <div class="subRow"><a href="/ehr/board/10.do">건의사항</a></div>
         <c:choose>

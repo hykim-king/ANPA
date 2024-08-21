@@ -27,13 +27,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const doDeleteBtn = document.querySelector('#doDelete');
     const titleInput = document.querySelector('#title');
     const moveList = document.querySelector('#moveList');
-
+    const answerBtn = document.querySelector('#answerBtn');
+    
     // .nav 클래스의 4번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(4) .nav-link');
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
     
     //이벤트
+    doDelAnswerClick();
+    doUpdateAnswerClick();
+    answerBtn.addEventListener("click", function(event){
+        event.stopPropagation();
+        doSaveAnswer();
+    });
+    
     doDeleteBtn.addEventListener("click", function(event){
         event.stopPropagation();
         doDelete();
@@ -48,8 +56,152 @@ document.addEventListener('DOMContentLoaded', function() {
     	event.stopPropagation();
     	doUpdate();
     });
-   
-    //함수
+    
+    //함수    
+    function doDelAnswerClick(){
+        const answerDelBtns = document.querySelectorAll("#answerTable tbody tr .btn-danger");
+        
+        answerDelBtns.forEach(function(answerDelBtn) {
+        	answerDelBtn.addEventListener("click", function() {   
+                if(confirm('댓글을 삭제 하시겠습니까?') === false) return;             
+                // 클릭된 버튼이 속한 행을 찾습니다
+                const row = this.closest('tr');
+                
+                const answerSeq = row.querySelector('.answerSeq').textContent;
+                const answerCon = row.querySelector('.answerContents2').textContent;
+                
+                console.log(answerSeq, answerCon);
+                doDelAnswer(answerSeq, answerCon);
+            });
+        });    	
+    }
+    function doDelAnswer(answerSeq, answerCon){        
+        //비동기 통신
+        let type= "GET";  
+        let url = "/ehr/board/doDelAnswer.do";
+        let async = "true";
+        let dataType = "json";
+        
+        let params = {
+            "answerSeq" : answerSeq,
+            "contents" : answerCon
+        }
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            if(data){
+                try{
+                    if(isEmpty(data) === false && 1 === data.messageId){
+                        alert(data.messageContents);
+                    }else{
+                        alert("에러발생 : "+data.messageContents);
+                    }
+                    
+                }catch(e){
+                     alert("예외발생 : 개발자에게 문의 요망");     
+                }
+                
+            }
+            
+        }); 
+    }
+    function doUpdateAnswerClick(){
+        const answerUpBtns = document.querySelectorAll("#answerTable tbody tr .btn-secondary");
+        
+        answerUpBtns.forEach(function(answerUpBtn) {
+            answerUpBtn.addEventListener("click", function() {   
+                if(confirm('댓글을 수정 하시겠습니까?') === false) return;             
+                // 클릭된 버튼이 속한 행을 찾습니다
+                const row = this.closest('tr');
+                
+                const userId = "${user.userId}";
+                const answerSeq = row.querySelector('.answerSeq').textContent;
+                const answerCon = row.querySelector('.answerContents2').value;
+                const answerConTag = row.querySelector('.answerContents2');
+                
+                console.log(answerSeq, answerCon, userId, answerConTag);
+                doUpdateAnswer(answerSeq, answerCon, userId, answerConTag);
+            });
+        });     
+    }
+    function doUpdateAnswer(answerSeq, answerCon, userId, answerConTag){        
+        if(isEmpty(answerCon) == true){
+            alert('내용을 입력 하세요.')
+            answerConTag.focus();
+            return;
+        }  
+        
+        if(confirm('수정 하시겠습니까?') === false) return;
+        
+        //비동기 통신
+        let type= "POST";  
+        let url = "/ehr/board/doUpdateAnswer.do";
+        let async = "true";
+        let dataType = "json";
+        
+        //markdown getter : simplemde.value()
+        let params = { 
+            "answerSeq": answerSeq,
+            "contents": answerCon,
+            "modId": userId
+        }
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            if(data){
+                try{
+                    if(isEmpty(data) === false && 1 === data.messageId){
+                        alert(data.messageContents);
+                    }else{
+                        alert("에러: "+data.messageContents);
+                    }
+                    
+                }catch(e){
+                     alert("예외 발생 : 개발자에게 문의 요망");     
+                }
+                
+            }
+            
+        });
+    }
+    function doSaveAnswer(){
+    	if(confirm('비방이나 모욕적인 댓글은 삭제될 수 있습니다. 등록하시겠습니까?') === false) return;
+    	
+    	const userId = "${user.userId}";
+    	const boardSeq = "${board.boardSeq}";
+    	const contents = document.querySelector('.answerContents').value;
+    	console.log("userId : " + userId);
+    	console.log("boardSeq : " + boardSeq);
+    	console.log("contents : " + contents);
+    	
+        //비동기 통신
+        let type= "POST";  
+        let url = "/ehr/board/doSaveAnswer.do";
+        let async = "true";
+        let dataType = "json";
+        
+        //markdown getter : simplemde.value()
+        let params = {
+            'contents' : contents,
+            'boardSeq' : boardSeq,
+            'regId'    : userId
+        }
+        
+        PClass.pAjax(url,params,dataType,type,async,function(data){
+            if(data){
+                try{
+                    if(isEmpty(data) === false && 1 === data.messageId){
+                        alert(data.messageContents);
+                    }else{
+                        alert("에러: "+data.messageContents);
+                    }
+                    
+                }catch(e){
+                     alert("data를 확인 하세요.");     
+                }
+                
+            }
+            
+        });
+    }    
     function doDelete(){
         if(confirm('삭제 하시겠습니까?') === false) return;
         
@@ -61,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         //markdown getter : simplemde.value()
         let params = {
-        	'title' : titleInput.value,
+            'title' : titleInput.value,
             "boardSeq" : '${board.boardSeq}'
         }
         
@@ -83,7 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
         });
     }
-    
     function doUpdate(){
         if(isEmpty(titleInput.value) == true){
             alert('제목을 입력 하세요.')
@@ -142,8 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <section class="board_info content content2 content3 align-items-center">
     <h3>공지사항</h3>
-    ${board }
-    ${user }
     <div class="d-flex justify-content-end">             
         <p class="table-btn btn btn-success" id="moveList">목록</p>                
     </div>
@@ -210,16 +359,38 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		<!-- list 배열에서 boardSeq와 일치하는 항목만 출력 -->
 		<c:forEach var="answer" items="${list}">
-		    <c:if test="${answer.boardSeq == boardSeq}">
-		        <!-- 일치하는 항목을 출력 -->
-				<tr>
-				    <th class="table-dark col-md-2">${answer.modId}</th>
-				    <td class="col-md-7">${answer.contents}</td>           
-				    <td class="col-md-3 text-center">${answer.modDt}</td>           
-				</tr>
-		    </c:if>
+			<c:if test="${answer.boardSeq == boardSeq}">
+				<c:choose>
+			        <c:when test="${answer.modId == user.userId}">
+	                    <!-- 일치하는 항목을 출력 -->
+		                <tr>
+		                    <th class="answerSeq d-none">${answer.answerSeq}</th>
+		                    <th class="table-dark col-md-2 text-center" style="vertical-align: middle;">${answer.modId}</th>
+		                    <td class="col-md-7">
+		                        <p class="col-md-12 m-0 answerCon">
+		                          <textarea class="form-control answerContents2">${answer.contents}</textarea>
+		                        </p>
+		                        <div class="col-md-auto m-0" style="float : right;">
+		                            <button class="btn btn-danger">삭제</button>
+		                            <button class="btn btn-secondary">수정</button>
+		                        </div>
+		                    </td>           
+		                    <td class="col-md-1 text-center" style="vertical-align: middle;">${answer.modDt}</td>           
+		                </tr>
+			        </c:when>
+			        <c:otherwise>
+                        <tr>
+                            <th class="table-dark col-md-2" style="vertical-align: middle;">${answer.modId}</th>
+                            <td class="col-md-7">
+                                <p class="col-md-12 m-0 answerCon">${answer.contents}</p>
+                            </td>           
+                            <td class="col-md-1 text-center" style="vertical-align: middle;">${answer.modDt}</td>           
+                        </tr>
+			        </c:otherwise>
+		        </c:choose>
+			</c:if>
 		</c:forEach>
-
+		<c:if test="${user != null}">		
         <tr>
 			<th class="table-dark col-md-2 text-center" colspan="3">댓글 등록</th>   
         </tr>
@@ -228,9 +399,10 @@ document.addEventListener('DOMContentLoaded', function() {
         </tr>
         <tr>
 			<td class="col-md-12" colspan="3">
-			    <p class="table-btn btn btn-success answerBtn">등록</p>
+			    <p id="answerBtn" class="table-btn btn btn-success answerBtn">등록</p>
 			</td>    
         </tr>
+        </c:if>
     </table>
 </section>
 <script>

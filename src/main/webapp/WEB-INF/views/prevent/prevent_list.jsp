@@ -22,17 +22,28 @@
 <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const test = "${search}";
+    console.log(test);
+    // .nav 클래스의 3번째 .nav-item의 자식 .nav-link를 선택합니다
+    const firstNavLink = document.querySelector('.nav .nav-item:nth-child(3) .nav-link');
+
+    // 선택한 요소에 "active" 클래스를 추가합니다
+    firstNavLink.classList.add('active');
+    
+});
+</script>
 <style>
 body {
 	font-family: Arial, sans-serif;
-	background-color: #f4f4f4;
 	margin: 0;
-	padding: 20px;
 }
 
 .container {
 	width: 80%;
-	margin: 0 auto;
+	margin: 50px auto;
 	background-color: #fff;
 	padding: 20px;
 	border-radius: 8px;

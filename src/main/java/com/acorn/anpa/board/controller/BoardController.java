@@ -46,6 +46,84 @@ public class BoardController implements PLog{
 		log.debug("└─────────────────────────");	
 	}
 	
+	@RequestMapping(value = "/doUpdateAnswer.do"
+			, method = RequestMethod.POST
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doUpdateAnswer(Answer inVO) throws SQLException{
+		String jsonString = "";
+		
+		int flag = answerService.doUpdate(inVO);
+		log.debug("2.flag:" + flag);
+		
+		String message = "";
+
+		if (1 == flag) {
+			message = inVO.getContents() + " 댓글이 수정 되었습니다.";
+		} else {
+			message = "댓글 수정 오류 발생";
+		}
+		
+		Message messageObj = new Message(flag, message);
+		
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
+	
+	@RequestMapping(value = "/doDelAnswer.do"
+			, method = RequestMethod.GET
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doDelAnswer(Answer inVO) throws SQLException{
+		String jsonString = "";
+		
+		int flag = answerService.doDelete(inVO);
+		log.debug("2.flag:" + flag);
+		
+		String message = "";
+
+		if (1 == flag) {
+			message = inVO.getContents() + " 댓글이 삭제 되었습니다.";
+		} else {
+			message = "댓글 삭제 실패!";
+		}
+		
+		Message messageObj = new Message(flag, message);
+		
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
+	
+	@RequestMapping(value = "/doSaveAnswer.do"
+			, method = RequestMethod.POST
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doSaveAnswer(Answer inVO) throws SQLException{
+		String jsonString = "";
+		
+		int flag = answerService.doSave(inVO);
+		log.debug("2.flag:" + flag);
+		
+		String message = "";
+
+		if (1 == flag) {
+			message = inVO.getContents() + " 내용이 등록되었습니다.";
+		} else {
+			message = "댓글 등록 오류!";
+		}
+		
+		Message messageObj = new Message(flag, message);
+		
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
+	
 	@RequestMapping(value = "/doSave.do"
 			, method = RequestMethod.POST
 			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding

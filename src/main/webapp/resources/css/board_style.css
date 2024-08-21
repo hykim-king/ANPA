@@ -64,6 +64,9 @@
     height: 100px;
     resize: none;
 }
+.answerContents2{	
+    resize: none;
+}
 .answerBtn{
 	margin : 0;
     float : right;	

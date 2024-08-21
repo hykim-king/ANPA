@@ -221,12 +221,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const monthInjured = monthInjuredData;
         const monthAmount = monthAmountData;    
         
-        Highcharts.chart('graphBox', {
+        Highcharts.chart('graphBox1_1', {
             accessibility: {
                 enabled: false
             },
             chart: {
-                type: 'bar'
+                type: 'column'
             },
             title: {
                 text: null
@@ -237,7 +237,99 @@ document.addEventListener('DOMContentLoaded', function() {
                 /* ,align: 'center' */
             },
             xAxis: {
-                categories: ['화재건수', '인명피해', '재산피해(천원)'],
+                categories: ['화재건수', '인명피해'],
+                title: {
+                    text: null
+                },
+                gridLineWidth: 1,
+                lineWidth: 0
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '건 (명)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify',
+                    formatter: function () {
+                        // y축 레이블을 천 단위로 쉼표를 넣어 표시
+                        return Highcharts.numberFormat(this.value, 0, '.', ',');
+                    }
+                },
+                gridLineWidth: 0
+            },
+            tooltip: {
+                formatter: function () {
+                    var suffixes = [' 건', ' 명'];
+                    var categoryTooltips = [
+                        '화재건수: 이 데이터는 화재 발생 건수를 나타냅니다.',
+                        '인명피해: 이 데이터는 인명 피해를 나타냅니다.'
+                    ];
+                    const formattedValue = Highcharts.numberFormat(this.y, 0, '.', ',');
+                    // 툴팁에 천 단위로 쉼표를 넣어 표시
+                    return '<b>' + this.x + '</b><br/>' +
+                        categoryTooltips[this.point.index] + ' : ' +
+                        Highcharts.numberFormat(this.y, 0) + suffixes[this.point.index];
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: '0',
+                    dataLabels: {
+                        enabled: false,
+                        formatter: function () {
+                            const formattedValue = Highcharts.numberFormat(this.y, 0, '.', ',');
+                            return formattedValue;
+                        }
+                    },
+                    groupPadding: 0.1
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: 10000,
+                y: 0,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                shadow: true,
+                symbolRadius: 0   // 아이콘의 모서리 반경을 0으로 설정하여 네모 모양으로 변경합니다.
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: '1달전',
+                data: [monthFireCount, monthInjured],
+                color: '#4f81bd' // 파란색
+            
+            }, {
+                name: '현재',
+                data: [todayFireCount, todayInjured],
+                color: '#ff6161' // 빨간색
+            }]
+        });
+        Highcharts.chart('graphBox1_2', {
+            accessibility: {
+                enabled: false
+            },
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: null
+                /* ,align: 'center' */
+            },
+            subtitle: {
+                text: null
+                /* ,align: 'center' */
+            },
+            xAxis: {
+                categories: ['재산피해(천원)'],
                 title: {
                     text: null
                 },
@@ -261,13 +353,11 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             tooltip: {
                 formatter: function () {
-                    var suffixes = [' 건', ' 건', ' 천원'];
+                    var suffixes = [' 천원'];
                     var categoryTooltips = [
-                        '화재건수: 이 데이터는 화재 발생 건수를 나타냅니다.',
-                        '인명피해: 이 데이터는 인명 피해를 나타냅니다.',
                         '재산피해(천원): 이 데이터는 재산 피해를 천 원 단위로 나타냅니다.'
                     ];
-                    const formattedValue = Highcharts.numberFormat(this.y, 0, ',', ' ');
+                    const formattedValue = Highcharts.numberFormat(this.y, 0, '.', ',');
                     // 툴팁에 천 단위로 쉼표를 넣어 표시
                     return '<b>' + this.x + '</b><br/>' +
                         categoryTooltips[this.point.index] + ' : ' +
@@ -280,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     dataLabels: {
                         enabled: true,
                         formatter: function () {
-                            const formattedValue = Highcharts.numberFormat(this.y, 0, ',', ' ');
+                            const formattedValue = Highcharts.numberFormat(this.y, 0, '.', ',');
                             return formattedValue;
                         }
                     },
@@ -305,12 +395,12 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             series: [{
                 name: '1달전',
-                data: [monthFireCount, monthInjured, monthAmount],
+                data: [monthAmount],
                 color: '#4f81bd' // 파란색
             
             }, {
                 name: '현재',
-                data: [todayFireCount, todayInjured, todayAmount],
+                data: [todayAmount],
                 color: '#ff6161' // 빨간색
             }]
         });
@@ -345,7 +435,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	            <h3 class="m-0">전국</h3>
 	            <div class="graphDate">2024년 08월</div>
 	        </div>
-	        <div id="graphBox"></div>
+	        <div id="graphBox1_1"></div>
+	        <div id="graphBox1_2"></div>
 	    </div>
     </div>
     
@@ -353,46 +444,32 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="m-0 mt-3 p-0">
             <div class="card">
                 <strong>소화기 사용요령</strong>
-                <span>User Guide of<br>
-Fire Extinguisher</span>
-                <button class="btn btn-danger">바로가기</button>
+                <span>User Guide of Fire<br>Extinguisher</span>
+                <button class="btn btn-danger">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
 				심폐소생술 행동 요령
                 </strong>
                 <span>How to Perform CPR</span>
-                <button class="btn btn-danger">바로가기</button>
+                <button class="btn btn-danger">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
-		                  자동심장충격기 행동요령
+		                  자동 심장 충격기 행동요령
 				</strong>
-                <span>How to Perform AED</span>
-                <button class="btn btn-danger">바로가기</button>
+                <span>How to Perform<br>AED</span>
+                <button class="btn btn-danger">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
 				옥내소화전 사용방법
                 </strong>
-                <span>Operation of<br> Fire Wall<br>Cabinet</span>
-                <button class="btn btn-danger">바로가기</button>
+                <span>Operation of<br> Fire Wall Cabinet</span>
+                <button class="btn btn-danger">바로가기 +</button>
             </div>
         </div>
     </div>
-
-<!--     <div class="card">
-        <div class="card-body" id="LocBig">
-            <h5 class="card-title">화재 장소</h5>
-            <hr>
-            <b><i class="bi bi-1-square-fill"></i> 비주거 0건</b>
-            <p class="card-text">평균 0 건</p>
-            <b><i class="bi bi-2-square-fill"></i> 주거 0건</b>
-            <p class="card-text">평균 0 건</p>
-            <b><i class="bi bi-3-square-fill"></i> 차량 0건</b>
-            <p class="card-text">평균 0 건</p>
-        </div>
-    </div> -->
 
     <div class="rankBox container-fluid">
         <div class="m-0 mt-4">
