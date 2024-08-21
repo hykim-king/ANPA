@@ -75,12 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let sigungoText = '';
     let searchDiv = '';
     
-    //총 계
-    let totalCnt = '';
-    let injuredSum = '';
-    let dead = '';
-    let injured = '';
-    let amount = '';
     //이벤트
     CSVBtn.addEventListener("click",function(event){
     	getCSV('fireData'+div+'.csv');
@@ -426,12 +420,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     //console.log('data[0].amount:'+data[0].amount);
                     //console.log('data[1].amount:'+data[1].amount);
                     
-                    totalCnt = data[1].totalCnt;
-                    injuredSum = data[1].injuredSum;
-                    dead = data[1].dead;
-                    injured = data[1].injured;
-                    amount = data[1].amount;
-                    
                     let tooltip = bigListText + '-' + midListText;
                     
                     columnChart(data[0],data[1]);
@@ -455,6 +443,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function doDataList(){
+    	//총 계
+        let totalCnt = 0;
+        let injuredSum = 0;
+        let dead = 0;
+        let injured = 0;
+        let amount = 0;
+    	
     	let url = '/ehr/firedata/totalDataList.do';
         let params = {
             "searchDateStart": fRdateStart.value,
@@ -480,23 +475,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     //console.log('table:'+table);
                     
                     let headerHtml = '<tr><th colspan="2">구분</th><th>화재 건수</th><th>총 인명피해</th><th>사망자</th><th>부상자</th> <th>재산피해</th></tr>';
-                        
+                    let html = '';
                     thead.innerHTML = headerHtml;
-                    
-                    
-                    let bodyhtml = '<tr>';
-                    bodyhtml += '<td colspan="2">합계</td>';
-                    bodyhtml += '<td>'+totalCnt+'</td>';
-                    bodyhtml += '<td>'+injuredSum+'</td>';
-                    bodyhtml += '<td>'+dead+'</td>';
-                    bodyhtml += '<td>'+injured+'</td>';
-                    bodyhtml += '<td>'+amount+'</td>';
-                    bodyhtml += '</tr>';
-                    
-                    tbody.innerHTML = bodyhtml;
+
                     
                     data.forEach(function(item){
-                    	let html = '<tr>';
+                    	html += '<tr>';
                     	
                     	html += '<td>'+item.subFactorBigNm+'</td>';
                     	html += '<td>'+item.subFactorMidNm+'</td>';
@@ -507,10 +491,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     	html += '<td>'+item.amount+'</td>';
                     	
                     	html += '</tr>';
-                    	tbody.innerHTML += html;
+                    	
+                    	totalCnt   += Number(item.totalCnt);
+                        injuredSum += Number(item.injuredSum);
+                        dead       += Number(item.dead);
+                        injured    += Number(item.injured);
+                        amount     += Number(item.amount);
                     });
+                    let bodyhtml = '<tr>';
                     
+                    bodyhtml += '<td colspan="2">합계</td>';
+                    bodyhtml += '<td>'+totalCnt+'</td>';
+                    bodyhtml += '<td>'+injuredSum+'</td>';
+                    bodyhtml += '<td>'+dead+'</td>';
+                    bodyhtml += '<td>'+injured+'</td>';
+                    bodyhtml += '<td>'+amount+'</td>';
                     
+                    bodyhtml += '</tr>';
+                    
+                    tbody.innerHTML = bodyhtml;
+                    tbody.innerHTML += html;
         	
                 }catch(e){
                     console.error("data가 null혹은, undefined 입니다.",e);

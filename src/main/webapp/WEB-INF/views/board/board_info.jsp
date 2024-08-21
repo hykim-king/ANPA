@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const moveList = document.querySelector('#moveList');
 
     // .nav 클래스의 4번째 .nav-item의 자식 .nav-link를 선택합니다
-    const firstNavLink = document.querySelector('.nav .nav-item:nth-child(5) .nav-link');
+    const firstNavLink = document.querySelector('.nav .nav-item:nth-child(4) .nav-link');
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
     
@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }  
         
-        console.log("simplemde",simplemde.value());
         if(confirm('수정 하시겠습니까?') === false) return;
         
         //비동기 통신

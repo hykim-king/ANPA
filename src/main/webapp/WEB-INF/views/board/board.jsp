@@ -23,15 +23,11 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-	const test = "${search}";
-	console.log(test);
     // .nav 클래스의 4번째 .nav-item의 자식 .nav-link를 선택합니다
-    const firstNavLink = document.querySelector('.nav .nav-item:nth-child(5) .nav-link');
+    const firstNavLink = document.querySelector('.nav .nav-item:nth-child(4) .nav-link');
 
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
-    
-    rowClick(); // 게시글 선택
     
     // 변수 선언 시작
     const doRetrieveBtn = document.querySelector('#searchBtn');    
@@ -41,25 +37,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchDiv = document.querySelector('#searchDiv');    
     const moveToReg = document.querySelector('#moveToReg');
     const table = document.querySelector('#boardTable tbody');
-    console.log('table'+table);
     //페이징
     let url = '/ehr/board/doRetrieveAjax.do';
     let maxNum = '${list[0].totalCnt}';
     renderingPaging(maxNum,1,pageSize.value,10, url, 'doRetrieve');
+    rowClick(); // 게시글 선택
     
-    
-    let DivValue = '${list[0].divYn}';
-    console.log('DivValue'+DivValue.value);
+    let DivValue = '${search.getDiv()}';
     
     //세션
     const userId = '${user.userId}';
-    console.log('userId: '+userId);
     const adminYn = '${user.adminYn}';
-    console.log('adminYn: '+adminYn);
-    console.log('${list[0].divYn}');
-    console.log('${user.adminYn }');
     
-    // 클릭 이벤트 시작
+    // 이벤트 시작
+    searchDiv.addEventListener('change', function(event) {
+    	if(searchDiv.value == '') searchWordInput.value = '';
+    });
+    
     moveToReg.addEventListener('click', function(event) {
         event.stopPropagation(); // 이벤트 버블링 방지
         
@@ -69,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
         	return;
         }
         
-        frm.divYn.value = '${list[0].divYn}';
+        frm.divYn.value = '${search.getDiv()}';
         
         frm.action = "/ehr/board/boardReg.do";
         frm.submit();
@@ -81,21 +75,14 @@ document.addEventListener('DOMContentLoaded', function() {
         doRetrieve(url,1);
     });
     
-    // 함수 시작
-    /* function doRetrieve(){
-    	const frm = document.querySelector("#bRfrm");
-    	
-        frm.action = `/ehr/board/${list[0].divYn}.do`;    
-        frm.submit();
-    } */
     //검색박스 엔터 적용
     searchWordInput.addEventListener("keydown",function(event){
-        console.log("searchWordInput keydown");
-        if(event.key === 'Enter' && event.keyCode === 13){
-            event.stopPropagation();
-            doRetrieve(url,1);
+        event.stopPropagation();
+        if(event.key !== 'Enter'){
+        	return;
         }
         
+            doRetrieve(url,1);
     });
     
 });   
@@ -104,7 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <section class="board_con content content2 content3 align-items-center">
-    <h3>추후 변경 공지사항 or 소통마당</h3>
+    <c:choose>
+        <c:when test="${search.getDiv() == 10}">
+            <h3>건의사항 / 소통 게시판</h3>
+        </c:when>
+        <c:otherwise>
+            <h3>공지사항 게시판</h3>
+        </c:otherwise>
+    </c:choose>
     <div class="row g-1 align-items-center">
         <form name="bRfrm" id="bRfrm" class="col-md-4">
             <div class="row g-1">
@@ -136,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         </form>
-        ${list }
+        
         <div class="col-md-1 d-flex">
             <button id="searchBtn" type="button" class="btn btn-dark mt-3">
                 <i class="bi bi-search"></i>
@@ -213,12 +207,8 @@ function doRetrieve(url, pageNo){
 	const searchDiv = document.querySelector('#searchDiv'); 
 	const searchWordInput = document.querySelector('#searchWord');
 	const table = document.querySelector('#boardTable tbody');
-	let DivValue = '${list[0].divYn}';
-    console.log("pageSize:"+pageSize.value);
-    console.log("searchDiv:"+searchDiv.value);
-    console.log("searchWord:"+searchWordInput.value);
-    console.log("div:"+DivValue);
-    console.log("url:"+url);
+	let DivValue = '${search.getDiv()}';
+	let maxNum = '';
     
     let type= "GET";  
     let async = "true";
@@ -254,36 +244,26 @@ function doRetrieve(url, pageNo){
                     html += '</td>';
                     html += '</tr>';
                     
-                    
                 });//for
+                maxNum = data[0].totalCnt;
                 
-                
+                table.innerHTML = html;
+                rowClick();
+                renderingPaging(maxNum,pageNo,pageSize.value,10, url, 'doRetrieve');
             }catch(e){
                  alert("data를 확인 하세요.");     
             }
             
         }else{
             html = '<tr><td class="text-center" colspan="99" >데이터가 없습니다.</td></tr>';
+            table.innerHTML = html;
+            renderingPaging(maxNum,pageNo,pageSize.value,10, url, 'doRetrieve');
         }
         
-        table.innerHTML = html;
-        
-        renderingPaging(data[0].totalCnt,1,pageSize.value,10, url, 'doRetrieve');
-        rowClick();
     });  
 }
     
 function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scriptName){
-    console.log('maxNum: '+maxNum);
-    console.log('currentPageNo: '+currentPageNo);
-    console.log('rowPerPage: '+rowPerPage);
-    console.log('bottomCount: '+bottomCount);
-    console.log('url: '+url);
-    console.log('scriptName: '+scriptName);
-    console.log(`scriptName : {scriptName}`);
-    
-    
-    
     const pagenation = document.querySelector('#page-selection');    
     let html = '';
     pagenation.innerHTML = '';
@@ -362,7 +342,6 @@ function rowClick(){
         row.addEventListener("click",function(event){
             
             let boardSeq = this.querySelector(".tbseq input").value;
-            console.log("seq: "+boardSeq);
             
             if(confirm('게시글을 조회하시겠습니까?') ==false) return;
             
@@ -372,7 +351,6 @@ function rowClick(){
     });//단건 선택 
 }
 function doSelectOne(boardSeq){
-    console.log("doSelectOne seq: "+boardSeq);
     
     const frm = document.querySelector("#bRfrm");
     

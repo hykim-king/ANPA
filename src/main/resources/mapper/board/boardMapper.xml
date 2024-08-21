@@ -77,10 +77,12 @@
                AND title LIKE #{searchWord} || '%'
                OR contents LIKE #{searchWord} || '%'
              </when>   
-             <when test="div != null and div !='' ">
+       </choose>
+       <choose>
+             <when test="div != null or div !='' ">
                 AND div = #{div}
              </when>                                                                                                                                 
-       </choose>                                                                                                                                   
+       </choose>                                                                                                                                
     </sql>
     
     <insert id="doSave" parameterType="Board">

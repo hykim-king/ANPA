@@ -137,7 +137,7 @@ public class BoardController implements PLog{
 	    HttpSession session = req.getSession(false); // false: 세션이 존재하지 않으면 새로 생성하지 않음
 	    
 	    // 로그인 사용자 정보 가져오기
-	    String regId = "";
+	    String regId = "guest";
 	    if (session != null) {
 	    	Member loginUser = (Member) session.getAttribute("user");
 	        if (loginUser != null) {
@@ -184,15 +184,11 @@ public class BoardController implements PLog{
 	@ResponseBody
 	public String doRetrieveAjax(Search search) throws SQLException {
 		log.debug("search : " + search);
-		log.debug("search : " + search);
-		log.debug("search : " + search);
-		log.debug("search : " + search);
-		log.debug("search : " + search);
 		String jsonString = "";
 		
 		List<Board> list = boardService.doRetrieve(search);
 		log.debug("list : " + list);
-		
+			
 		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(list);
 		log.debug("3.jsonString:" + jsonString);
 		
