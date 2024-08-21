@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     
     <!-- pagenation -->
-    <div class="text-center">
+    <div class="text-center" style="margin-top : 30px;">
 	    <div id="page-selection" class="text-center page">
 	    
 	    </div>

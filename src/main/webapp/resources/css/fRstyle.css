@@ -16,7 +16,7 @@
 .map{
 	top : 0;
 	left: 0;
-    width : 80%;
+    width : 150%;
     max-width : 500px;
     height: auto;
 }
@@ -31,4 +31,37 @@
 }
 .btn-download:hover {
     background-color: #0056b3; /* Hover 색상 */
+}
+.svgBox{
+	margin-top : 15px;
+	width : 100%;
+	height : auto;
+}
+.svgBoxInner1{
+	width: 30%;
+	height: 100%;
+	min-height: 800px;
+	float: left;
+}
+.svgBoxInner2{
+	width: 70%;
+	height: 100%;
+	float: right;
+}
+#fireCnt{overflow: hidden; width: 50%; float: left; height: 50%;}
+#fireAmount{overflow: hidden; width: 50%; float: right; height: 50%;}
+#result{overflow: hidden; width: 100%; float: right; height: 50%;}
+@media screen and (max-width: 1400px){
+    .svgBoxInner1{
+		width: 100%;
+		height: auto;
+		min-height: 800px;
+    }
+    .svgBoxInner2{
+        width: 100%;
+        height: auto;
+        min-height: 500px;
+    }
+    #fireCnt{width: 100%; height: 200px;}
+    #fireAmount{width: 100%; height: 200px;}
 }
