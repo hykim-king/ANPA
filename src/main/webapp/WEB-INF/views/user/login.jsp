@@ -208,10 +208,10 @@
                 <button type="submit" class="btn btn-primary w-100" id="loginInfo">로그인</button>
             </div>
         </form>
-        <div class="text-center mt-3">
+        <!--  <div class="text-center mt-3">
             <a href="${CP}/user/findUserId.do" class="me-2">아이디 찾기</a> |
             <a href="${CP}/user/findUserPw.do" class="ms-2">비밀번호 찾기</a>
-        </div>
+        </div> -->
         <hr>
         <div class="info-message text-center">
             <p><strong>아직 회원이 아니신가요?</strong> <br>
