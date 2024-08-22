@@ -178,7 +178,7 @@ public class UserController implements PLog{
 		return jsonString;
 	}	
     
-    // ID 중복 체크 
+    // EMAIL 중복 체크 
     @RequestMapping(value = "/emailDuplicateCheck.do", method = RequestMethod.GET)
     @ResponseBody
     public String emailDuplicateCheck(Member inVO) throws SQLException {
@@ -198,8 +198,8 @@ public class UserController implements PLog{
 		
 		return jsonString;
 	}	
-    
-    
+
+	
     // ID 찾기 페이지 이동
     @RequestMapping(value = "/findUserId.do", method = RequestMethod.GET)
     public String findIDPage() {
