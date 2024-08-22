@@ -1,3 +1,5 @@
+<%@page import="com.acorn.anpa.cmn.StringUtil"%>
+<%@page import="com.acorn.anpa.cmn.Search"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
@@ -37,10 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
     //이벤트
     doDelAnswerClick();
     doUpdateAnswerClick();
-    answerBtn.addEventListener("click", function(event){
-        event.stopPropagation();
-        doSaveAnswer();
-    });
+    if(answerBtn != null){
+	    answerBtn.addEventListener("click", function(event){
+	        event.stopPropagation();
+	        doSaveAnswer();
+	    });    	
+    }
     
     doDeleteBtn.addEventListener("click", function(event){
         event.stopPropagation();
@@ -92,12 +96,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
+                        doRetrieve(url, 1);
                     }else{
                         alert("에러발생 : "+data.messageContents);
                     }
                     
                 }catch(e){
-                     alert("예외발생 : 개발자에게 문의 요망");     
+                     alert("댓글삭제 예외발생 : 개발자에게 문의 요망");     
                 }
                 
             }
@@ -150,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
+                        doRetrieve(url, 1);
                     }else{
                         alert("에러: "+data.messageContents);
                     }
@@ -190,12 +196,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
+                        doRetrieve(url, 1);
                     }else{
                         alert("에러: "+data.messageContents);
                     }
                     
                 }catch(e){
-                     alert("data를 확인 하세요.");     
+                     alert("댓글 등록 예외 발생 : 개발자한테 문의하세요");     
                 }
                 
             }
@@ -228,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                 }catch(e){
-                     alert("data를 확인 하세요.");     
+                     alert("게시글 삭제 예외 입니다 : 개발자에게 문의 요망");     
                 }
                 
             }
@@ -277,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                 }catch(e){
-                     alert("data를 확인 하세요.");     
+                     alert("게시글 수정 예외 입니다 : 개발자에게 문의 요망");     
                 }
                 
             }
@@ -285,14 +292,155 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
     }
+    
+let url = '/ehr/board/doAnswerAjax.do';
+let maxNum = '${list[0].totalCnt}';
+doRetrieve(url, 1);    
 });   
+//페이징
+function doRetrieve(url, pageNo){
+    const boardSeq = "${board.boardSeq}";
+    const table = document.querySelector('#answerTable thead');
+    
+    let type= "GET";  
+    let async = "true";
+    let dataType = "json";
+    
+    let params = {
+        'pageNo' : pageNo,
+        "pageSize" : "10",
+        "searchWord" : boardSeq
+    }
+    
+    PClass.pAjax(url,params,dataType,type,async,function(data){
+        let html = '';
+        if(isEmpty(data) === false){
+            try{
+                console.log(data);
+                data.forEach(function(item){
+                	console.log(item);
+                	console.log(item.modId);
+                    if(item.modId == "${user.userId}"){  	
+                    html += '<tr><th class="answerSeq d-none">';
+                    html += item.answerSeq;
+                    html += '</th><th class="table-dark col-md-2 text-center" style="vertical-align: middle;">';
+                    html += item.modId;
+                    html += '</th><td class="col-md-7"><p class="col-md-12 m-0 answerCon"><textarea class="form-control answerContents2">';
+                    html += item.contents;
+                    html += '</textarea></p><div class="col-md-auto m-0 mt-2" style="float : right;"><button class="btn btn-secondary">수정</button><button class="btn btn-danger">삭제</button></div></td><td class="col-md-1 text-center" style="vertical-align: middle;">';
+                    html += item.modDt;
+                    html += '</td></tr>';
+                    }else{
+                    html += '<tr><th class="table-dark col-md-2" style="vertical-align: middle;">';
+                    html += item.modId;
+                    html += '</th><td class="col-md-7"><p class="col-md-12 m-0 answerCon">';
+                    html += item.contents;
+                    html += '</p></td><td class="col-md-1 text-center" style="vertical-align: middle;">';
+                    html += item.modDt;
+                    html += '</td></tr>';
+                    }          
+                });//for
+                maxNum = data[0].totalCnt;   
+                table.innerHTML = html;
+                renderingPaging(maxNum, 1, 10, 10, url, 'doRetrieve');
+            }catch(e){
+                 console.log("data를 확인 하세요.");     
+                 alert("data를 확인 하세요.");     
+            }
+            table.innerHTML = html;
+            renderingPaging(maxNum, pageNo,10,10, url, 'doRetrieve');
+        }else{
+            html = '<tr><td class="text-center" colspan="99" >댓글이 없습니다</td></tr>';
+            table.innerHTML = html;
+            renderingPaging(maxNum, pageNo,10,10, url, 'doRetrieve');
+        }
+        
+    });  
+}
+
+function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scriptName){
+    const pagenation = document.querySelector('#page-selection');    
+    let html = '';
+    pagenation.innerHTML = '';
+
+    // 페이지 계산
+    let maxPageNo = Math.ceil(maxNum / rowPerPage);
+    let startPageNo = Math.floor((currentPageNo - 1) / bottomCount) * bottomCount + 1;
+    let endPageNo = Math.min(startPageNo + bottomCount - 1, maxPageNo);
+
+    let nowBlocNo = Math.floor((currentPageNo - 1) / bottomCount) + 1;
+    let maxBlockNo = Math.ceil(maxPageNo / bottomCount);
+
+    // 페이징 HTML 생성
+    html += '<ul class="pagination justify-content-center">';
+
+    // <<
+    if (nowBlocNo > 1 && nowBlocNo <= maxBlockNo) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', 1);">`;
+        html += '<span aria-hidden="true">&laquo;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    // <
+    if (startPageNo > 1) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${startPageNo - bottomCount});">`;
+        html += '<span aria-hidden="true">&lt;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    // 1 2 3 ... 10
+    for (let inx = startPageNo; inx <= maxPageNo && inx <= endPageNo; inx++) {
+        if (inx === currentPageNo) {
+            html += '<li class="page-item">';
+            html += '<a class="page-link active" href="#">';
+            html += inx;
+            html += '</a>';
+            html += '</li>';
+        } else {
+            html += '<li class="page-item">';
+            html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${inx});">`;
+            html += inx;
+            html += '</a>';
+            html += '</li>';
+        }
+    }
+
+    // >
+    if (maxPageNo > endPageNo) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${endPageNo + 1});">`;
+        html += '<span aria-hidden="true">&gt;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    // >>
+    if (maxPageNo > endPageNo) {
+        html += '<li class="page-item">';
+        html += `<a class="page-link" href="javascript:\${scriptName}('\${url}', \${maxPageNo});">`;
+        html += '<span aria-hidden="true">&raquo;</span>';
+        html += '</a>';
+        html += '</li>';
+    }
+
+    html += '</ul>';
+    pagenation.innerHTML = html;
+}
 </script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
-
 <section class="board_info content content2 content3 align-items-center">
-    <h3>공지사항</h3>
+    <h3>
+    공지사항
+	${search}
+	${user}
+	${board.boardSeq}
+    </h3>
     <div class="d-flex justify-content-end">             
         <p class="table-btn btn btn-success" id="moveList">목록</p>                
     </div>
@@ -354,7 +502,23 @@ document.addEventListener('DOMContentLoaded', function() {
     </c:choose>
     
     <table class="table table-bordered" id="answerTable">
-		<!-- boardSeq 값을 변수에 저장 -->
+        <thead></thead>
+        <tbody>
+	        <c:if test="${user != null}">       
+	        <tr>
+	            <th class="table-dark col-md-2 text-center" colspan="3">댓글 등록</th>   
+	        </tr>
+	        <tr>
+	            <td class="col-md-12" colspan="3"><textarea class="form-control answerContents"></textarea></td>    
+	        </tr>
+	        <tr>
+	            <td class="col-md-12" colspan="3">
+	                <p id="answerBtn" class="table-btn btn btn-success answerBtn">등록</p>
+	            </td>    
+	        </tr>
+	        </c:if>
+        </tbody>
+		<%-- <!-- boardSeq 값을 변수에 저장 -->
 		<c:set var="boardSeq" value="${board.boardSeq}" />
 		
 		<!-- list 배열에서 boardSeq와 일치하는 항목만 출력 -->
@@ -370,9 +534,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		                        <p class="col-md-12 m-0 answerCon">
 		                          <textarea class="form-control answerContents2">${answer.contents}</textarea>
 		                        </p>
-		                        <div class="col-md-auto m-0" style="float : right;">
-		                            <button class="btn btn-danger">삭제</button>
+		                        <div class="col-md-auto m-0 mt-2" style="float : right;">
 		                            <button class="btn btn-secondary">수정</button>
+		                            <button class="btn btn-danger">삭제</button>
 		                        </div>
 		                    </td>           
 		                    <td class="col-md-1 text-center" style="vertical-align: middle;">${answer.modDt}</td>           
@@ -402,8 +566,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			    <p id="answerBtn" class="table-btn btn btn-success answerBtn">등록</p>
 			</td>    
         </tr>
-        </c:if>
+        </c:if> --%>
     </table>
+    
+    <!-- pagenation -->
+    <div class="text-center" style="margin : 20px auto;">
+        <div id="page-selection" class="text-center page">
+        
+        </div>
+    </div>
+    <!--// pagenation -->
 </section>
 <script>
     var simplemde = new SimpleMDE({ element: document.getElementById("contents")})

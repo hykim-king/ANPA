@@ -765,7 +765,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <table id="manageDataTable" class="table table-bordered full-width-table">
             <thead>
                 <tr>
-                    <th class="align-middle"><input id="checkAll" type="checkbox"></th>
+                    <th class="align-middle" data-label="전체 체크"><input id="checkAll" type="checkbox"></th>
                     <th class="align-middle d-none" id="fireSeq"></th>
                     <th class="align-middle">날짜</th>
                     <th class="align-middle">총 사상자</th>
@@ -785,19 +785,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 <c:when test="${list.size() >0 }">
                     <c:forEach var="item" items="${list}">
 	                <tr>
-	                    <td class="align-middle checkbox"><input type="checkbox" class="chk"></td>
-                        <td class="align-middle">${item.regDt}</td>
+	                    <td class="align-middle checkbox" data-label="체크박스"><input type="checkbox" class="chk"></td>
+                        <td class="align-middle" data-label="날짜">${item.regDt}</td>
 	                    <td class="align-middle d-none fireSeqTd"><input type="password" value="${item.fireSeq}"></td>
-	                    <td class="align-middle">${item.injuredSum}</td>
-	                    <td class="align-middle">${item.dead}</td>
-	                    <td class="align-middle">${item.injured}</td>
-	                    <td class="align-middle">${item.subFactorBigNm} - ${item.subFactorMidNm}</td>
-	                    <td class="align-middle">${item.subLocBigNm} - ${item.subLocMidNm}</td>
-	                    <td class="align-middle">${item.subCityBigNm} ${item.subCityMidNm}</td>
-	                    <td class="align-middle">${item.regId}</td>
+	                    <td class="align-middle" data-label="사상자">${item.injuredSum}</td>
+	                    <td class="align-middle" data-label="사망자">${item.dead}</td>
+	                    <td class="align-middle" data-label="부상자">${item.injured}</td>
+	                    <td class="align-middle" data-label="화재요인">${item.subFactorBigNm} - ${item.subFactorMidNm}</td>
+	                    <td class="align-middle" data-label="화재장소">${item.subLocBigNm} - ${item.subLocMidNm}</td>
+	                    <td class="align-middle" data-label="화재지역">${item.subCityBigNm} ${item.subCityMidNm}</td>
+	                    <td class="align-middle" data-label="등록자">${item.regId}</td>
 	                    <td class="align-middle d-none">${item.modDt}</td>
 	                    <td class="align-middle d-none">${item.modId}</td>
-	                    <td class="align-middle"><button class="btn btn-secondary">수정</button></td>
+	                    <td class="align-middle" data-label="수정"><button class="btn btn-secondary">수정</button></td>
 	                </tr>     
 	                </c:forEach>
                 </c:when>
@@ -841,9 +841,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- form -->
 <div class = "popup popupHide">
 <form action="#" name="frmDataUpdate" id="frmDataUpdate" class="form-horizontal">
-  <div class="row m-0 mb-2">
-      <div class="col-sm-10"></div>
-      <div class="col-sm-2">
+  <div class="row m-0">
+      <div class="col-sm-12 p-0">
         <button class="btn btn-danger" id="frmUpCloseBtn" type="button">X</button>
       </div>
   </div>
@@ -855,31 +854,23 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
   
   <div class="row m-0 mb-2">
-      <label for="injuredSum" class="col-sm-3 col-form-label">사상자</label>
-      <div class="col-sm-auto">
-        <input type="number" class="form-control" name="injuredSum" id="injuredSum"   required="required">
-      </div> 
+      <label for="injuredSum" class="pLabel col-sm-3 col-form-label">사상자</label>
+      <input type="number" class="pInput form-control" name="injuredSum" id="injuredSum"   required="required">
   </div>
   
   <div class="row m-0 mb-2">
-      <label for="dead" class="col-sm-3 col-form-label">사망자</label>
-      <div class="col-sm-auto">
-        <input type="number" class="form-control" name="dead" id="dead" required="required">
-      </div>  
+      <label for="dead" class="pLabel col-sm-3 col-form-label">사망자</label>
+      <input type="number" class="pInput form-control" name="dead" id="dead" required="required">
   </div>  
   
   <div class="row m-0 mb-2">
-      <label for="injured" class="col-sm-3 col-form-label">부상자</label>
-      <div class="col-sm-auto">
-        <input type="number" class="form-control" name="injured" id="injured" required="required">
-      </div> 
+      <label for="injured" class="pLabel col-sm-3 col-form-label">부상자</label>
+      <input type="number" class="pInput form-control" name="injured" id="injured" required="required">
   </div>
   
   <div class="row m-0 mb-2">
-      <label for="amount" class="col-sm-3 col-form-label">피해금액 (단위 : 천원)</label>
-      <div class="col-sm-auto">
-        <input type="number" class="form-control" name="amount" id="amount" required="required">
-      </div> 
+      <label for="amount" class="pLabel col-sm-3 col-form-label">피해금액 (단위 : 천원)</label>
+      <input type="number" class="pInput form-control" name="amount" id="amount" required="required">
   </div>    
   
   <div class="row m-0 mb-2">
@@ -929,8 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
 
   <div class="row m-0 mb-2">
-      <div class="col-sm-10"></div>
-      <div class="col-sm-2">
+      <div class="col-sm-12 p-0">
         <button class="btn btn-success" id="frmUpdateBtn" type="button">수정</button>
         <button class="btn btn-success" id="frmSaveBtn" type="button">저장</button>
       </div>

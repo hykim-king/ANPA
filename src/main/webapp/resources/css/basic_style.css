@@ -223,6 +223,7 @@ body *{
         padding: 20px 7%;
         min-height: 700px;
     }
+    .user-info{display: none;}
 }
 .content{
     width: 100%;

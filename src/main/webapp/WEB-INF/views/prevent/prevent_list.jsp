@@ -23,17 +23,18 @@
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function() {
 
-    const test = "${search}";
-    console.log(test);
-    // .nav 클래스의 3번째 .nav-item의 자식 .nav-link를 선택합니다
-    const firstNavLink = document.querySelector('.nav .nav-item:nth-child(3) .nav-link');
+		const test = "${search}";
+		console.log(test);
+		// .nav 클래스의 3번째 .nav-item의 자식 .nav-link를 선택합니다
+		const firstNavLink = document
+				.querySelector('.nav .nav-item:nth-child(3) .nav-link');
 
-    // 선택한 요소에 "active" 클래스를 추가합니다
-    firstNavLink.classList.add('active');
-    
-});
+		// 선택한 요소에 "active" 클래스를 추가합니다
+		firstNavLink.classList.add('active');
+
+	});
 </script>
 <style>
 body {
@@ -201,11 +202,18 @@ h1 {
 									<img src="<c:url value='/resources/img/${vo.imgSrc}'/>"
 									alt="이미지">
 								</a>
-								<h4>${vo.title}</h4>
+								<!-- 제목 링크 색상 및 스타일 변경 -->
+								<h4>
+									<a
+										href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>"
+										style="color: black; text-decoration: none;"> ${vo.title}
+									</a>
+								</h4>
 								<p>${vo.contents}</p>
-								<p>${vo.modDt}조회수: ${vo.readCnt}</p>
+								<p>${vo.modDt}조회수:${vo.readCnt}</p>
 							</div>
 						</c:forEach>
+
 					</c:when>
 					<c:otherwise>
 						<p>검색 결과가 없습니다.</p>

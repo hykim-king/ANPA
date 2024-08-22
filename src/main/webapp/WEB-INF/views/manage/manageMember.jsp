@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <table id="manageDataTable" class="table table-bordered full-width-table">
             <thead>
                 <tr>
-                    <th class="align-middle"><input id="checkAll" type="checkbox"></th>
+                    <th class="align-middle" data-label="전체 체크"><input id="checkAll" type="checkbox"></th>
                     <th class="align-middle" id = "userId">아이디</th>
                     <th class="align-middle">이름</th>
                     <th class="align-middle">이메일</th>
@@ -205,12 +205,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 <c:when test="${list.size() >0 }">
                     <c:forEach var="item" items="${list}">
 	                <tr>
-	                    <td class="align-middle checkbox"><input type="checkbox" class="chk"></td>
-	                    <td class="align-middle userIdTd">${item.userId}</td>
-	                    <td class="align-middle">${item.userName}</td>
-	                    <td class="align-middle">${item.email}</td>
-	                    <td class="align-middle">${item.adminYnNm}</td>
-	                    <td class="align-middle">
+	                    <td class="align-middle checkbox" data-label="체크박스"><input type="checkbox" class="chk"></td>
+	                    <td class="align-middle userIdTd" data-label="아이디">${item.userId}</td>
+	                    <td class="align-middle" data-label="이름">${item.userName}</td>
+	                    <td class="align-middle" data-label="이메일">${item.email}</td>
+	                    <td class="align-middle" data-label="관리자여부">${item.adminYnNm}</td>
+	                    <td class="align-middle" data-label="거주지">
 	                        <c:choose>
 							    <c:when test="${empty item.subCityBnm}">
 							        없음
@@ -220,8 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
 							    </c:otherwise>
 							</c:choose>
                         </td>
-	                    <td class="align-middle">${item.tel}</td>
-	                    <td class="align-middle">${item.regDt}</td>
+	                    <td class="align-middle" data-label="전화번호">${item.tel}</td>
+	                    <td class="align-middle" data-label="가입일">${item.regDt}</td>
 	                </tr>     
 	                </c:forEach>
                 </c:when>

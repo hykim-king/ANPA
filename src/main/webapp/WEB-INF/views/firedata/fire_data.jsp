@@ -22,11 +22,11 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    /* // .nav 클래스의 첫 번째 .nav-item의 자식 .nav-link를 선택합니다
+    // .nav 클래스의 첫 번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:first-child .nav-link');
 
     // 선택한 요소에 "active" 클래스를 추가합니다
-    firstNavLink.classList.add('active'); */
+    firstNavLink.classList.add('active');
     
     //화재 요인 버튼
     const factorBtn = document.querySelector('#factor');

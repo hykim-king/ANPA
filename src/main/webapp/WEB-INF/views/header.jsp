@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function(){
                         console.log(message);
                         if (message.messageId === 1) { // 로그아웃 성공
                             alert(message.messageContents);
-                            window.location.href = "/ehr/main/index.do"; // 메인 페이지로 리다이렉트
+                            window.location.replace("/ehr/main/index.do"); // 메인 페이지로 리다이렉트
                         } else {
                             alert(message.messageContents); // 오류 메시지 출력
                         }
@@ -78,23 +78,23 @@ document.addEventListener("DOMContentLoaded", function(){
             <img src="${CP}/resources/img/logo_x.png" alt="#logo">
             </a>
         </div>
-        <!-- 네비게이션 바 시작 -->
+        <!-- 네비게이션 바 시작 -->        
         <ul class="nav nav-tabs text-center justify-content-center">
             <li class="nav-item d-flex justify-content-center align-items-center">
-                <a class="nav-link" aria-current="page" href="${CP}/monthfiredata/monthFireData.do">화재 통계</a>
+                <a class="nav-link" aria-current="page" href="/ehr/firedata/firedata.do">화재 통계</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-                <a class="nav-link" href="#">화재 현황</a>
+                <a class="nav-link" href="/ehr/monthfiredata/monthFireData.do">화재 현황</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-                <a class="nav-link" href="#">화재 예방법</a>
+                <a class="nav-link" href="/ehr/prevent/doRetrieve.do">화재 예방법</a>
             </li>
             <li class="nav-item dropdown d-flex justify-content-center align-items-center">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">알림마당</a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">공지사항</a></li>
+                    <li><a class="dropdown-item" href="/ehr/board/20.do">공지사항</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#">건의사항</a></li>
+                    <li><a class="dropdown-item" href="/ehr/board/10.do">건의사항</a></li>
                 </ul>
             </li>
         </ul>
