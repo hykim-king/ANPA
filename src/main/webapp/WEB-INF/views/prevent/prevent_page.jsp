@@ -45,6 +45,13 @@
         color: #666;
         line-height: 1.6;
     }
+    .content-section img {
+        display: block;
+        margin: 0 auto;
+        width: 80%;
+        height: auto;
+        margin-bottom: 10px;
+    }
     .content-footer {
         display: flex;
         justify-content: space-between;
@@ -80,7 +87,8 @@
         <p><strong>제목:</strong> ${vo.title}</p>
         <p><strong>작성일:</strong> ${vo.regDt} | <strong>조회수:</strong> ${vo.readCnt}</p>
         <hr>
-        <img src="<c:url value='/resources/page/${vo.contents}'/>" alt="예방법 이미지" style="width: 100%; height: auto; margin-bottom: 20px;">
+        <!-- 중앙 정렬된 이미지 -->
+        <img src="<c:url value='/resources/page/${vo.contents}'/>" alt="예방법 이미지">
     </section>
 
     <div class="content-footer">
