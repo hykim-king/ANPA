@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +51,74 @@ public class UserController implements PLog{
 		log.debug("└────────────────────────────────────────┘");
 	}
 
+	//회원정보수정
+	@RequestMapping(
+			value = "/doUpdate.do",
+			method = RequestMethod.POST,
+			produces = "text/plain;charset=UTF-8"
+			)
+	@ResponseBody
+	public String doUpdate(Model model, Member inVO) throws Exception {
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ doUpdate()");
+		log.debug("└──────────────────────────────────────────────");	
+		log.debug("param user : " + inVO);
+		
+		String jsonString = "";
+		int flag = userService.doUpdate(inVO);
+		log.debug("flag : " + flag);
+		
+		String message = "";
+		
+		if(1==flag) {
+			message = inVO.getUserId() + " 님 정보 수정이 완료되었습니다.";
+		}else {
+			message = inVO.getUserId() + " 님 정보 수정을 실패하였습니다.";			
+		}
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		jsonString = gson.toJson(new Message(flag, message));
+		
+		log.debug("3. jsonString : " + jsonString);
+		
+		return jsonString;
+	}
+	
+	//회원정보 조회
+	@GetMapping("/doSelectOne.do") 
+	public String doSelectOne(Model model, HttpServletRequest req) throws SQLException{
+		log.debug("┌──────────────────────────────────────────────");
+		log.debug("│ doSelectOne()");
+		log.debug("└──────────────────────────────────────────────");	
+		
+		String viewName = "user/userUpdate";
+		Member inVO = new Member();
+		
+		// HttpSession 객체를 얻어오기
+	    HttpSession session = req.getSession(false); // false: 세션이 존재하지 않으면 새로 생성하지 않음
+	    // 로그인 사용자 정보 가져오기
+	    if (session != null) {
+	    	inVO = (Member) session.getAttribute("user");    
+	    	log.debug("inVO: "+inVO);
+	    }
+
+    	Code code = new Code();
+    	// 모델에 튜닝 시군구 코드
+		code.setMasterCode("city");
+		List<Code> cityCode = codeService.doRetrieve(code);
+		model.addAttribute("cityCode", cityCode);
+		
+	    //회원 조회
+	    Member outVO = userService.doSelectOne(inVO);
+	    log.debug("outVO : " + outVO);
+
+	    // 모델에 데이터 추가
+	    model.addAttribute("outVO", outVO);
+
+	    return viewName;
+		
+	}
+		
     // 로그인 페이지 이동
     @RequestMapping(value = "/login.do", method = RequestMethod.GET)
     public String loginPage() {

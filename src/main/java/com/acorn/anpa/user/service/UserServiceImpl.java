@@ -218,5 +218,41 @@ public class UserServiceImpl implements UserService, PLog {
         log.debug("Deleting all members.");
         userMapper.deleteAll();
     }
+	
+	@Override
+	public int doUpdate(Member inVO) throws SQLException {
+		log.debug("1. param : " + inVO);	
+		int flag = this.userMapper.doUpdate(inVO);
+		log.debug("2. flag : " + flag);
+		
+		return flag;
+	}
+
+	@Override
+	public Member doSelectOne(Member inVO) throws SQLException {
+		log.debug("1. param : " + inVO);	
+		Member outVO = this.userMapper.doSelectOne(inVO);
+		log.debug("2. outVO : " + outVO);
+		
+		return outVO;
+	}
+
+	@Override
+	public int doDelete(Member inVO) throws SQLException {
+		log.debug("1. param : " + inVO);	
+		int flag = this.userMapper.doUpdate(inVO);
+		log.debug("2. flag : " + flag);
+		
+		return flag;
+	}
+
+	@Override
+	public int doSave(Member inVO) throws SQLException {
+		log.debug("1. param : " + inVO);	
+		int flag = this.userMapper.doUpdate(inVO);
+		log.debug("2. flag : " + flag);
+		
+		return flag;
+	}
 
 }

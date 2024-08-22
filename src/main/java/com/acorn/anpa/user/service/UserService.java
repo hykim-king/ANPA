@@ -6,6 +6,38 @@ import com.acorn.anpa.member.domain.Member;
 public interface UserService {
 
 	/**
+	 * 회원정보수정
+	 * @param inVO
+	 * @return
+	 * @throws SQLException
+	 */
+	int doUpdate(Member inVO) throws SQLException;
+	
+	/**
+	 * 회원정보 조회
+	 * @param inVO
+	 * @return
+	 * @throws SQLException
+	 */
+	Member doSelectOne(Member inVO) throws SQLException;
+	
+	/**
+	 * 단건 삭제
+	 * @param user
+	 * @return 1(성공)/0(실패)
+	 * @throws SQLException
+	 */
+	int doDelete(Member inVO) throws SQLException;
+	
+	/**
+	 * 단건 등록
+	 * @param user
+	 * @return 1(성공)/0(실패)
+	 * @throws SQLException
+	 */
+	int doSave(Member inVO) throws SQLException;
+	
+	/**
 	 * 로그인
 	 * 
 	 * @param userId
