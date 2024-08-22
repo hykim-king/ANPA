@@ -31,110 +31,112 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     // header end
     
-    // 함수 시작
-    // 서브 차트 함수 시작    
-    const monFireCnt00 = parseFloat("${monthFrData00.monthFireCount}"); // 현재 
-    const monFireCnt01 = parseFloat("${monthFrData01.monthFireCount}"); // 1달전 
-    const monFireCnt02 = parseFloat("${monthFrData02.monthFireCount}"); // 2달전 
-    const monFireCnt03 = parseFloat("${monthFrData03.monthFireCount}"); // 3달전 
-    const monFireCnt04 = parseFloat("${monthFrData04.monthFireCount}"); // 4달전
-    const monFireCnt05 = parseFloat("${monthFrData05.monthFireCount}"); // 5달전 
-    const monFireCnt06 = parseFloat("${monthFrData06.monthFireCount}"); // 6달전
+    // 함수 시작    
+    function updateGraph2(){
+        // 서브 차트 함수 시작    
+        const monFireCnt00 = parseFloat("${monthFrData00.monthFireCount}"); // 현재 
+        const monFireCnt01 = parseFloat("${monthFrData01.monthFireCount}"); // 1달전 
+        const monFireCnt02 = parseFloat("${monthFrData02.monthFireCount}"); // 2달전 
+        const monFireCnt03 = parseFloat("${monthFrData03.monthFireCount}"); // 3달전 
+        const monFireCnt04 = parseFloat("${monthFrData04.monthFireCount}"); // 4달전
+        const monFireCnt05 = parseFloat("${monthFrData05.monthFireCount}"); // 5달전 
+        const monFireCnt06 = parseFloat("${monthFrData06.monthFireCount}"); // 6달전
 
-    const lyFireCnt00 = parseFloat("${monthFrData00.lastYearMonthFireCount}"); // 1년전 
-    const lyFireCnt01 = parseFloat("${monthFrData01.lastYearMonthFireCount}"); // 1년 1달전 
-    const lyFireCnt02 = parseFloat("${monthFrData02.lastYearMonthFireCount}"); // 1년 2달전 
-    const lyFireCnt03 = parseFloat("${monthFrData03.lastYearMonthFireCount}"); // 1년 3달전 
-    const lyFireCnt04 = parseFloat("${monthFrData04.lastYearMonthFireCount}"); // 1년 4달전
-    const lyFireCnt05 = parseFloat("${monthFrData05.lastYearMonthFireCount}"); // 1년 5달전 
-    const lyFireCnt06 = parseFloat("${monthFrData06.lastYearMonthFireCount}"); // 1년 6달전
-    
- // 데이터 포인트를 정의하는 함수
-    function getMarkerSymbol(value, data) {
-        var highest = Math.max.apply(Math, data);
-        return value === highest ? 'url(${CP}/resources/img/fire.png)' : 'circle';
+        const lyFireCnt00 = parseFloat("${monthFrData00.lastYearMonthFireCount}"); // 1년전 
+        const lyFireCnt01 = parseFloat("${monthFrData01.lastYearMonthFireCount}"); // 1년 1달전 
+        const lyFireCnt02 = parseFloat("${monthFrData02.lastYearMonthFireCount}"); // 1년 2달전 
+        const lyFireCnt03 = parseFloat("${monthFrData03.lastYearMonthFireCount}"); // 1년 3달전 
+        const lyFireCnt04 = parseFloat("${monthFrData04.lastYearMonthFireCount}"); // 1년 4달전
+        const lyFireCnt05 = parseFloat("${monthFrData05.lastYearMonthFireCount}"); // 1년 5달전 
+        const lyFireCnt06 = parseFloat("${monthFrData06.lastYearMonthFireCount}"); // 1년 6달전
+    	
+        // 데이터 포인트를 정의하는 함수
+        function getMarkerSymbol(value, data) {
+            var highest = Math.max.apply(Math, data);
+            return value === highest ? 'url(${CP}/resources/img/fire.png)' : 'circle';
+        }
+
+        // 데이터 포인트를 배열로 설정
+        const lyFireCnts = [lyFireCnt06, lyFireCnt05, lyFireCnt04, lyFireCnt03, lyFireCnt02, lyFireCnt01, lyFireCnt00];
+        const monFireCnts = [monFireCnt06, monFireCnt05, monFireCnt04, monFireCnt03, monFireCnt02, monFireCnt01, monFireCnt00];
+        
+	    Highcharts.chart('graphBox2', {
+	        chart: {
+	            type: 'spline'
+	        },
+	        title: {
+	            text: null
+	        },
+	        subtitle: {
+	            text: null
+	        },
+	        xAxis: {
+	            categories: [
+	                '6달전(현재)/6달전(작년)', '5달전(현재)/5달전(작년)', '4달전(현재)/4달전(작년)', '3달전(현재)/3달전(작년)', '2달전(현재)/2달전(작년)', '1달전(현재)/1달전(작년)', '오늘(현재)/작년의 오늘'
+	            ],
+	            accessibility: {
+	                description: 'Months of the year'
+	            }
+	        },
+	        yAxis: {
+	            title: {
+	                text: '화재건수 (현재/작년)'
+	            },
+	            labels: {
+	                overflow: 'justify',
+	                formatter: function () {
+	                    // y축 레이블을 천 단위로 쉼표를 넣어 표시
+	                    return Highcharts.numberFormat(this.value, 0, '.', ',');
+	                }
+	            }
+	        },
+	        tooltip: {
+	            crosshairs: true,
+	            shared: true
+	        },
+	        plotOptions: {
+	            spline: {
+	                marker: {
+	                    radius: 4,
+	                    lineColor: '#666666',
+	                    lineWidth: 1
+	                }
+	            }
+	        },
+	        credits: {
+	            enabled: false
+	        },
+	        series: [{
+	            name: '현재 - 6개월전',
+	            data: monFireCnts.map(function (value) {
+	                return {
+	                    y: value,
+	                    marker: {
+	                        symbol: getMarkerSymbol(value, monFireCnts)
+	                    }
+	                };
+	            }),
+	            color: '#ff6161',
+	            dataLabels: {
+	                enabled: true
+	            }
+	        }, {
+	            name: '1년전의 오늘 - 6개월전(작년기준)',
+	            data: lyFireCnts.map(function (value) {
+	                return {
+	                    y: value,
+	                    marker: {
+	                        symbol: getMarkerSymbol(value, lyFireCnts)
+	                    }
+	                };
+	            }),
+	            color: '#4f81bd',
+	            dataLabels: {
+	                enabled: true
+	            }
+	        }]
+	    });        
     }
-
-    // 데이터 포인트를 배열로 설정
-    const lyFireCnts = [lyFireCnt06, lyFireCnt05, lyFireCnt04, lyFireCnt03, lyFireCnt02, lyFireCnt01, lyFireCnt00];
-    const monFireCnts = [monFireCnt06, monFireCnt05, monFireCnt04, monFireCnt03, monFireCnt02, monFireCnt01, monFireCnt00];
-    
-    Highcharts.chart('graphBox2', {
-        chart: {
-            type: 'spline'
-        },
-        title: {
-            text: null
-        },
-        subtitle: {
-            text: null
-        },
-        xAxis: {
-            categories: [
-                '6달전(현재)/6달전(작년)', '5달전(현재)/5달전(작년)', '4달전(현재)/4달전(작년)', '3달전(현재)/3달전(작년)', '2달전(현재)/2달전(작년)', '1달전(현재)/1달전(작년)', '오늘(현재)/작년의 오늘'
-            ],
-            accessibility: {
-                description: 'Months of the year'
-            }
-        },
-        yAxis: {
-            title: {
-                text: '화재건수 (현재/작년)'
-            },
-            labels: {
-                overflow: 'justify',
-                formatter: function () {
-                    // y축 레이블을 천 단위로 쉼표를 넣어 표시
-                    return Highcharts.numberFormat(this.value, 0, '.', ',');
-                }
-            }
-        },
-        tooltip: {
-            crosshairs: true,
-            shared: true
-        },
-        plotOptions: {
-            spline: {
-                marker: {
-                    radius: 4,
-                    lineColor: '#666666',
-                    lineWidth: 1
-                }
-            }
-        },
-        credits: {
-            enabled: false
-        },
-        series: [{
-            name: '현재 - 6개월전',
-            data: monFireCnts.map(function (value) {
-                return {
-                    y: value,
-                    marker: {
-                        symbol: getMarkerSymbol(value, monFireCnts)
-                    }
-                };
-            }),
-            color: '#ff6161',
-            dataLabels: {
-                enabled: true
-            }
-        }, {
-            name: '1년전의 오늘 - 6개월전(작년기준)',
-            data: lyFireCnts.map(function (value) {
-                return {
-                    y: value,
-                    marker: {
-                        symbol: getMarkerSymbol(value, lyFireCnts)
-                    }
-                };
-            }),
-            color: '#4f81bd',
-            dataLabels: {
-                enabled: true
-            }
-        }]
-    });
     // 서브 차트 함수 끝
     
     sessionStorage.removeItem("tFCntSess"); // 삭제
@@ -171,6 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     	if (todayFireCount != tFCntSessValue) {							
 	                    	updateMainTitleBox(todayFireCount, todayInjured, todayAmount);
 	                    	updateGraph(todayFireCount, todayInjured, todayAmount, monthFireCount, monthInjured, monthAmount);
+	                    	updateGraph2();
 						}else{
 							console.log("nothing to happen");
 						}

@@ -66,5 +66,11 @@ public class CodeServiceImpl implements CodeService,PLog{
 		
 		return codeMapper.codeList(search);
 	}
+
+	@Override
+	public List<Code> doMstCode(Code code) throws SQLException {
+		// TODO Auto-generated method stub
+		return codeMapper.doMstCode(code);
+	}
 	
 }

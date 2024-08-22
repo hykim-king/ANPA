@@ -262,19 +262,19 @@ public class ManageController implements PLog{
 		Code code = new Code();
 		// 모델에 튜닝 장소 코드
 		code.setMasterCode("location");
-		List<Code> locCode = codeService.doRetrieve(code);
+		List<Code> locCode = codeService.doMstCode(code);
 		model.addAttribute("LocCode", locCode);
 		// 모델에 튜닝 장소 코드
 		
 		// 모델에 튜닝 시군구 코드
 		code.setMasterCode("city");
-		List<Code> cityCode = codeService.doRetrieve(code);
+		List<Code> cityCode = codeService.doMstCode(code);
 		model.addAttribute("cityCode", cityCode);
 		// 모델에 튜닝 시군구 코드
 		
 		// 모델에 튜닝 화재요인 코드
 		code.setMasterCode("factor");
-		List<Code> factorCode = codeService.doRetrieve(code);
+		List<Code> factorCode = codeService.doMstCode(code);
 		model.addAttribute("factorCode", factorCode);
 		// 모델에 튜닝 화재요인 코드
 		

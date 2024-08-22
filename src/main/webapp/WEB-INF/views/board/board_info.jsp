@@ -435,12 +435,7 @@ function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scrip
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <section class="board_info content content2 content3 align-items-center">
-    <h3>
-    공지사항
-	${search}
-	${user}
-	${board.boardSeq}
-    </h3>
+    <h3>공지사항</h3>
     <div class="d-flex justify-content-end">             
         <p class="table-btn btn btn-success" id="moveList">목록</p>                
     </div>

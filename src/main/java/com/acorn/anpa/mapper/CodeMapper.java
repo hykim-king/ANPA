@@ -28,4 +28,11 @@ public interface CodeMapper extends WorkDiv<Code> {
 	 */
 	List<Code> codeList(Search search) throws SQLException;
 	
+	/**
+	 * 
+	 * @param code
+	 * @return
+	 * @throws SQLException
+	 */
+	List<Code> doMstCode(Code code) throws SQLException;	
 }
