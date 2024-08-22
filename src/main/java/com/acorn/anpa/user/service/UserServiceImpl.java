@@ -115,7 +115,6 @@ public class UserServiceImpl implements UserService, PLog {
 			log.debug("name : "+name);
 			
 			flag = userMapper.findPassword(member);
-			
 			StringBuilder sb = new StringBuilder(100); //메일 내용
 			String password = ""; //초기화 비밀번호
 			String title = ""; //메일 제목
@@ -138,19 +137,21 @@ public class UserServiceImpl implements UserService, PLog {
 				sb.append("\n");
 				sb.append("감사합니다,\n");
 				sb.append("ANPA 팀\n");
+			
+			
+				String contents = sb.toString();
+				log.debug("contents : "+contents);
+				
+				member.setPassword(password);
+				int flagPw = userMapper.passwordUpdate(member);
+				
+				if(flagPw == 1) {
+					sendEmail(title, contents, userEmail);
+				}
+			
 			}
 			
-			String contents = sb.toString();
-			log.debug("contents : "+contents);
-			
-			member.setPassword(password);
-			int flagPw = userMapper.passwordUpdate(member);
-			
-			if(flagPw == 1) {
-				sendEmail(title, contents, userEmail);
-			}
-			
-			return flagPw;
+			return flag;
 		}
 		
 		//비밀번호 찾기 메일 전송
