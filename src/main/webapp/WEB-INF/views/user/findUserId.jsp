@@ -19,7 +19,7 @@
  <title>ANPA | 아이디 찾기</title>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-    const findIdBtn = document.querySelector("#findUserId"); // 버튼의 ID 수정
+    const findIdBtn = document.querySelector("#findUserId"); 
     const userNameInput = document.querySelector("#userName");
     const telInput = document.querySelector("#tel");
     const emailInput = document.querySelector("#email"); 
