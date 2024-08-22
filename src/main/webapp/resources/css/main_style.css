@@ -42,7 +42,7 @@
 .main_sub_title{
     left : 30px;
     bottom: 50px;
-    font-size: 15px;
+    font-size: 20px;
 }
 .main_fd1{animation: fadeAndSlideUp 0.5s ease forwards;}
 .main_fd2{animation: fadeAndSlideUp 0.5s ease .5s forwards;}

@@ -201,8 +201,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const mainTitleBox = document.querySelector('.main_title_box');
 
         const contentHTML =
-        '<p class="main_title">' + '대한민국의 미래 ANPA가 함께합니다' + '</p>' +
-        '<p class="main_sub_title">' + 'ANPA 시스템을 소개합니다' + '</p>' +
+        '<p class="main_title">' + '작은 대비가 큰 안전을 만듭니다!' + '</p>' +
+        '<p class="main_sub_title">' + '안녕하세요 안전파수꾼입니다' + '</p>' +
         '<p class="main_fd1">화재건수 : ' + todayFireCount + '</p>' +
         '<p class="main_fd2">인명피해 : ' + todayInjured + '</p>' +
         '<p class="main_fd3">재산피해 : ' + formattedTodayAmount + ' (단위 : 천원)' + '</p>'
