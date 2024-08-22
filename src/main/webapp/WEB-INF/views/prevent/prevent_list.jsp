@@ -42,14 +42,7 @@ body {
     margin: 0;
 }
 
-.container {
-    width: 80%;
-    margin: 50px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+
 
 h1 {
     text-align: center;
@@ -154,10 +147,10 @@ h1 {
     </script>
 
     <jsp:include page="/WEB-INF/views/header.jsp" />
-    <div class="container">
+    
         <!-- 제목 -->
         <section
-            class="board_con content content2 content3 align-items-center">
+           class="board_con content content2 content3 align-items-center">
             <h3>화재예방법</h3>
             <!-- 검색 폼 -->
             <form action="${CP}/prevent/search.do" method="get"
