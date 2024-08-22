@@ -67,11 +67,11 @@ public class UserController implements PLog{
 
 		String loginMessage = "";
 		if (10 == checkCount) {
-			loginMessage = "잘못된 아이디 입니다!";
+			loginMessage = "아이디가 일치하지 않습니다";
 		} else if (20 == checkCount) {
-			loginMessage = "잘못된 비밀번호 입니다!";
+			loginMessage = "비밀번호가 일치하지 않습니다";
 		} else if (30 == checkCount) {
-			loginMessage = "아이디 및 비번일치!";
+			loginMessage = "아이디 및 비밀번호가 일치합니다!";
 
 			// 회원정보
 			Member member = userService.loginInfo(inVO);
@@ -100,7 +100,7 @@ public class UserController implements PLog{
 		if( null != httpSession.getAttribute("user")) {
 			httpSession.invalidate();
 					
-			loginOutMessage = "로그아웃 되었습니다.";
+			loginOutMessage = "로그아웃이 완료되었습니다";
 			flag = 1;
 		}
 		
@@ -142,7 +142,7 @@ public class UserController implements PLog{
 		String message = "";
 
 		if (1 == flag) {
-			message = member.getUserId() + " 님 안전파수꾼 가입을 환영합니다!";
+			message = member.getUserId() + " 님 안전파수꾼 회원이 되신 것을 환영합니다!";
 		} else {
 			message = member.getUserId() + " 님 회원가입에 실패하였습니다";
 		}
@@ -219,11 +219,11 @@ public class UserController implements PLog{
     	    int flag;
 
     	    if (foundUserId != null && !foundUserId.isEmpty()) {
-    	        message = "회원님의 아이디는 " + foundUserId + "입니다.";
-    	        flag = 1;  // 성공
+    	        message = "회원님의 아이디는☛" + foundUserId + "☚입니다.";
+    	        flag = 1;  
     	    } else {
-    	        message = "해당 정보와 일치하는 아이디가 없습니다.";
-    	        flag = 0;  // 실패
+    	        message = "해당 정보와 일치하는 아이디가 없습니다";
+    	        flag = 0;  
     	    }
 
     	    Message messageObj = new Message(flag, message);
@@ -237,7 +237,7 @@ public class UserController implements PLog{
     // 비밀번호 찾기 페이지 이동
     @RequestMapping(value = "/findUserPw.do", method = RequestMethod.GET)
     public String findPwPage() {
-        return "user/findUserPw"; // findPw.jsp로 이동
+        return "user/findUserPw"; 
     }
     
     // 비밀번호 찾기 처리
@@ -251,9 +251,9 @@ public class UserController implements PLog{
 	    String message;
 
 	    if (flag == 1) {
-	        message = "비밀번호 초기화 완료! 이메일을 확인하시고, 새로운 비밀번호를 사용하여 로그인해 주세요.";
+	        message = "입력하신 이메일 주소로 임시 비밀번호가 전송되었습니다!";
 	    } else {
-	        message = "해당 정보와 일치하는 아이디가 없습니다.";
+	        message = "해당 정보와 일치하는 비밀번호가 없습니다";
 	    }
 
 	    Message messageObj = new Message(flag, message);

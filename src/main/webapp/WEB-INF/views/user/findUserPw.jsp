@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 if (data && data.messageContents) {
                     resultDiv.innerHTML = "<p><strong>"+data.messageContents+"</strong></p><a href='${CP}/user/login.do' class='btn btn-primary w-100'>로그인</a>";
                 } else {
-                    resultDiv.innerHTML = `<p>비밀번호를 찾을 수 없습니다. 입력한 정보가 일치하지 않을 수 있습니다.</p>`;
+                    resultDiv.innerHTML = `<p>입력한 정보중, 일치하지 않는 항목이 있습니다.</p>`;
                 }
             },
             error: function(xhr, status, error) {
