@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
+                        window.history.go(0);
                     }else{
                         alert("에러발생 : "+data.messageContents);
                     }
@@ -150,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
+                        window.history.go(0);
                     }else{
                         alert("에러: "+data.messageContents);
                     }
@@ -190,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
+                        window.history.go(0);
                     }else{
                         alert("에러: "+data.messageContents);
                     }
@@ -370,9 +373,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		                        <p class="col-md-12 m-0 answerCon">
 		                          <textarea class="form-control answerContents2">${answer.contents}</textarea>
 		                        </p>
-		                        <div class="col-md-auto m-0" style="float : right;">
-		                            <button class="btn btn-danger">삭제</button>
+		                        <div class="col-md-auto m-0 mt-2" style="float : right;">
 		                            <button class="btn btn-secondary">수정</button>
+		                            <button class="btn btn-danger">삭제</button>
 		                        </div>
 		                    </td>           
 		                    <td class="col-md-1 text-center" style="vertical-align: middle;">${answer.modDt}</td>           

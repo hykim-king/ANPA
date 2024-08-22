@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </form>
         
-        <div class="col-md-1 d-flex">
+        <div class="col-md-auto d-flex">
             <button id="searchBtn" type="button" class="btn btn-dark mt-3">
                 <i class="bi bi-search"></i>
             </button>
