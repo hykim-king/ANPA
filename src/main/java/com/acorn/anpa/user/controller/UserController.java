@@ -83,7 +83,7 @@ public class UserController implements PLog{
 		Message message = new Message(checkCount, loginMessage);
 
 		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(message);
-		log.debug("3.jsonString:" + jsonString);
+		log.debug("1.jsonString:" + jsonString);
 
 		return jsonString;
 	}
@@ -106,7 +106,7 @@ public class UserController implements PLog{
 		
 		Message message=new Message(flag, loginOutMessage);
 		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(message);
-		log.debug("3.jsonString:" + jsonString);		
+		log.debug("1.jsonString:" + jsonString);		
 		
 		return jsonString;
     }
@@ -172,7 +172,28 @@ public class UserController implements PLog{
 			message =  inVO.getUserId()+" 아이디 중복체크가 완료되었습니다!";
 		}
 		jsonString = new Gson().toJson(new Message(flag, message));
-		log.debug("3.jsonString:" + jsonString);
+		log.debug("2.jsonString:" + jsonString);
+		
+		
+		return jsonString;
+	}	
+    
+    // ID 중복 체크 
+    @RequestMapping(value = "/emailDuplicateCheck.do", method = RequestMethod.GET)
+    @ResponseBody
+    public String emailDuplicateCheck(Member inVO) throws SQLException {
+    	String jsonString = "";
+		log.debug("1. param: " + inVO);
+		
+		int flag = userService.emailDuplicateCheck(inVO);
+		String message = "";
+		if(1==flag) {
+			message =  inVO.getEmail()+" 사용 불가 이메일입니다";
+		}else {
+			message =  inVO.getEmail()+" 이메일 중복체크가 완료되었습니다!";
+		}
+		jsonString = new Gson().toJson(new Message(flag, message));
+		log.debug("2.jsonString:" + jsonString);
 		
 		
 		return jsonString;
@@ -186,7 +207,7 @@ public class UserController implements PLog{
     }
 
     // ID 찾기 처리
-    @PostMapping("/findUserId.do")
+    @RequestMapping(value ="/findUserId.do", method = RequestMethod.POST)
     @ResponseBody
     public String findUserId(Member inVO) throws SQLException {
 
@@ -208,16 +229,39 @@ public class UserController implements PLog{
     	    Message messageObj = new Message(flag, message);
     	    String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
 
-    	    log.debug("3. jsonString: " + jsonString);
+    	    log.debug("2. jsonString: " + jsonString);
 
     	    return jsonString;
     }
-
     
     // 비밀번호 찾기 페이지 이동
     @RequestMapping(value = "/findUserPw.do", method = RequestMethod.GET)
     public String findPwPage() {
         return "user/findUserPw"; // findPw.jsp로 이동
+    }
+    
+    // 비밀번호 찾기 처리
+    @PostMapping("/findPassword.do")
+    @ResponseBody
+    public String findPassword(Member inVO) throws SQLException {
+    	log.debug("1. param: " + inVO);
+
+	    // 사용자 비밀번호 초기화
+	 	int flag = userService.findPassword(inVO);
+	    String message;
+
+	    if (flag == 1) {
+	        message = "비밀번호 초기화 완료! 이메일을 확인하시고, 새로운 비밀번호를 사용하여 로그인해 주세요.";
+	    } else {
+	        message = "해당 정보와 일치하는 아이디가 없습니다.";
+	    }
+
+	    Message messageObj = new Message(flag, message);
+	    String jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(messageObj);
+
+	    log.debug("3. jsonString: " + jsonString);
+
+	    return jsonString;
     }
 
     // 비밀번호 찾기 처리

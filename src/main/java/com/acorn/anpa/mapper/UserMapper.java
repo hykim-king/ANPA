@@ -64,6 +64,14 @@ public interface UserMapper extends WorkDiv<Member> {
 	 * @throws SQLException
 	 */
 	int idDuplicateCheck(Member inVO) throws SQLException;
+	
+	/**
+	 * email중복 체크 
+	 * @param inVO
+	 * @return 1(사용불가)/0(사용가능)
+	 * @throws SQLException
+	 */
+	int emailDuplicateCheck(Member inVO) throws SQLException;
 
 
 	/**
@@ -75,9 +83,9 @@ public interface UserMapper extends WorkDiv<Member> {
 	 * @return String
 	 * @throws SQLException
 	 */
-	String findUserId(Member inVO) throws SQLException;
+	String findUserId(Member member) throws SQLException;
 		
-   /**
+	 /**
 	 * 비밀번호 찾기
 	 * 
 	 * @param userId
@@ -86,7 +94,15 @@ public interface UserMapper extends WorkDiv<Member> {
 	 * @return String
 	 * @throws SQLException
 	 */
-	String findPassword(Member inVO) throws SQLException;	 
+	int findPassword(Member inVO) throws SQLException;	
+	
+	/**
+	 * 비밀번호 초기화
+	 * @param inVO
+	 * @return
+	 * @throws SQLException
+	 */
+	int passwordUpdate(Member inVO) throws SQLException;	
 
 	/**
 	 * 모든 회원 정보 삭제 (테스트용)

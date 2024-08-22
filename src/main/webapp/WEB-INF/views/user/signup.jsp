@@ -24,6 +24,7 @@
         const cBselect = document.querySelector("#cBselect");
         const cMselect = document.querySelector("#cMselect");
         let idDuplicatedClick = 0; // 변수 초기화
+        let emailDuplicatedClick = 0; // 변수 초기화
         
         cBselect.addEventListener("change",function(){
             cityCodeSet("", cBselect, cMselect);        
@@ -106,6 +107,47 @@
                 error: function(xhr, status, error) {
                     console.error("아이디 중복체크 오류 발생: " + error);
                     alert("아이디 중복체크 오류 발생: " + error);
+                }
+            });
+        }
+        
+        // 이메일 중복 체크
+        $("#emailDuplicateCheck").on("click", function(event){
+            event.preventDefault(); 
+            emailDuplicateCheck();
+        });
+
+        function emailDuplicateCheck(){
+            let emailInput = $("#email").val();
+
+            if(isEmpty(emailInput)){
+                alert("이메일을 입력하세요.");
+                $("#email").focus();
+                return;
+            }
+
+            let url = "${CP}/user/emailDuplicateCheck.do";
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                data: { "email": emailInput },
+                dataType: "json",
+                success: function(data) {
+                    if(data){
+                        if(data.messageId === 1){ 
+                            alert(data.messageContents); // 사용 불가
+                            $("#email").focus();
+                            emailDuplicatedClick = 0;
+                        }else{ // 사용 가능
+                            alert(data.messageContents);
+                            emailDuplicatedClick = 1;
+                        }  
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("이메일 중복체크 오류 발생: " + error);
+                    alert("이메일 중복체크 오류 발생: " + error);
                 }
             });
         }
@@ -195,6 +237,12 @@
             if (!emailPattern.test($("#email").val())) {
                 alert("유효한 이메일 주소를 입력하세요.");
                 $("#email").focus();
+                return;
+            }
+            
+            if(emailDuplicatedClick === 0){
+                alert("이메일 중복 체크를 하세요.");
+                $("#emailDuplicateCheck").focus();
                 return;
             }
             
@@ -331,6 +379,7 @@
         }
         .form-group {
             margin-bottom: 25px;
+            position: relative;
         }
         .form-control, .form-select {
             border: 1px solid #ccc;
@@ -444,14 +493,17 @@
             <div class="form-group d-flex align-items-center">
                 <input type="text" class="form-control" id="userId" name="userId" 
                        placeholder="아이디"  maxlength="20" required="required">
-                <button type="button" class="btn-check-duplicate ms-2" id="idDuplicateCheck">id 중복 체크</button>
+                <button type="button" class="btn-check-duplicate ms-2" id="idDuplicateCheck">id 체크</button>
             </div>
-            <div class="form-group d-flex align-items-center checkbox-group">
-                <input type="email" class="form-control" id="email" name="email" 
-                       placeholder="이메일"  maxlength="320" required="required">
-                <input type="checkbox" id="emailYn" name="emailYn">
-                <label for="emailYn">수신동의</label>
-            </div>
+            <div class="form-group d-flex align-items-center">
+			    <input type="email" class="form-control" id="email" name="email" 
+			           placeholder="이메일" maxlength="320" required="required">
+			    <button type="button" class="btn-check-duplicate ms-2" id="emailDuplicateCheck">email 체크</button>
+			</div>
+			<div class="form-group d-flex align-items-center checkbox-group mt-2">
+			    <input type="checkbox" id="emailYn" name="emailYn">
+			    <label for="emailYn">이메일 수신동의</label>
+			</div>
             <div class="form-group">
                 <input type="tel" class="form-control" id="tel" name="tel" 
                        placeholder="전화번호"  maxlength="15" required="required">

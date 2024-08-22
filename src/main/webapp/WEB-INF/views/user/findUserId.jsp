@@ -7,35 +7,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="UTF-8">
 <head>
-    <!-- 파비콘 추가 -->
-    <link rel="icon" type="image/x-icon" href="${CP}/resources/img/favicon.ico">
-    <link rel="stylesheet" href="${CP}/resources/css/bootstrap.css">
-    <!-- bootstrap icon -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- 기본 스타일 -->
-    <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
-    <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <title>ANPA | 아이디 찾기</title>
+ <!-- 파비콘 추가 -->
+ <link rel="icon" type="image/x-icon" href="${CP}/resources/img/favicon.ico">
+ <link rel="stylesheet" href="${CP}/resources/css/bootstrap.css">
+ <!-- bootstrap icon -->
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+ <!-- 기본 스타일 -->
+ <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
+ <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
+ <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+ <title>ANPA | 아이디 찾기</title>
 <script>
-    document.addEventListener("DOMContentLoaded", function(){
-	    const findIdBtn = document.querySelector("#findId");
-	    const userNameInput = document.querySelector("#userName");
-	    const telInput = document.querySelector("#tel");
-	    const emailInput = document.querySelector("#email"); 
-	    const resultDiv = document.querySelector("#result");
-	    
-	    const form = document.querySelector("form");
-	    form.addEventListener("submit", function(event) {
-	        event.preventDefault();
-	        findUserId(); 
+document.addEventListener("DOMContentLoaded", function(){
+    const findIdBtn = document.querySelector("#findUserId"); // 버튼의 ID 수정
+    const userNameInput = document.querySelector("#userName");
+    const telInput = document.querySelector("#tel");
+    const emailInput = document.querySelector("#email"); 
+    const resultDiv = document.querySelector("#result");
+    
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        findUserId(); 
     });
     
-    //전화번호 000-1234-5678 형식으로 입력
     function formatPhoneNumber(value) {
-        // 숫자만 추출
         value = value.replace(/\D/g, '');
-        
         if (value.length < 4) return value;
         if (value.length < 7) return value.slice(0, 3) + '-' + value.slice(3);
         return value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
@@ -46,18 +43,16 @@
         $(this).val(formattedValue);
     });
 
-    // backspace와 delete 키 처리
     $('#tel').on('keydown', function(event) {
         const key = event.key;
         const cursorPos = this.selectionStart;
         const currentValue = $(this).val();
         
-        // backspace 또는 delete 키가 눌린 경우는 포맷을 적용하지 않음
         if (key === 'Backspace' || key === 'Delete') {
             if (key === 'Backspace' && currentValue[cursorPos - 1] === '-') {
-                this.setSelectionRange(cursorPos - 1, cursorPos - 1); // 하이픈을 넘어 커서 이동
+                this.setSelectionRange(cursorPos - 1, cursorPos - 1);
             } else if (key === 'Delete' && currentValue[cursorPos] === '-') {
-                this.setSelectionRange(cursorPos + 1, cursorPos + 1); // 하이픈을 넘어 커서 이동
+                this.setSelectionRange(cursorPos + 1, cursorPos + 1);
             }
         }
     });
@@ -81,32 +76,28 @@
             return;
         }       
 
-        let type= "POST";  
-        let url = "/ehr/user/findUserId.do";
-        let dataType = "json";  
-        let async = true;
-        let params = {  
-            "userName": userNameInput.value.trim(),
-            "tel": telInput.value.trim(),
-            "email": emailInput.value.trim()     
-        };        
-        
         $.ajax({
-            type: type,
-            url: url,
-            data: params,
-            dataType: dataType,
-            async: async,
+            type: "POST",
+            url: "/ehr/user/findUserId.do",
+            data: {
+                userName: userNameInput.value.trim(),
+                tel: telInput.value.trim(),
+                email: emailInput.value.trim()
+            },
+            dataType: "json",
             success: function (data) {
-                if (data.success) {  // 아이디 찾기 성공
-                    resultDiv.innerHTML = `<p>찾으신 아이디는: <strong>${data.userId}</strong></p><a href="${CP}/user/login.do" class="btn btn-primary w-100">로그인</a>`;
-                } else {  // 아이디 찾기 실패
-                    resultDiv.innerHTML = `<p>일치하지 않은 항목이 있습니다.</p>`;
+                console.log("Server response:", data);
+                
+                if (data && data.messageContents) {
+                    resultDiv.innerHTML = "<p><strong>"+data.messageContents+"</strong></p><a href='${CP}/user/login.do' class='btn btn-primary w-100'>로그인</a>";
+                } else {
+                    resultDiv.innerHTML = `<p>아이디를 찾을 수 없습니다. 입력한 정보가 일치하지 않을 수 있습니다.</p>`;
                 }
             },
             error: function(xhr, status, error) {
                 resultDiv.innerHTML = `<p>아이디 찾기 처리 중 오류가 발생했습니다.</p>`;
                 console.error("Error: " + error);
+                console.log("Response Text: ", xhr.responseText);
             }
         });
     }

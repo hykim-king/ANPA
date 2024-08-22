@@ -48,6 +48,14 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	int idDuplicateCheck(Member inVO) throws SQLException;
+	
+	/**
+	 * email중복 체크 
+	 * @param inVO
+	 * @return 1(사용불가)/0(사용가능)
+	 * @throws SQLException
+	 */
+	int emailDuplicateCheck(Member inVO) throws SQLException;
 
 	 /**
      * 아이디 찾기
@@ -57,9 +65,9 @@ public interface UserService {
      * @return String 찾은 아이디
      * @throws SQLException
      */
-	String findUserId(Member inVO) throws SQLException;
+	String findUserId(Member member) throws SQLException;
 
-    /**
+	/**
      * 비밀번호 찾기
      * - 사용자 ID, 이름, 이메일을 기반으로 비밀번호를 찾음
      * @param userId
@@ -68,7 +76,15 @@ public interface UserService {
      * @return String 찾은 비밀번호(보안상 권장되지 않음)
      * @throws SQLException
      */
-	String findPassword(Member inVO) throws SQLException;
+	int findPassword(Member inVO) throws SQLException;
+	
+	/**
+	 * 비밀번호 초기화
+	 * @param inVO
+	 * @return
+	 * @throws SQLException
+	 */
+	int passwordUpdate(Member inVO) throws SQLException;
 	
     /**
      * 모든 회원 삭제 (테스트 용도)

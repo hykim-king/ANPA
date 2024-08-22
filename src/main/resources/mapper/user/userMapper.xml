@@ -86,6 +86,13 @@
         WHERE user_id = #{userId}
     </select>
     
+     <!-- 이메일 중복 체크 -->
+    <select id="emailDuplicateCheck" parameterType="Member" resultType="int">
+        SELECT COUNT(*)
+        FROM member
+        WHERE email = #{email}
+    </select>
+    
     <!-- 아이디 찾기 -->
 	<select id="findUserId" parameterType="Member" resultType="String">
 	    SELECT user_id AS userId
@@ -96,16 +103,24 @@
 	</select>
 	
 	<!-- 비밀번호 찾기 -->
-	<select id="findPassword" parameterType="Member" resultType="String">
-	    SELECT password
-	    FROM member
-	    WHERE user_id = #{userId}
-	      AND tel = #{tel}
-	      AND email = #{email}
-	      AND user_name = #{userName}      
-	</select>
+    <select id="findPassword" parameterType="Member" resultType="int">
+        SELECT COUNT(*)
+        FROM member
+        WHERE user_id = #{userId}
+          AND tel = #{tel}
+          AND email = #{email}
+          AND user_name = #{userName}      
+    </select>
+    
+    <update id="passwordUpdate" parameterType="Member">
+        UPDATE member
+        SET
+            password  = #{password},
+            mod_dt    = SYSDATE
+        WHERE user_id = #{userId}
+    </update>
 
-    <!-- 모든 데이터 삭제 (테스트 용도) -->
+    <!-- 모든 데이터 삭제 (테스트용) -->
     <delete id="deleteAll">
         DELETE FROM member
     </delete>
