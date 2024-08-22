@@ -203,12 +203,12 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 //페이징
 function doRetrieve(url, pageNo){
-	const pageSize = document.querySelector('#pageSize'); 
-	const searchDiv = document.querySelector('#searchDiv'); 
-	const searchWordInput = document.querySelector('#searchWord');
-	const table = document.querySelector('#boardTable tbody');
-	let DivValue = '${search.getDiv()}';
-	let maxNum = '';
+    const pageSize = document.querySelector('#pageSize'); 
+    const searchDiv = document.querySelector('#searchDiv'); 
+    const searchWordInput = document.querySelector('#searchWord');
+    const table = document.querySelector('#boardTable tbody');
+    let DivValue = '${search.getDiv()}';
+    let maxNum = '';
     
     let type= "GET";  
     let async = "true";

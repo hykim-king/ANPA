@@ -202,6 +202,23 @@ public class BoardController implements PLog{
 		return jsonString;
 	}
 	
+	@RequestMapping(value = "/doAnswerAjax.do"
+			, method = RequestMethod.GET
+			, produces = "text/plain;charset=UTF-8") // produces:																					// encoding
+	@ResponseBody
+	public String doAnswerAjax(Search search) throws SQLException {
+		log.debug("search : " + search);
+		String jsonString = "";
+		
+		List<Answer> list = answerService.doRetrieve(search);
+		log.debug("list : " + list);
+			
+		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(list);
+		log.debug("3.jsonString:" + jsonString);
+		
+		return jsonString;
+	}
+	
 	@GetMapping(value = "/doSelectOne.do")
 	public String doSelectOne(Model model, HttpServletRequest req) throws SQLException {
 	    String viewName = "board/board_info";
@@ -226,9 +243,9 @@ public class BoardController implements PLog{
 
 
 		Search search = new Search();
-
 		search.setSearchWord(boardSeq + "");
 		List<Answer> list = answerService.doRetrieve(search);
+		model.addAttribute("search", search);
 		model.addAttribute("list", list);
 		
 	    // 게시글 조회
