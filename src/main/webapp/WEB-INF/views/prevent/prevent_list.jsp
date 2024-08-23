@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>화재 예방법 - ANPA</title>
+<title>ANPA | 화재 예방법</title>
 <!-- 파비콘 추가 -->
 <link rel="icon" type="image/x-icon"
     href="${CP}/resources/img/favicon.ico">
@@ -24,9 +24,9 @@
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
         const test = "${search}";
         console.log(test);
+
         // .nav 클래스의 3번째 .nav-item의 자식 .nav-link를 선택합니다
         const firstNavLink = document
                 .querySelector('.nav .nav-item:nth-child(3) .nav-link');
@@ -34,8 +34,42 @@
         // 선택한 요소에 "active" 클래스를 추가합니다
         firstNavLink.classList.add('active');
 
+        // 검색어 입력 필드에서 Enter 키를 눌렀을 때 검색을 수행하는 이벤트 리스너 추가
+        const searchInput = document.querySelector("#searchWord");
+        searchInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // 기본 Enter 키 동작을 막음
+                document.querySelector("#doRetrieveBtn").click(); // 검색 버튼 클릭 이벤트 호출
+            }
+        });
+    });
+
+    function pageRetrieve(url, pageNo) {
+        const frm = document.querySelector("#preventFrm");
+        frm.pageNo.value = pageNo;
+        console.log("pageNo: " + pageNo);
+
+        frm.action = url;
+        frm.submit();
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        const doRetrieveBtn = document.querySelector("#doRetrieveBtn");
+        doRetrieveBtn.addEventListener("click", function(event) {
+            event.stopPropagation();
+            doRetrieve();
+        });
+
+        function doRetrieve() {
+            console.log("doRetrieve()");
+            const frm = document.querySelector("#preventFrm");
+
+            frm.action = "/ehr/prevent/doRetrieve.do";
+            frm.submit();
+        }
     });
 </script>
+
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -46,12 +80,10 @@ h1 {
     text-align: center;
     margin-bottom: 20px;
 }
-
-/* 카드 리스트 크기 20% 줄이기 */
 .card-list {
     display: grid;
-    grid-template-columns: repeat(5, minmax(80px, 1fr)); /* 카드 크기 줄이기 */
-    gap: 10px; /* 카드 간격 조정 */
+    grid-template-columns: repeat(5, minmax(80px, 1fr)); 
+    gap: 10px; 
 }
 
 .card {
@@ -106,49 +138,20 @@ h1 {
     color: white;
     border: 1px solid #4CAF50;
 }
-/* Custom Style for Search Button */
+
 .btn-custom {
-    background-color: #6c757d; /* Gray color */
+    background-color: #6c757d; 
     color: white;
     border: none;
 }
 
 .btn-custom:hover {
-    background-color: #5a6268; /* Darker gray on hover */
+    background-color: #5a6268; 
 }
 </style>
 </head>
 <body>
-    <script>
-        function pageRetrieve(url, pageNo) {
-            const frm = document.querySelector("#preventFrm");
-            frm.pageNo.value = pageNo;
-            console.log("pageNo: " + pageNo);
-
-            frm.action = url;
-            frm.submit();
-        }
-        document.addEventListener("DOMContentLoaded", function() {
-            const doRetrieveBtn = document.querySelector("#doRetrieveBtn");
-            doRetrieveBtn.addEventListener("click", function(event) {
-                event.stopPropagation();
-                doRetrieve();
-            });
-
-            function doRetrieve() {
-                console.log("doRetrieve()");
-                const frm = document.querySelector("#preventFrm");
-
-                frm.action = "/ehr/prevent/doRetrieve.do";
-                frm.submit();
-            }
-        });
-        
-        
-    </script>
-
-    <jsp:include page="/WEB-INF/views/header.jsp" />
-    
+      <jsp:include page="/WEB-INF/views/header.jsp" />    
         <!-- 제목 -->
         <section
            class="board_con content content2 content3 align-items-center">
@@ -157,14 +160,6 @@ h1 {
             <form action="${CP}/prevent/search.do" method="get"
                 class="row g-2 align-items-center mb-4" id="preventFrm">
                 <input type="text" class="d-none" id="pageNo" name="pageNo">
-<%--                 <div class="col-sm-auto">
-                    <select class="form-select" name="searchDiv" id="searchDiv">
-                        <c:forEach var="item" items="${BOARD_SEARCH}">
-                            <option value="${item.subCode}"
-                                <c:if test="${item.subCode == search.searchDiv}">selected</c:if>>${item.midList}</option>
-                        </c:forEach>
-                    </select>
-                </div> --%>
                 <div class="col-sm-auto">
                     <select class="form-select" name="searchDiv" id="searchDiv">
                        <option value="10" selected>제목</option>
@@ -184,47 +179,42 @@ h1 {
             <div class="page-info mb-4">
                 <span>전체 ${totalCnt}건</span>,     <span>${currentPage}/${totalPages}페이지</span>
             </div>
-
             <!-- 카드 리스트 -->
             <div class="card-list">
                 <c:choose>
                     <c:when test="${list.size() > 0}">
                         <c:forEach var="vo" items="${list}">
                            <div class="card">
-        <p class="d-none">
-            <a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>">${vo.preventSeq}</a>
-        </p>
-        <!-- 이미지에 대한 링크 -->
-        <a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>">
-            <img src="<c:url value='/resources/img/${vo.imgSrc}'/>" alt="이미지">
-        </a>
-        <!-- 제목 링크 색상 및 스타일 변경 -->
-        <h4>
-            <a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>"
-               style="color: black; text-decoration: none;"> 
-               ${vo.title}
-            </a>
-        </h4>
-      <br>
-        <p style="font-size: 0.9em;">작성일: ${vo.modDt}  &nbsp; &nbsp; &nbsp;&nbsp; 조회수: ${vo.readCnt}</p>
-    </div>
-</c:forEach>
-
+                            <p class="d-none">
+                                <a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>">${vo.preventSeq}</a>
+                            </p>
+                            <!-- 이미지에 대한 링크 -->
+                            <a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>">
+                                <img src="<c:url value='/resources/img/${vo.imgSrc}'/>" alt="이미지">
+                            </a>
+                            <!-- 제목 링크 색상 및 스타일 변경 -->
+                            <h4>
+                                <a href="<c:url value='/prevent/doSelectOne.do?preventSeq=${vo.preventSeq}'/>"
+                                   style="color: black; text-decoration: none;"> 
+                                   ${vo.title}
+                                </a>
+                            </h4>
+                          <br>
+                            <p style="font-size: 0.9em;">작성일: ${vo.modDt}  &nbsp; &nbsp; &nbsp;&nbsp; 조회수: ${vo.readCnt}</p>
+                        </div>
+                    </c:forEach>
                     </c:when>
                     <c:otherwise>
                         <p>검색 결과가 없습니다.</p>
                     </c:otherwise>
                 </c:choose>
             </div>
-
-
             <!-- pagenation -->
             <div class="text-center">
                 <div id="page-selection" class="text-center page">
                     <%
                         //총글수 :
                     int maxNum = (int) request.getAttribute("totalCnt");
-
                     Search search = (Search) request.getAttribute("search");
                     //페이지 번호:
                     int currentPageNo = search.getPageNo();
@@ -232,10 +222,8 @@ h1 {
                     int rowPerPage = search.getPageSize();
                     //바닥글 :
                     int bottomCount = search.BOTTOM_COUNT;
-
                     String url = "/ehr/prevent/doRetrieve.do";
                     String scriptName = "pageRetrieve";
-
                     out.print(StringUtil.renderingPaging(maxNum, currentPageNo, rowPerPage, bottomCount, url, scriptName));
                     %>
                 </div>
