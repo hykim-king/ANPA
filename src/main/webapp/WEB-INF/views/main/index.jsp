@@ -25,11 +25,40 @@ document.addEventListener('DOMContentLoaded', function() {
 	
     // header start
     const appMenus = document.querySelector('.appmenu');    
+    const houseFireBtn = document.querySelector('#houseFire');    
+    const elecFireBtn = document.querySelector('#elecFire'); 
+    const carFireBtn = document.querySelector('#carFire');
+    const cigaFireBtn = document.querySelector('#cigaFire');
     
     appMenus.addEventListener('click', function(){
         console.log("상단 앱 메뉴 클릭");
     });
     // header end
+    
+    //주택화재 예방요령 바로가기
+    houseFireBtn.addEventListener('click', function(){
+        console.log("houseFireBtn click:"+houseFireBtn);
+    	event.stopPropagation(); // 이벤트 버블링 방지        
+    	window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=413";
+    });
+    //전기화재 예방요령 바로가기
+    elecFireBtn.addEventListener('click', function(){
+        console.log("elecFireBtn click:"+elecFireBtn);
+        event.stopPropagation(); // 이벤트 버블링 방지        
+        window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=412";
+    });    
+    //전기화재 예방요령 바로가기
+    elecFireBtn.addEventListener('click', function(){
+        console.log("elecFireBtn click:"+elecFireBtn);
+        event.stopPropagation(); // 이벤트 버블링 방지        
+        window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=419";
+    });
+    //차량화재 예방요령 바로가기
+    cigaFireBtn.addEventListener('click', function(){
+        console.log("elecFireBtn click:"+elecFireBtn);
+        event.stopPropagation(); // 이벤트 버블링 방지        
+        window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=411";
+    });
     
     // 함수 시작    
     function updateGraph2(){
@@ -446,30 +475,30 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="preventBox container-fluid">
         <div class="m-0 mt-3 p-0">
             <div class="card">
-                <strong>소화기 사용요령</strong>
-                <span>User Guide of Fire<br>Extinguisher</span>
-                <button class="btn btn-danger">바로가기 +</button>
+                <strong>주택화재 예방요령</strong>
+                <span>Home Fire Prevention Tips</span>
+                <button class="btn btn-danger" id="houseFire">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
-				심폐소생술 행동 요령
+				전기화재 예방요령
                 </strong>
-                <span>How to Perform CPR</span>
-                <button class="btn btn-danger">바로가기 +</button>
+                <span>Electrical Fire Prevention Tips</span>
+                <button class="btn btn-danger" id="elecFire">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
-		                  자동 심장 충격기 행동요령
+		                  차량화재 예방요령
 				</strong>
-                <span>How to Perform<br>AED</span>
-                <button class="btn btn-danger">바로가기 +</button>
+                <span>Vehicle Fire Prevention Tips</span>
+                <button class="btn btn-danger" id="carFire">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
-				옥내소화전 사용방법
+				담뱃불화재 예방요령
                 </strong>
-                <span>Operation of<br> Fire Wall Cabinet</span>
-                <button class="btn btn-danger">바로가기 +</button>
+                <span>Cigarette Fire Prevention Tips</span>
+                <button class="btn btn-danger" id="cigaFire">바로가기 +</button>
             </div>
         </div>
     </div>
