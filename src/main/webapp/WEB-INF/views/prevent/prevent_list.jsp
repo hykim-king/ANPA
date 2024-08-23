@@ -139,13 +139,6 @@ h1 {
                 console.log("doRetrieve()");
                 const frm = document.querySelector("#preventFrm");
 
-                // 제목 필드가 비어있는지 확인
-                const searchWord = document.querySelector("#searchWord").value.trim();
-                if (searchWord === "") {
-                    alert("제목을 입력하세요");
-                    return;
-                }
-
                 frm.action = "/ehr/prevent/doRetrieve.do";
                 frm.submit();
             }
@@ -162,19 +155,27 @@ h1 {
             <form action="${CP}/prevent/search.do" method="get"
                 class="row g-2 align-items-center mb-4" id="preventFrm">
                 <input type="text" class="d-none" id="pageNo" name="pageNo">
-                <div class="col-sm-9">
+                <div class="col-sm-3">
+                    <select class="form-select" name="searchDiv" id="searchDiv">
+                        <c:forEach var="item" items="${BOARD_SEARCH}">
+                            <option value="${item.subCode}"
+                                <c:if test="${item.subCode == search.searchDiv}">selected</c:if>>${item.midList}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-sm-6">
                     <input type="search" name="searchWord" id="searchWord"
-                        class="form-control" placeholder="제목 검색" required>
+                        class="form-control" placeholder="검색어 입력" required>
                 </div>
                 <div class="col-sm-3">
                     <button id="doRetrieveBtn" type="button" class="btn btn-custom">
                         <i class="bi bi-search"></i> 검색
                     </button>
                 </div>
-            </form>
+                </form>
             <!-- 페이지 정보 -->
             <div class="page-info mb-4">
-                <span>전체 ${totalCnt}건</span>, <span>${currentPage}/${totalPages}페이지</span>
+                <span>전체 ${totalCnt}건</span>,     <span>${currentPage}/${totalPages}페이지</span>
             </div>
 
             <!-- 카드 리스트 -->
@@ -197,7 +198,7 @@ h1 {
                ${vo.title}
             </a>
         </h4>
-        <p>${vo.contents}</p>
+      <br>
         <p style="font-size: 0.9em;">작성일: ${vo.modDt}  &nbsp; &nbsp; &nbsp;&nbsp; 조회수: ${vo.readCnt}</p>
     </div>
 </c:forEach>
