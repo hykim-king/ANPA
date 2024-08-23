@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", function(){
     console.log("DOMContentLoaded");    
     const appmenuWrapBtn = document.querySelector("#appmenuWrapBtn");                 
     const appmenuWrap = document.querySelector(".appmenuWrap");                 
-    const appmenu = document.querySelector(".appmenu");                 
+    const appmenu = document.querySelector(".appmenu");      
+    const doSelectOneBtn = document.querySelector("#doSelectOne");  
     
     appmenuWrapBtn.addEventListener("click",function(event){
     	appmenuWrap.classList.toggle('hide');
@@ -21,7 +22,12 @@ document.addEventListener("DOMContentLoaded", function(){
     appmenu.addEventListener("click",function(event){
     	appmenuWrap.classList.toggle('hide');
         event.stopPropagation(); // 이벤트 버블링 방지        
-    });    
+    });
+    
+    doSelectOneBtn.addEventListener("click",function(event){
+        event.stopPropagation(); // 이벤트 버블링 방지        
+        window.location.href = "/ehr/user/doSelectOne.do";
+    });  
     
     if(document.querySelector(".logout-btn")){
         const logoutAnkers = document.querySelectorAll(".logout-btn");
@@ -67,6 +73,16 @@ document.addEventListener("DOMContentLoaded", function(){
     }    
 });
 </script>
+<style>
+    .user-name {
+        text-decoration: none; /* 기본 상태에서는 밑줄 없음 */
+        cursor: pointer;       /* 마우스를 올리면 커서가 포인터로 변경 */
+    }
+
+    .user-name:hover {
+        text-decoration: underline; /* 마우스를 올리면 밑줄이 생김 */
+    }
+</style>
 </head>
 <body>
 <header id="top_header">
@@ -104,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function(){
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
                 <div class="user-info">
-                    <span class="user-name">${sessionScope.user.userName}님</span>
+                    <span id=doSelectOne class="user-name">${sessionScope.user.userName}님</span>
                     <a id="logoutBtn" class="logout-btn">🔥 로그아웃</a>
                 </div>
             </c:when>

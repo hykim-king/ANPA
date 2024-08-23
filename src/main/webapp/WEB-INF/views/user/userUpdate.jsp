@@ -164,8 +164,9 @@ $(document).ready(function(){
                  try{
                      if(1 == message.messageId){    
                     	 console.log("message.messageId:"+message.messageId);
-                         alert(message.messageContents);
+                         //alert(message.messageContents);
                          window.location.href = "/ehr/main/index.do";
+                         alert("회원정보 수정이 완료되었습니다.");
                      }else{
                          alert(message.messageContents);
                      }
