@@ -42,17 +42,16 @@ body {
     margin: 0;
 }
 
-
-
 h1 {
     text-align: center;
     margin-bottom: 20px;
 }
 
+/* 카드 리스트 크기 20% 줄이기 */
 .card-list {
     display: grid;
-    grid-template-columns: repeat(5, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(5, minmax(80px, 1fr)); /* 카드 크기 줄이기 */
+    gap: 10px; /* 카드 간격 조정 */
 }
 
 .card {
@@ -156,17 +155,9 @@ h1 {
             <form action="${CP}/prevent/search.do" method="get"
                 class="row g-2 align-items-center mb-4" id="preventFrm">
                 <input type="text" class="d-none" id="pageNo" name="pageNo">
-                <div class="col-sm-3">
-                    <select class="form-select" name="searchDiv" id="searchDiv">
-                        <c:forEach var="item" items="${BOARD_SEARCH}">
-                            <option value="${item.subCode}"
-                                <c:if test="${item.subCode == search.searchDiv}">selected</c:if>>${item.midList}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="col-sm-6">
+                <div class="col-sm-9">
                     <input type="search" name="searchWord" id="searchWord"
-                        class="form-control" placeholder="검색어 입력" required>
+                        class="form-control" placeholder="제목 검색" required>
                 </div>
                 <div class="col-sm-3">
                     <button id="doRetrieveBtn" type="button" class="btn btn-custom">
