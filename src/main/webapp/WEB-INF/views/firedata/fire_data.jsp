@@ -47,7 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
     //시도,시군구
     const sido = document.querySelector('#sido');
     const sigungo = document.querySelector('#sigungo');
-    
+    //초기화
+    const resycleBtn = document.querySelector('#resycle');
     
     let div = '';
     let selectedText = '';
@@ -77,7 +78,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let searchDiv = '';
     
     //이벤트
+    
+    //초기화
+    resycleBtn.addEventListener("click",function(event){
+    	event.stopPropagation();
+    	//element.classList.add('d-none'); d-none추가
+    });
+    
+    //CSV파일 다운로드
     CSVBtn.addEventListener("click",function(event){
+    	event.stopPropagation();
     	getCSV('fireData'+div+'.csv');
     	
     });
@@ -161,7 +171,8 @@ document.addEventListener('DOMContentLoaded', function() {
     //지도 선택시 시도 선택
     lands.forEach(function(land){
     	land.addEventListener("click",function(event){
-    		console.log('click'+event.target);
+    		event.stopPropagation();
+    		//console.log('click'+event.target);
     		
     		let title = event.target.getAttribute('title');
     		//console.log('title:'+title);
@@ -180,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //시도 선택시
     sido.addEventListener("change",function(event){
+    	event.stopPropagation();
         let searchDiv = '20';
         let searchWord = sido.value;
         div = 'city';
@@ -199,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //시군구 선택시
     sigungo.addEventListener("change",function(event){
+    	event.stopPropagation();
     	doData();
         
     });
@@ -206,13 +219,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //조회버튼
     doRetrieveBtn.addEventListener("click",function(event){
-    	
+    	event.stopPropagation();
     	doData();
     	
     });
     
     //화재요인버튼
     factorBtn.addEventListener("click",function(event){
+    	event.stopPropagation();
     	div = 'factor';
     	workDiv = 'factor';
     	let searchDiv = '10';
@@ -225,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //화재장소버튼
     locationBtn.addEventListener("click",function(event){
+    	event.stopPropagation();
         div = 'location';
        	workDiv = 'location';
         let searchDiv = '10';
@@ -237,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //대분류 선택시
     bigList.addEventListener("change",function(event){
+    	event.stopPropagation();
         let searchDiv = '20';
         let searchWord = bigList.value;
         
@@ -274,6 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //소분류 선택시
     midList.addEventListener("change",function(event){
+    	event.stopPropagation();
         let midselectedText = midList.options[midList.selectedIndex].textContent;
         
         if(div == 'factor'){
@@ -431,14 +448,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     let data = response;
                     //console.log('data[0].totalCnt:'+data[0].totalCnt);
                     //console.log('data[0].totalCnt:'+data[1].totalCnt);
-                    //console.log('data[0].amount:'+data[0].amount);
-                    //console.log('data[1].amount:'+data[1].amount);
                     
                     let tooltip = searchConditions.textContent;
+                    let totalAmount = BigInt(data[0].amountSum);
+                    let selectedAmount = BigInt(data[1].amountSum);
+                    //console.log('totalAmount:'+totalAmount);
+                    //console.log('selectedAmount:'+selectedAmount);
                     
                     columnChart(data[0],data[1]);
                     pieChart(data[0].totalCnt,data[1].totalCnt,fireCnt,'화재건수',tooltip);
-                    pieChart(data[0].amount,data[1].amount,fireAmount,'재산피해(천원)',tooltip);
+                    pieChart(Number(totalAmount),Number(selectedAmount),fireAmount,'재산피해(천원)',tooltip);
+                    /* pieChart(data[0].totalCnt,data[1].totalCnt,fireCnt,'화재건수',tooltip);
+                    pieChart(data[0].amount,data[1].amount,fireAmount,'재산피해(천원)',tooltip); */
                                         
                 }catch(e){
                     console.error("data가 null혹은, undefined 입니다.",e);
@@ -503,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     	html += '<td style="text-align: right;">'+numFormat.format(item.injuredSum)+'</td>';
                     	html += '<td style="text-align: right;">'+numFormat.format(item.dead)+'</td>';
                     	html += '<td style="text-align: right;">'+numFormat.format(item.injured)+'</td>';
-                    	html += '<td style="text-align: right;">'+numFormat.format(item.amount)+'</td>';
+                    	html += '<td style="text-align: right;">'+numFormat.format(BigInt(item.amountSum))+'</td>';
                     	
                     	html += '</tr>';
                     	
@@ -511,7 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         injuredSum += Number(item.injuredSum);
                         dead       += Number(item.dead);
                         injured    += Number(item.injured);
-                        amount     += Number(item.amount);
+                        amount     += Number(BigInt(item.amountSum));
                     });
                     let bodyhtml = '<tr>';
                     
@@ -721,9 +742,9 @@ document.addEventListener('DOMContentLoaded', function() {
          <!-- 하단 좌측 검색 날짜 -->
          <div class="search-date">
              <p class="m-0"><i class="bi bi-calendar"></i> 검색기간 : </p>
-             <input type="date" class="form-input" name="fRdateStart" id="fRdateStart" value="${currentDate}" >
+             <input type="date" class="form-input" name="fRdateStart" id="fRdateStart" min="${minMaxDate.regDt}" max="${minMaxDate.modDt}">
              <p class="m-0"> - </p>
-             <input type="date" class="form-input" name="fRdateEnd" id="fRdateEnd">
+             <input type="date" class="form-input" name="fRdateEnd" id="fRdateEnd" min="${minMaxDate.regDt}" max="${minMaxDate.modDt}">
          </div>
          
          <!-- 우측 하단 버튼들 -->

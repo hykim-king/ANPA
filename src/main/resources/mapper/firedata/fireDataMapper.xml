@@ -102,7 +102,7 @@
                sum(t1.injured_sum) injuredSum,
                sum(t1.dead) dead,
                sum(t1.injured) injured,
-               sum(t1.amount) amount
+               sum(t1.amount) amountSum
           FROM fire_data t1
           LEFT JOIN code t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
           LEFT JOIN code t3 ON t3.master_code = 'location' AND t3.sub_code = t1.sub_loc
@@ -127,7 +127,7 @@
 		       SUM(t1.injured_sum) injuredSum,
 		       SUM(t1.DEAD) dead,
 		       SUM(t1.injured) injured,
-		       SUM(t1.amount) amount
+		       SUM(t1.amount) amountSum
 		FROM FIRE_DATA t1
 		LEFT JOIN code t2 ON t2.master_code = 'factor' AND t2.sub_code = t1.sub_factor
         LEFT JOIN code t3 ON t3.master_code = 'location' AND t3.sub_code = t1.sub_loc
@@ -317,6 +317,12 @@
 		        LEFT JOIN CODE LOC ON LOC.master_code = 'location' AND LOC.sub_code = FIRE_DATA.sub_loc
 		        LEFT JOIN CODE CITY ON CITY.master_code = 'city' AND CITY.sub_code = FIRE_DATA.sub_city
 		WHERE   FIRE_DATA.fire_seq = #{fireSeq}
+    </select>
+    
+    <select id="minMaxDate" resultType="Search">
+        SELECT TO_CHAR(MIN(reg_dt),'YYYY-MM-DD') regDt,
+		       TO_CHAR(MAX(reg_dt),'YYYY-MM-DD') modDt
+		FROM fire_data
     </select>
     
     <!-- 테스트용 DAO 메서드 -->

@@ -64,4 +64,9 @@ public interface FireDataMapper extends WorkDiv<Firedata> {
 	 * @throws SQLException
 	 */
 	List<Firedata> totalDataList(Search search) throws SQLException;
+	
+	/**
+	 * 데이터 존재 기간 최소 맥스
+	 */
+	Search minMaxDate() throws SQLException;
 }

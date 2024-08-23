@@ -8,6 +8,7 @@ public class Firedata extends DTO{
 	private	int    dead;		// 사망자
 	private int    injured;		// 부상자
 	private int    amount;		// 피해액
+	private long   amountSum;   // 피해액 통계
 	
 	private int    subFactor;	// 화재요인코드
 	private String subFactorBigNm; // 화재요인 대분류 이름

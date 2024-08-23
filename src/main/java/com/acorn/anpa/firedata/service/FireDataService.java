@@ -17,4 +17,6 @@ public interface FireDataService extends WorkDiv<Firedata>{
 	Firedata doMainData() throws SQLException;
 	
 	List<Firedata> totalDataList(Search search) throws SQLException;
+	
+	Search minMaxDate() throws SQLException;
 }

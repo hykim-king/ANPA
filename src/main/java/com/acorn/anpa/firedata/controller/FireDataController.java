@@ -48,6 +48,11 @@ public class FireDataController implements PLog {
 		
 		model.addAttribute("cityList",cityList);
 		
+		//최소 최대 날짜만 받는 용도
+		Search minMaxDate = fireDataService.minMaxDate();
+		model.addAttribute("minMaxDate",minMaxDate);
+		//최소 최대 날짜만 받는 용도 end
+		
 		return "firedata/fire_data";
 	}
 	
@@ -63,10 +68,9 @@ public class FireDataController implements PLog {
 		Firedata outVO = fireDataService.totalData(search);
 		
 		//전국 데이터
-		Search searchnull = new Search();
-		searchnull.setSearchDateStart(search.getSearchDateStart());
-		searchnull.setSearchDateEnd(search.getSearchDateEnd());
-		Firedata total = fireDataService.totalData(searchnull);
+		search.setSubCityBigNm(null);
+		search.setSubCityMidNm(null);
+		Firedata total = fireDataService.totalData(search);
 		
 		List<Firedata> allData = new ArrayList<Firedata>();
 		

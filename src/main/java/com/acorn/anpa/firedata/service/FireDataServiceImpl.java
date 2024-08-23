@@ -172,5 +172,11 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 	public List<Firedata> totalDataList(Search search) throws SQLException {
 		log.debug("1. param : " + search);
 		return this.fireDataMapper.totalDataList(search);
+	}
+
+	@Override
+	public Search minMaxDate() throws SQLException {
+		
+		return fireDataMapper.minMaxDate();
 	}    
 }
