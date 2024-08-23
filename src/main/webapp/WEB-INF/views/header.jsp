@@ -24,10 +24,12 @@ document.addEventListener("DOMContentLoaded", function(){
         event.stopPropagation(); // 이벤트 버블링 방지        
     });
     
-    doSelectOneBtn.addEventListener("click",function(event){
-        event.stopPropagation(); // 이벤트 버블링 방지        
-        window.location.href = "/ehr/user/doSelectOne.do";
-    });  
+    if(doSelectOneBtn){    	
+	    doSelectOneBtn.addEventListener("click",function(event){
+	        event.stopPropagation(); // 이벤트 버블링 방지        
+	        window.location.href = "/ehr/user/doSelectOne.do";
+	    });  
+    }
     
     if(document.querySelector(".logout-btn")){
         const logoutAnkers = document.querySelectorAll(".logout-btn");
