@@ -18,11 +18,12 @@
 
 ---  
 ## 🚒 프로젝트 핵심기능  
-1. 전체화제 통계
+1. 전체 화재 통계
 2. 최근 화재현황 (한달 단위)
 3. 화재 알림 시스템
 4. 화재 예방법
 5. 알림마당 게시판 (공지사항 & 건의사항)
+6. 회원관리
 
 ---  
 ## 🚒 기술스택  
@@ -45,7 +46,9 @@
 ---  
 ## 🚒 ERD  
 <div align="center">
-<img style="width:1000px;" src="https://github.com/user-attachments/assets/30993e1a-9328-4b79-9166-07d40167cb19">
+  <img style="width:700px;" src="https://github.com/user-attachments/assets/f5c7e596-e8de-4dd1-a9f8-5a470f26d43b">
+<br>
+  <img style="width:1000px;" src="https://github.com/user-attachments/assets/e1058d77-b4cc-4e78-8ab5-5ff64614924e">
 </div>
 
 ---  
