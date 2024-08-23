@@ -119,6 +119,13 @@
 
         function emailDuplicateCheck(){
             let emailInput = $("#email").val();
+            
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailInput)) {
+                alert("올바른 이메일 형식을 입력하세요.");
+                $("#email").focus();
+                return;
+            }
 
             if(isEmpty(emailInput)){
                 alert("이메일을 입력하세요.");
