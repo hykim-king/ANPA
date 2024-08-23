@@ -139,6 +139,13 @@ h1 {
                 console.log("doRetrieve()");
                 const frm = document.querySelector("#preventFrm");
 
+                // 제목 필드가 비어있는지 확인
+                const searchWord = document.querySelector("#searchWord").value.trim();
+                if (searchWord === "") {
+                    alert("제목을 입력하세요");
+                    return;
+                }
+
                 frm.action = "/ehr/prevent/doRetrieve.do";
                 frm.submit();
             }
