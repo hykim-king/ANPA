@@ -54,11 +54,11 @@ document.addEventListener("DOMContentLoaded", function(){
                     try {
                         const message = data;
                         console.log(message);
-                        if (message.messageId === 1) { // 로그아웃 성공
+                        if (message.messageId === 1) { 
                             alert(message.messageContents);
-                            window.location.replace("/ehr/main/index.do"); // 메인 페이지로 리다이렉트
+                            window.location.replace("/ehr/main/index.do"); 
                         } else {
-                            alert(message.messageContents); // 오류 메시지 출력
+                            alert(message.messageContents); 
                         }
                     } catch (e) {
                         alert("잘못된 데이터 형식입니다.");
@@ -74,14 +74,39 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 </script>
 <style>
-    .user-name {
-        text-decoration: none; /* 기본 상태에서는 밑줄 없음 */
-        cursor: pointer;       /* 마우스를 올리면 커서가 포인터로 변경 */
-    }
+.user-name, .login-btn, .logout-btn {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    color: #333; 
+    padding: 5px 10px; 
+    border-radius: 4px; 
+    text-decoration: none; 
+    transition: color 0.3s ease, transform 0.3s ease;
+}
 
-    .user-name:hover {
-        text-decoration: underline; /* 마우스를 올리면 밑줄이 생김 */
-    }
+.user-name::before, .login-btn::before, .logout-btn::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: -1;
+    transition: height 0.3s ease;
+    border-radius: 4px; 
+}
+
+.user-name:hover, .login-btn:hover, .logout-btn:hover {
+    color: black; 
+    transform: translateY(-3px); 
+    text-decoration: none;
+}
+
+.user-name:hover::before, .login-btn:hover::before, .logout-btn:hover::before {
+    height: 100%; 
+    top: 0;
+}
 </style>
 </head>
 <body>
@@ -121,12 +146,12 @@ document.addEventListener("DOMContentLoaded", function(){
             <c:when test="${not empty sessionScope.user}">
                 <div class="user-info">
                     <span id=doSelectOne class="user-name">${sessionScope.user.userName}님</span>
-                    <a id="logoutBtn" class="logout-btn">🔥 로그아웃</a>
+                    <a id="logoutBtn" class="logout-btn">🔥 로그아웃 🔥</a>
                 </div>
             </c:when>
             <c:otherwise>
                 <a id="loginBtn" class="login-btn" href="${CP}/user/login.do">
-                                                    🔥로그인 / 회원가입
+                                                    🔥로그인🔥
                 </a>
             </c:otherwise>
         </c:choose>
@@ -151,13 +176,13 @@ document.addEventListener("DOMContentLoaded", function(){
             <c:when test="${not empty sessionScope.user}">
                 <div class="subRow">
                     <span class="user-name">${sessionScope.user.userName}님</span>
-                    <a id="logoutBtn2" class="logout-btn">🔥 로그아웃</a>
+                    <a id="logoutBtn2" class="logout-btn">🔥 로그아웃 🔥</a>
                 </div>
             </c:when>
             <c:otherwise>
                 <div class="subRow">
                 <a id="loginBtn2" class="login-btn" href="${CP}/user/login.do">
-                                                    🔥로그인 / 회원가입
+                                                    🔥로그인🔥
                 </a>
                 </div>    
             </c:otherwise>
