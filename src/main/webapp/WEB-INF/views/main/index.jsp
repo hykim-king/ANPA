@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=412";
     });    
     //전기화재 예방요령 바로가기
-    elecFireBtn.addEventListener('click', function(){
+    carFireBtn.addEventListener('click', function(){
         console.log("elecFireBtn click:"+elecFireBtn);
         event.stopPropagation(); // 이벤트 버블링 방지        
         window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=419";
