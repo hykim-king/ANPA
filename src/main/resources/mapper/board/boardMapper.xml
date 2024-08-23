@@ -32,7 +32,11 @@
     <select id="doRetrieve" parameterType="Search" resultMap="boardMap">
         SELECT A.*, B.*                                                                                                                                     
 		FROM( 
-		    SELECT  TT1.no,
+		    SELECT  (
+                    SELECT COUNT(*)
+                    FROM answer
+                    WHERE tt1.board_seq = answer.board_seq
+                    ) no,
 		            TT1.board_seq,
 		            TT1.title,
 		            TT1.contents,

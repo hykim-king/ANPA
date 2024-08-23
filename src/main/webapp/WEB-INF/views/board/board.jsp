@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>
+list : ${list }
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <section class="board_con content content2 content3 align-items-center">
     <c:choose>
@@ -175,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	                    </th>
 	                    <td class="table-light">
 	                        <div class="row-content">
-	                            <div class="title">${item.title}</div>
+	                            <div class="title">${item.title}<c:if test="${item.no >0 }"><span>[${item.no }]</span></c:if> </div>
 	                            <div class="details">수정자 : ${item.modId} 조회수 : ${item.readCnt} 수정일: ${item.modDt }</div>
 	                        </div>
 	                    </td>
@@ -238,7 +239,16 @@ function doRetrieve(url, pageNo){
                     html += '</th>';
                     html += '<td class="table-light">';
                     html += '<div class="row-content">';
-                    html += '<div class="title">'+item.title+'</div>';
+                    
+                    html += '<div class="title">'+item.title;
+                    console.log(item.no);
+                    console.log(Number(item.no)>0);
+                    if(Number(item.no) > 0){
+	                    html += '<span>['+item.no+']</span></div>'; 
+                    }else{
+                        html += '</div>'; 
+                    }
+                    
                     html += '<div class="details">수정자 : '+item.modId+' 조회수 : '+item.readCnt+' 수정일: '+item.modDt+'</div>';
                     html += '</div>';
                     html += '</td>';
