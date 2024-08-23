@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     //console.log('data[0].amount:'+data[0].amount);
                     //console.log('data[1].amount:'+data[1].amount);
                     
-                    let tooltip = bigListText + '-' + midListText;
+                    let tooltip = searchConditions.textContent;
                     
                     columnChart(data[0],data[1]);
                     pieChart(data[0].totalCnt,data[1].totalCnt,fireCnt,'화재건수',tooltip);
@@ -463,6 +463,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let dead = 0;
         let injured = 0;
         let amount = 0;
+        let numFormat = new Intl.NumberFormat();
     	
     	let url = '/ehr/firedata/totalDataList.do';
         let params = {
@@ -496,13 +497,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.forEach(function(item){
                     	html += '<tr>';
                     	
-                    	html += '<td>'+item.subFactorBigNm+'</td>';
-                    	html += '<td>'+item.subFactorMidNm+'</td>';
-                    	html += '<td>'+item.totalCnt+'</td>';
-                    	html += '<td>'+item.injuredSum+'</td>';
-                    	html += '<td>'+item.dead+'</td>';
-                    	html += '<td>'+item.injured+'</td>';
-                    	html += '<td>'+item.amount+'</td>';
+                    	html += '<td style="text-align: center;">'+item.subFactorBigNm+'</td>';
+                    	html += '<td style="text-align: center;">'+item.subFactorMidNm+'</td>';
+                    	html += '<td style="text-align: right;">'+numFormat.format(item.totalCnt)+'</td>';
+                    	html += '<td style="text-align: right;">'+numFormat.format(item.injuredSum)+'</td>';
+                    	html += '<td style="text-align: right;">'+numFormat.format(item.dead)+'</td>';
+                    	html += '<td style="text-align: right;">'+numFormat.format(item.injured)+'</td>';
+                    	html += '<td style="text-align: right;">'+numFormat.format(item.amount)+'</td>';
                     	
                     	html += '</tr>';
                     	
@@ -514,18 +515,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     let bodyhtml = '<tr>';
                     
-                    bodyhtml += '<td colspan="2">합계</td>';
-                    bodyhtml += '<td>'+totalCnt+'</td>';
-                    bodyhtml += '<td>'+injuredSum+'</td>';
-                    bodyhtml += '<td>'+dead+'</td>';
-                    bodyhtml += '<td>'+injured+'</td>';
-                    bodyhtml += '<td>'+amount+'</td>';
+                    bodyhtml += '<td colspan="2" style="text-align: center;">합계</td>';
+                    bodyhtml += '<td style="text-align: right;">'+numFormat.format(totalCnt)+'</td>';
+                    bodyhtml += '<td style="text-align: right;">'+numFormat.format(injuredSum)+'</td>';
+                    bodyhtml += '<td style="text-align: right;">'+numFormat.format(dead)+'</td>';
+                    bodyhtml += '<td style="text-align: right;">'+numFormat.format(injured)+'</td>';
+                    bodyhtml += '<td style="text-align: right;">'+numFormat.format(amount)+'</td>';
                     
                     bodyhtml += '</tr>';
                     
                     tbody.innerHTML = bodyhtml;
                     tbody.innerHTML += html;
-        	
+                    	
                 }catch(e){
                     console.error("data가 null혹은, undefined 입니다.",e);
                     alert("data가 null혹은, undefined 입니다.");  
@@ -589,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             y: data
                         },
                         {
-                            name: '전체/ ' + tooltip,
+                            name: '전국/ ' + tooltip,
                             y: totalData - data
                         }
                     ]
@@ -720,7 +721,7 @@ document.addEventListener('DOMContentLoaded', function() {
          <!-- 하단 좌측 검색 날짜 -->
          <div class="search-date">
              <p class="m-0"><i class="bi bi-calendar"></i> 검색기간 : </p>
-             <input type="date" class="form-input" name="fRdateStart" id="fRdateStart" value="${currentDate}">
+             <input type="date" class="form-input" name="fRdateStart" id="fRdateStart" value="${currentDate}" >
              <p class="m-0"> - </p>
              <input type="date" class="form-input" name="fRdateEnd" id="fRdateEnd">
          </div>
@@ -786,7 +787,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	<div>
 		<button type="button" id="CSV" class="btn btn-download me-1 d-none">CSV파일</button>
 	    <table id="table" class="table table-bordered table-striped table-hover table-sm">
-	        <thead id="thead"></thead>
+	        <thead id="thead" style="text-align: center;"></thead>
 	        <tbody id="tbody"></tbody>
 	    </table>
 	</div>

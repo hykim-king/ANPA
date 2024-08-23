@@ -31,6 +31,7 @@
 
 <%-- bootstrap css --%>
 <link rel="stylesheet" href="${CP}/resources/css/bootstrap.css">
+<link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 
 <%-- jquery --%>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
@@ -129,6 +130,7 @@
 </script>
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/header.jsp" />
 	<!-- container -->
 	<div class="container">
 
@@ -182,6 +184,7 @@
 			element : document.getElementById("contents")
 		})
 	</script>
+	<jsp:include page="/WEB-INF/views/footer.jsp" />
 	<%-- bootstrap js --%>
 	<script src="${CP}/resources/js/bootstrap.bundle.min.js"></script>
 </body>

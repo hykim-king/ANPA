@@ -40,8 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //페이징
     let url = '/ehr/board/doRetrieveAjax.do';
     let maxNum = '${list[0].totalCnt}';
-    renderingPaging(maxNum,1,pageSize.value,10, url, 'doRetrieve');
-    rowClick(); // 게시글 선택
+    doRetrieve(url,1);
     
     let DivValue = '${search.getDiv()}';
     
@@ -89,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>
-list : ${list }
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <section class="board_con content content2 content3 align-items-center">
     <c:choose>
@@ -101,7 +99,7 @@ list : ${list }
         </c:otherwise>
     </c:choose>
     <div class="row g-1 align-items-center">
-        <form name="bRfrm" id="bRfrm" class="col-md-4">
+        <form name="bRfrm" id="bRfrm" class="col-md-6">
             <div class="row g-1">
                 <input type="hidden" name="work_div" id="work_div">
                 <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
@@ -109,7 +107,7 @@ list : ${list }
                 <input type="hidden" name="regId" id="regId">
                 <input type="hidden" name="divYn" id="divYn">
 
-                <div class="col-md-3">
+                <div class="col-md-auto">
                     <select class="form-select mt-3" name="pageSize" id="pageSize">
                         <c:forEach var="item" items="${pageSearch}">
                            <option value="${item.subCode}" <c:if test="${search.pageSize == item.subCode}">selected</c:if>>${item.midList}</option>
@@ -117,7 +115,7 @@ list : ${list }
                     </select>
                 </div>
                 
-                <div class="col-md-3">
+                <div class="col-md-auto">
                     <select class="form-select mt-3" name="searchDiv" id="searchDiv">
                         <option value="">전체</option>
                         <c:forEach var="item" items="${boardSearch}">
@@ -126,7 +124,7 @@ list : ${list }
                     </select>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <input class="form-control mt-3" type="search" name="searchWord" id="searchWord" placeholder="검색어 입력" value="${search.searchWord}">
                 </div>
             </div>
@@ -155,40 +153,12 @@ list : ${list }
             </c:otherwise>
         </c:choose>
     </div>
+    
+    <div class="cnt_page"><span></span></div>
 
     <div class="table-outset mt-2">
         <table id="boardTable" class="table">
             <tbody>
-              <c:choose>
-                <c:when test="${list.size() >0 }">
-                  <c:forEach var="item" items="${list}">
-	                <tr class="table-row">
-	                    <th class="tbseq" style="display: none;"><input type="text" value="${item.boardSeq}"></th>
-	                    <th class="table-dark text-center align-middle col-2">	                    
-						<c:choose>
-						    <c:when test="${item.divYn eq '20' || item.divYn == 20}">
-			                                               공지사항
-						    </c:when>
-						    <c:otherwise>
-		            	                    건의사항 / 소통
-						    </c:otherwise>
-						</c:choose>	                    
-	                    </th>
-	                    <td class="table-light">
-	                        <div class="row-content">
-	                            <div class="title">${item.title}<c:if test="${item.no >0 }"><span>[${item.no }]</span></c:if> </div>
-	                            <div class="details">수정자 : ${item.modId} 조회수 : ${item.readCnt} 수정일: ${item.modDt }</div>
-	                        </div>
-	                    </td>
-	                </tr>
-                  </c:forEach>
-                </c:when>
-				<c:otherwise>
-				  <tr>
-				    <td class="text-center" colspan="99" >데이터가 없습니다.</td>
-				  </tr>
-				</c:otherwise>
-              </c:choose> 
             </tbody>                      
         </table>
     </div>
@@ -208,6 +178,7 @@ function doRetrieve(url, pageNo){
     const searchDiv = document.querySelector('#searchDiv'); 
     const searchWordInput = document.querySelector('#searchWord');
     const table = document.querySelector('#boardTable tbody');
+    const cnt_page = document.querySelector('.cnt_page span');
     let DivValue = '${search.getDiv()}';
     let maxNum = '';
     
@@ -241,8 +212,6 @@ function doRetrieve(url, pageNo){
                     html += '<div class="row-content">';
                     
                     html += '<div class="title">'+item.title;
-                    console.log(item.no);
-                    console.log(Number(item.no)>0);
                     if(Number(item.no) > 0){
 	                    html += '<span>['+item.no+']</span></div>'; 
                     }else{
@@ -260,6 +229,10 @@ function doRetrieve(url, pageNo){
                 table.innerHTML = html;
                 rowClick();
                 renderingPaging(maxNum,pageNo,pageSize.value,10, url, 'doRetrieve');
+                
+                let pageNofmt = new Intl.NumberFormat().format(pageNo);
+                let maxNumfmt = new Intl.NumberFormat().format(maxNum);
+			    cnt_page.textContent = '총 게시글: '+maxNumfmt+' 건 / '+pageNofmt+' Page';
             }catch(e){
                  alert("data를 확인 하세요.");     
             }
@@ -271,6 +244,7 @@ function doRetrieve(url, pageNo){
         }
         
     });  
+    
 }
     
 function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scriptName){
