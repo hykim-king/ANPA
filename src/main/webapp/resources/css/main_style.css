@@ -221,6 +221,25 @@
 	margin-top : 25px;
 }	
 .subGraphBox > div{box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);}
+@media screen and (max-width: 1200px) {
+	.content .main,
+    .graph{
+        width: 96.5%;
+        max-width: none;
+        margin: 0 auto;
+        display: block;
+        float: none;
+    }
+    .content .main img{
+        max-width: 100%;
+    }    
+    .graph{
+        margin: 20px auto 0 auto;
+        height: auto;
+        background-color: white;
+        border: 1px solid #e2e2e2;
+    }    
+}
 @media screen and (max-width: 1000px) {
     .content .main,
     .graph{

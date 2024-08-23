@@ -333,7 +333,7 @@ function doRetrieve(url, pageNo){
                     }else{
                     html += '<tr><th class="table-dark col-md-2" style="vertical-align: middle;">';
                     html += item.modId;
-                    html += '</th><td class="col-md-7"><p class="col-md-12 m-0 answerCon">';
+                    html += '</th><td class="col-md-auto"><p class="col-md-12 m-0 answerCon">';
                     html += item.contents;
                     html += '</p></td><td class="col-md-1 text-center" style="vertical-align: middle;">';
                     html += item.modDt;
@@ -540,7 +540,7 @@ function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scrip
 			        <c:otherwise>
                         <tr>
                             <th class="table-dark col-md-2" style="vertical-align: middle;">${answer.modId}</th>
-                            <td class="col-md-7">
+                            <td class="col-md-auto">
                                 <p class="col-md-12 m-0 answerCon">${answer.contents}</p>
                             </td>           
                             <td class="col-md-1 text-center" style="vertical-align: middle;">${answer.modDt}</td>           
