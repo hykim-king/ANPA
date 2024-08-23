@@ -21,7 +21,7 @@
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
         margin: 0;
-        padding: 20px;
+        
     }
     .container {
         width: 70%; /* 흰색 박스 크기 줄이기 */
