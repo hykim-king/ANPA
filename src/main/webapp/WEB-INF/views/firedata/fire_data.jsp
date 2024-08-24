@@ -82,6 +82,20 @@ document.addEventListener('DOMContentLoaded', function() {
     //초기화
     resycleBtn.addEventListener("click",function(event){
     	event.stopPropagation();
+    	$('g').addClass('d-none');
+    	$('#CSV').addClass('d-none');
+    	bigList.value = '';
+    	midList.value = '';
+    	searchConditions.textContent = '';
+    	fRdateEnd.value = currentDate;
+        fRdateStart.value = lastMonthDate;
+        fireCnt.innerHTML = '';
+        fireAmount.innerHTML = '';
+        result.innerHTML = '';
+        $('#thead').html('');
+        $('#tbody').html('');
+        sido.value = '';
+        sigungo.value = '';
     	//element.classList.add('d-none'); d-none추가
     });
     
@@ -510,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const tbody = document.querySelector('#tbody');
                     //console.log('table:'+table);
                     
-                    let headerHtml = '<tr><th colspan="2">구분</th><th>화재 건수</th><th>총 인명피해</th><th>사망자</th><th>부상자</th> <th>재산피해</th></tr>';
+                    let headerHtml = '<tr><th colspan="2">구분</th><th>화재 건수</th><th>총 인명피해</th><th>사망자</th><th>부상자</th><th>재산피해(천원)</th></tr>';
                     let html = '';
                     thead.innerHTML = headerHtml;
 
