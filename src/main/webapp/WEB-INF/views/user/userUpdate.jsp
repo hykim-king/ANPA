@@ -358,6 +358,7 @@ $(document).ready(function(){
 <body>
     <jsp:include page="/WEB-INF/views/header.jsp" />
     <div class="signup-container">
+outVO : ${outVO }
         <h2>회원정보 수정</h2>
         <form id="signupForm" action="${CP}/user/signup.do" method="post">
             <div class="form-group">
@@ -371,7 +372,7 @@ $(document).ready(function(){
             <div class="form-group d-flex align-items-center checkbox-group">
                 <input type="email" class="form-control" id="email" name="email" 
                        placeholder="이메일"  maxlength="320" required="required" value="${outVO.email }">
-                <input type="checkbox" id="emailYn" name="emailYn">
+                <input type="checkbox" id="emailYn" name="emailYn" <c:if test="${outVO.emailYn == 1 }">checked</c:if> >
                 <label for="emailYn">수신동의</label>
             </div>
             <div class="form-group">
