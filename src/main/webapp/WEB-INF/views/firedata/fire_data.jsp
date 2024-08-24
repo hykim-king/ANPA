@@ -416,11 +416,11 @@ document.addEventListener('DOMContentLoaded', function() {
         //console.log('sido.value: '+sido.value);
         //console.log('sigungo.value: '+sigungo.value);
         
-        if(workDiv == 'factor' && bigList.value != '' ){
+        if(workDiv == 'factor' && bigList.value != '' && midList.value == ''){
             searchDiv = '10';
         }else if(workDiv == 'factor' && midList.value != ''){
             searchDiv = '20';
-        }else if(workDiv == 'location' && bigList.value != ''){
+        }else if(workDiv == 'location' && bigList.value != '' && midList.value == ''){
             searchDiv = '30';
         }else if(workDiv == 'location' && midList.value != ''){
             searchDiv = '40';
