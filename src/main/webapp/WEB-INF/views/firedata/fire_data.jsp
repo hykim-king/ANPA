@@ -77,6 +77,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let sigungoText = '';
     let searchDiv = '';
     
+    factorList();
+    doData();
+    
     //이벤트
     
     //초기화
@@ -240,14 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //화재요인버튼
     factorBtn.addEventListener("click",function(event){
     	event.stopPropagation();
-    	div = 'factor';
-    	workDiv = 'factor';
-    	let searchDiv = '10';
-    	midList.value = '';
-    	
-    	searchConditions.textContent = factorBtn.textContent;
-    	
-    	categoryBigList(searchDiv,div);
+    	factorList();
     });
     
     //화재장소버튼
@@ -315,6 +311,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
     });
+    
+    function factorList(){
+    	div = 'factor';
+        workDiv = 'factor';
+        let searchDiv = '10';
+        midList.value = '';
+        
+        searchConditions.textContent = factorBtn.textContent;
+        
+        categoryBigList(searchDiv,div);
+    }
     
     //코드 리스트 대+소분류 
     function categoryMidList(searchDiv,div,searchWord,select){
