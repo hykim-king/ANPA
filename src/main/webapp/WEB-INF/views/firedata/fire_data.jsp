@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         {
                             name: '전국/ ' + tooltip,
-                            y: totalData - data
+                            y: totalData
                         }
                     ]
                 }
