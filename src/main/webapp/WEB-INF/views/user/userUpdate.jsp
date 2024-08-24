@@ -25,11 +25,20 @@ $(document).ready(function(){
     const cBselect = document.querySelector("#cBselect");
     const cMselect = document.querySelector("#cMselect");
     const subCityValue = "${outVO.subCity}"
+    const sido = '${outVO.subCity}';
+    const sidoValue = sido.substring(0, 2)+'000';
     let idDuplicatedClick = 0; // 변수 초기화
 	
+    cBselect.value = sidoValue;
+    cityCodeSet("", cBselect, cMselect); 
+    
+    setTimeout(function() {
+    	cMselect.value = subCityValue;
+    }, 150);
     
     cBselect.addEventListener("change",function(){
-        cityCodeSet("", cBselect, cMselect);        
+        cityCodeSet("", cBselect, cMselect);  
+        
     }); 
     
     // 회원정보수정
@@ -208,6 +217,7 @@ $(document).ready(function(){
                     console.log(optionCodeData);
                     cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
                     optionCodeData.forEach(function(item) {
+                    	
                         const option = document.createElement("option");
                         option.value = item.subCode;
                         option.selected = subCityMidNm == item.subCode;
