@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(jsonData);
                     console.log(allMessage.messageId);
                     if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
-                        alert(allMessage.messageContents);
+                        //alert(allMessage.messageContents);
                         tmJSON(jsonData);
                     
                     }else{
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="card-text">오늘 `+todayInjured+` 명 / 월 `+monthInjured+` 명</p>
             <hr>
             <b>전년 동기</b>
-            <p class="card-text">오늘 `+lastYearDayInjured+` 명 / 월 `+lastYearMonthAmount+` 명</p>
+            <p class="card-text">오늘 `+lastYearDayInjured+` 명 / 월 `+lastYearMonthInjured+` 명</p>
             `;
         InjuredCountDiv.innerHTML = InjuredCountcontentHTML;
         
@@ -481,7 +481,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="card-text">오늘 `+todayAmount+` 천원 / 월 `+monthAmount+` 천원</p>
             <hr>
             <b>전년 동기</b>
-            <p class="card-text">오늘 `+lastYearDayAmount+` 천원 / 월 `+lastYearMonthInjured+` 천원</p>
+            <p class="card-text">오늘 `+lastYearDayAmount+` 천원 / 월 `+lastYearMonthAmount+` 천원</p>
             `;
         AmountCountDiv.innerHTML = AmountCountcontentHTML;
 	   
@@ -596,11 +596,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="card-title">화재 장소</h5>
                     <hr>
                     <b><i class="bi bi-1-square-fill"></i> 비주거 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                     <b><i class="bi bi-2-square-fill"></i> 주거 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                     <b><i class="bi bi-3-square-fill"></i> 차량 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                 </div>
             </div>
         </div>
@@ -611,11 +611,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="card-title">화재 장소 소분류</h5>
                     <hr>
                     <b><i class="bi bi-1-square-fill"></i> 상점가 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                     <b><i class="bi bi-2-square-fill"></i> 아파트 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                     <b><i class="bi bi-3-square-fill"></i> 공터 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                 </div>
             </div>
         </div>
@@ -626,11 +626,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="card-title">발화 원인</h5>
                     <hr>
                     <b><i class="bi bi-1-square-fill"></i> 전기적 요인 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                     <b><i class="bi bi-2-square-fill"></i> 부주의 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                     <b><i class="bi bi-3-square-fill"></i> 기계적 0건</b>
-                    <p class="card-text">평균 0 건</p>
+                    <p class="card-text">월 평균 0 건</p>
                 </div>
             </div>
         </div>

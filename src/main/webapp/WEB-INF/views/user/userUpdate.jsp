@@ -370,13 +370,13 @@ $(document).ready(function(){
             </div>
             <div class="form-group d-flex align-items-center checkbox-group">
                 <input type="email" class="form-control" id="email" name="email" 
-                       placeholder="이메일"  maxlength="320" required="required">
+                       placeholder="이메일"  maxlength="320" required="required" value="${outVO.email }">
                 <input type="checkbox" id="emailYn" name="emailYn">
                 <label for="emailYn">수신동의</label>
             </div>
             <div class="form-group">
                 <input type="tel" class="form-control" id="tel" name="tel" 
-                       placeholder="전화번호"  maxlength="15" required="required">
+                       placeholder="전화번호"  maxlength="15" required="required" value="${outVO.tel }">
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" id="password" name="password" 
@@ -394,7 +394,7 @@ $(document).ready(function(){
                             <option value="${item.subCode}" <c:if test="${search.subCityBigNm == item.subCode}">selected</c:if>>${item.bigList}</option>
                         </c:if>
                     </c:forEach>
-               </select>
+               </select>  
             </div>
             <div class="form-group">
                 <select class="form-select" name="cMselect" id="cMselect">
