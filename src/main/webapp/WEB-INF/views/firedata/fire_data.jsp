@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
         $('#tbody').html('');
         sido.value = '';
         sigungo.value = '';
-    	//element.classList.add('d-none'); d-none추가
     });
     
     //CSV파일 다운로드

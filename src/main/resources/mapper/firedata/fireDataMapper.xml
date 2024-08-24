@@ -76,23 +76,35 @@
              </when>
         </choose>
         <choose>
-             <when test="searchDiv != null and searchDiv == 10">
-                 AND t2.big_list = #{BigNm}
-                 GROUP BY t2.mid_list
+             <when test="div == 'factor' and BigNm == '' ">
+                 GROUP BY t2.big_list,t2.mid_list
+                 ORDER BY t2.big_list
              </when>
-             <when test="searchDiv != null and searchDiv == 20">
+             <when test="div == 'factor' and MidNm == '전체' ">
+                 AND t2.big_list = #{BigNm}
+                 GROUP BY t2.big_list,t2.mid_list
+                 ORDER BY t2.big_list
+             </when>
+             <when test="div == 'factor' and MidNm != '전체' ">
                  AND t2.big_list = #{BigNm}
                  AND t2.mid_list = #{MidNm}
-                 GROUP BY t2.mid_list
+                 GROUP BY t2.big_list,t2.mid_list
+                 ORDER BY t2.big_list
              </when>
-             <when test="searchDiv != null and searchDiv == 30">
+             <when test="div == 'location' and BigNm == '' ">
+                 GROUP BY t3.big_list,t3.mid_list
+                 ORDER BY t3.big_list
+             </when>
+             <when test="div == 'location' and MidNm == '전체'">
                  AND t3.big_list = #{BigNm}
-                 GROUP BY t3.mid_list
+                 GROUP BY t3.big_list,t3.mid_list
+                 ORDER BY t3.big_list
              </when>
-             <when test="searchDiv != null and searchDiv == 40">
+             <when test="div == 'location' and MidNm != '전체'">
                  AND t3.big_list = #{BigNm}
                  AND t3.mid_list = #{MidNm}
-                 GROUP BY t3.mid_list
+                 GROUP BY t3.big_list,t3.mid_list
+                 ORDER BY t3.big_list
              </when>
         </choose>
     </sql>
@@ -114,12 +126,14 @@
     </select>
     
     <select id="totalDataList" parameterType="Search" resultType="Firedata">
-        SELECT #{BigNm} subFactorBigNm,
+        SELECT 
                <choose>
-                   <when test="searchDiv == 10 || searchDiv == 20">
+                   <when test="div == 'factor'">
+                    t2.big_list subFactorBigNm,
                     t2.mid_list subFactorMidNm,
                    </when>
-                   <when test="searchDiv == 30 || searchDiv == 40">
+                   <when test="div == 'location'">
+                    t3.big_list subFactorBigNm,
                     t3.mid_list subFactorMidNm,
                    </when>
                </choose>

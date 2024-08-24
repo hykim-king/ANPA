@@ -90,34 +90,8 @@ public class FireDataController implements PLog {
 		String jsonString = "";
 		log.debug("param: " + search);
 		List<Firedata> totalDataList = new ArrayList<Firedata>();;
-		Search codeSearch = new Search();
 		
-		if((search.getDiv() != null && search.getDiv() != "") && (search.getBigNm() == null || search.getBigNm() == "")) {
-			codeSearch.setSearchDiv("10");
-			String category = search.getDiv();
-			
-			codeSearch.setDiv(category);
-			List<Code> codeList = codeService.codeList(codeSearch);
-			
-			if(category.equals("factor")) {
-				search.setSearchDiv("10");
-			}else {
-				search.setSearchDiv("30");
-			}
-			
-			List<Firedata> outVO = null;
-			for(Code code : codeList) {
-				search.setBigNm(code.getBigList());
-				outVO = fireDataService.totalDataList(search);
-				for(Firedata vo : outVO) {
-					totalDataList.add(vo);
-				}
-			}
-			
-		}else {
-			totalDataList = fireDataService.totalDataList(search);
-		}
-		
+		totalDataList = fireDataService.totalDataList(search);
 		
 		jsonString = new Gson().toJson(totalDataList);
 		log.debug("jsonString: "+jsonString);
