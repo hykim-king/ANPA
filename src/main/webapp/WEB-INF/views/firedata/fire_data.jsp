@@ -830,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <!-- 통계 테이블 -->
     <div>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="width : 100%;">
             <button type="button" id="CSV" class="btn btn-success me-1 d-none">내려받기</button>
         </div>
         <table id="table" class="table table-bordered table-striped table-hover table-sm mt-3">
