@@ -1,6 +1,9 @@
 package com.acorn.anpa.firedata.service;
 
 import java.sql.SQLException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,15 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 		flag = fireDataMapper.doSave(inVO);
 		log.debug("2. flag : " + flag);
 		
+		// 현재 한국 시간대의 ZonedDateTime 객체 생성
+		ZonedDateTime sysTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+		
+		// 원하는 포맷 지정
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd HH:mm:ss");
+		
+        // 포맷을 적용하여 문자열로 변환
+        String formattedTime = sysTime.format(formatter);    
+        
 		String title = "화재가 발생하였습니다";
 		String contents = "";
 		/* String userEmail = "anpa1995@naver.com"; */
@@ -81,7 +93,7 @@ public class FireDataServiceImpl implements PLog, FireDataService {
 		        log.debug("└─────────────────────────────────────────────────────────");
 		        userEmail = member.getEmail();
 		        userName = member.getUserName();
-		        contents = userName + "님이 거주하시는 " + bigList + midList + " 해당 지역에 화재가 발생하였습니다";
+		        contents = userName + "님이 거주하시는 " + bigList + midList + " 해당 지역에 화재가 발생하였습니다" + "\n화재 발생 시각 : " + formattedTime;
 		        sendEmail(title, contents, userEmail);
 		        emailCount++;
 		    }			
