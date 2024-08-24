@@ -23,6 +23,8 @@
 <title>ANPA</title>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+        
+	
     // .nav 클래스의 두 번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(2) .nav-link');
     const selectBtn = document.querySelector("#selectBtn");
@@ -33,6 +35,12 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("monthSelectInput"+monthSelectInput);
 
     
+    // 시작, 끝 날짜 디폴트 값
+    let now = new Date(); //현재 날짜 호출
+    let currentYear = now.getFullYear(); //년도 호출
+    let currentMonth = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 현재 월
+    
+    
     // 선택한 요소에 "active" 클래스를 추가합니다
     firstNavLink.classList.add('active');
     
@@ -40,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateValue = '<%= new SimpleDateFormat("yyyy-MM").format(new Date()) %>';
 
     selectYear();
+    
     
     selectBtn.addEventListener("click",function(event){
 	   	console.log("selectBtn click");
@@ -51,32 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     });
    
-   
     // 연도 선택 박스의 값이 변경될 때 호출되는 함수
     yearSelectInput.addEventListener("change", function(event) {
     	console.log("yearSelectInput 연도 선택 : "+yearSelectInput.value);
-        const selectedYear = this.value;
-
-        // 월 선택 박스 초기화
-        monthSelectInput.innerHTML = '<option value="">월 선택</option>';
-
-        // 연도가 선택된 경우 1월부터 12월까지 추가
-        if (selectedYear) {
-        	 for (let i = 1; i <= 12; i++) {
-                 const option = document.createElement('option');
-
-                 // 1~9월에는 0을 붙이고, 10~12월에는 그대로 설정
-                 if (i < 10) {
-                     option.value = '0' + i; // 01, 02, ..., 09
-                     option.textContent = '0' + i + '월'; // 1~9월에는 0 붙임
-                 } else {
-                     option.value = i; // 10, 11, 12
-                     option.textContent = i + '월'; // 10, 11, 12월에는 그대로 출력
-                 }
-
-                 monthSelectInput.appendChild(option);
-             }
-        }
+    	yearChange()
         
     });
     
@@ -85,7 +72,41 @@ document.addEventListener('DOMContentLoaded', function() {
         event.stopPropagation();//이벤트 버블링 방지
     });
     
-    //--------------------------------------------------------------------------   
+    //--------------------------------------------------------------------------
+    //연도 선택시 월 옵션이 나타나게하는 함수
+    function yearChange(){
+    	const selectedYear = this.value;
+
+        // 월 선택 박스 초기화
+        monthSelectInput.innerHTML = '<option value="">월 선택</option>';
+
+        // 연도가 선택된 경우 1월부터 12월까지 추가
+        if (selectedYear) {
+             for (let i = 1; i <= 12; i++) {
+                 const option = document.createElement('option');
+                 
+                 // 1~9월에는 0을 붙이고, 10~12월에는 그대로 설정
+                 if (i < 10) {
+                     option.value = '0' + i; // 01, 02, ..., 09
+                     if(currentMonth == ('0' + i)){
+                    	 option.selected = true;
+                     }
+                     option.textContent = '0' + i + '월'; // 1~9월에는 0 붙임
+                 } else {
+                     option.value = i; // 10, 11, 12
+                     if(currentMonth == i){
+                         option.selected = true;
+                     }
+                     option.textContent = i + '월'; // 10, 11, 12월에는 그대로 출력
+                 }
+
+                 monthSelectInput.appendChild(option);
+             }
+             
+        }
+    	
+    }//--yearChange() end
+    
     function todayMonthData(regDt){
     	console.log("todayMonthData(regDt):"+selectBtn);
     	
@@ -283,9 +304,25 @@ document.addEventListener('DOMContentLoaded', function() {
                    jsonData.yearData.forEach(function(year) {
                        const option = document.createElement('option');
                        option.value = year;
+                       
+                       //현재날짜 화재날짜를 페이지에 기본으로 띄우기
+                       if(year == currentYear){
+                    	   option.selected = true;
+                       // 연도가 선택된 후 yearChange() 함수 호출
+                       yearChange.call({ value: currentYear });
+                       }
+                       
+                     
+                       
                        option.textContent = year + '년';
                        yearSelectInput.appendChild(option);
+                      
                    });
+                   
+                   todayMonthData();
+                   locBigData();
+                   locMidData();
+                   factorMidData();
 
                }catch(e){
                  
