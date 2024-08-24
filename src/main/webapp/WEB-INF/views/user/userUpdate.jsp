@@ -368,7 +368,6 @@ $(document).ready(function(){
 <body>
     <jsp:include page="/WEB-INF/views/header.jsp" />
     <div class="signup-container">
-outVO : ${outVO }
         <h2>회원정보 수정</h2>
         <form id="signupForm" action="${CP}/user/signup.do" method="post">
             <div class="form-group">
