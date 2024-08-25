@@ -46,7 +46,7 @@
     -webkit-overflow-scrolling: touch; /* 터치 스크롤을 부드럽게 */
     width: 100%; /* 컨테이너의 너비를 100%로 설정 */
 }
-@media (max-width: 1560px) {
+@media (max-width: 1200px) {
 	.popup .pLabel{width : 100%;}
     .popup .pInput{width : 100%;}
     .table-responsive th{display:none;}

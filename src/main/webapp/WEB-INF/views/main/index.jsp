@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 /* ,align: 'center' */
             },
             xAxis: {
-                categories: ['화재건수', '인명피해'],
+                categories: ['화재건수'],
                 title: {
                     text: null
                 },
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
             yAxis: {
                 min: 0,
                 title: {
-                    text: '건 (명)',
+                    text: '(건)',
                     align: 'high'
                 },
                 labels: {
@@ -293,9 +293,99 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             tooltip: {
                 formatter: function () {
-                    var suffixes = [' 건', ' 명'];
+                    var suffixes = [' 건'];
                     var categoryTooltips = [
-                        '화재건수: 이 데이터는 화재 발생 건수를 나타냅니다.',
+                        '화재건수: 이 데이터는 화재 발생 건수를 나타냅니다.'
+                    ];
+                    const formattedValue = Highcharts.numberFormat(this.y, 0, '.', ',');
+                    // 툴팁에 천 단위로 쉼표를 넣어 표시
+                    return '<b>' + this.x + '</b><br/>' +
+                        categoryTooltips[this.point.index] + ' : ' +
+                        Highcharts.numberFormat(this.y, 0) + suffixes[this.point.index];
+                }
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: '0',
+                    dataLabels: {
+                        enabled: false,
+                        formatter: function () {
+                            const formattedValue = Highcharts.numberFormat(this.y, 0, '.', ',');
+                            return formattedValue;
+                        }
+                    },
+                    groupPadding: 0.1
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: 10000,
+                y: 0,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor:
+                    Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                shadow: true,
+                symbolRadius: 0   // 아이콘의 모서리 반경을 0으로 설정하여 네모 모양으로 변경합니다.
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: '1달전',
+                data: [monthFireCount],
+                color: '#4f81bd' // 파란색
+            
+            }, {
+                name: '현재',
+                data: [todayFireCount],
+                color: '#ff6161' // 빨간색
+            }]
+        });
+        Highcharts.chart('graphBox1_2', {
+            accessibility: {
+                enabled: false
+            },
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: null
+                /* ,align: 'center' */
+            },
+            subtitle: {
+                text: null
+                /* ,align: 'center' */
+            },
+            xAxis: {
+                categories: ['인명피해'],
+                title: {
+                    text: null
+                },
+                gridLineWidth: 1,
+                lineWidth: 0
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '(명)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify',
+                    formatter: function () {
+                        // y축 레이블을 천 단위로 쉼표를 넣어 표시
+                        return Highcharts.numberFormat(this.value, 0, '.', ',');
+                    }
+                },
+                gridLineWidth: 0
+            },
+            tooltip: {
+                formatter: function () {
+                    var suffixes = [' 명'];
+                    var categoryTooltips = [
                         '인명피해: 이 데이터는 인명 피해를 나타냅니다.'
                     ];
                     const formattedValue = Highcharts.numberFormat(this.y, 0, '.', ',');
@@ -336,16 +426,16 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             series: [{
                 name: '1달전',
-                data: [monthFireCount, monthInjured],
+                data: [monthInjured],
                 color: '#4f81bd' // 파란색
             
             }, {
                 name: '현재',
-                data: [todayFireCount, todayInjured],
+                data: [todayInjured],
                 color: '#ff6161' // 빨간색
             }]
         });
-        Highcharts.chart('graphBox1_2', {
+        Highcharts.chart('graphBox1_3', {
             accessibility: {
                 enabled: false
             },
@@ -413,7 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 layout: 'vertical',
                 align: 'right',
                 verticalAlign: 'top',
-                x: 0,
+                x: 100000,
                 y: 0,
                 floating: true,
                 borderWidth: 1,
@@ -456,11 +546,18 @@ document.addEventListener('DOMContentLoaded', function() {
 	const month = now.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다
 
 	// 두 자리 수로 포맷팅
-	const formattedMonth = month < 10 ? `0${month}` : month;
+	let formattedMonth = ""; // const를 let으로 변경
+	if (month < 10) {
+	    formattedMonth = "0" + month;
+	} else {
+	    formattedMonth = month;
+	}
 
 	// 연도와 월을 YY/MM 형식으로 포맷팅
-	const yearMonth = `${year}-${formattedMonth}`;
-	
+	const yearMonth = year + "/" + formattedMonth;
+	console.log(yearMonth);
+
+	// sysMonth 클래스를 가진 모든 요소를 선택합니다
 	const sysMonths = document.querySelectorAll('.sysMonth');
 	sysMonths.forEach(sysMonth => {
 	    sysMonth.innerHTML = "(" + yearMonth + " 기준)";
@@ -482,11 +579,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	    
 	    <div class="graph">
 	        <div class="graphTitle">
-	            <h3 class="m-0">전국</h3>
+	            <h3 class="m-0 d-flex align-items-center">전국 <span class="blueBox"></span> 1달전 <span class="redBox"></span> 현재</h3>
 	            <div class="graphDate">2024년 08월</div>
 	        </div>
 	        <div id="graphBox1_1"></div>
 	        <div id="graphBox1_2"></div>
+	        <div id="graphBox1_3"></div>
 	    </div>
     </div>
     
@@ -494,28 +592,28 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="m-0 mt-3 p-0">
             <div class="card">
                 <strong>주택화재 예방요령</strong>
-                <span>Home Fire Prevention Tips</span>
+                <span>Home Fire<br>Prevention Tips</span>
                 <button class="btn btn-danger" id="houseFire">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
 				전기화재 예방요령
                 </strong>
-                <span>Electrical Fire Prevention Tips</span>
+                <span>Electrical Fire<br>Prevention Tips</span>
                 <button class="btn btn-danger" id="elecFire">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
 		                  차량화재 예방요령
 				</strong>
-                <span>Vehicle Fire Prevention Tips</span>
+                <span>Vehicle Fire<br>Prevention Tips</span>
                 <button class="btn btn-danger" id="carFire">바로가기 +</button>
             </div>
             <div class="card">
                 <strong>
 				담뱃불화재 예방요령
                 </strong>
-                <span>Cigarette Fire Prevention Tips</span>
+                <span>Cigarette Fire<br>Prevention Tips</span>
                 <button class="btn btn-danger" id="cigaFire">바로가기 +</button>
             </div>
         </div>
@@ -524,14 +622,16 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="rankBox container-fluid">
         <div class="m-0 mt-4">
             <div class="card">
-            <h5>화재 장소 - 대분류 <span class="sysMonth"><span></h5>
+			<div>
+            <h5>이달의 화재현황 - 장소(대) <span class="sysMonth"><span></h5>
 				<c:choose>
 					<c:when test="${rankLbData.size() >0 }">
 					<c:forEach var="item" items="${rankLbData}" varStatus="status">
 					   <div>
 					       <!-- status.index는 0부터 시작하므로 +1을 추가하여 1부터 시작하도록 조정 -->
-					       <p><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocBigNm} : ${item.monthFireCount} 건</p>
-					       <p>평균 : ${item.monthAvg} 건</p>
+					       <p>
+						   <span><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocBigNm} : ${item.monthFireCount} 건</span><span>평균 : ${item.monthAvg} 건</span>
+						   </p>
 					   </div>
 					</c:forEach>
 					</c:when>
@@ -539,15 +639,20 @@ document.addEventListener('DOMContentLoaded', function() {
 					   <p>화재 발생이 없습니다 :)</p>
 					</c:otherwise>
 				</c:choose>
+			</div>
+			<a href="/ehr/monthfiredata/monthFireData.do">자세히 보기</a>
             </div>
             <div class="card">
-            <h5>화재 장소 - 중분류 <span class="sysMonth"><span></h5>
+			<div>
+            <h5>이달의 화재현황 - 장소(중) <span class="sysMonth"><span></h5>
                 <c:choose>
                     <c:when test="${rankLmData.size() >0 }">
                       <c:forEach var="item" items="${rankLmData}" varStatus="status">
                        <div>
-                           <p><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocMidNm} : ${item.monthFireCount} 건</p>
-                           <p>평균 : ${item.monthAvg} 건</p>
+                           <p>
+							<span><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocMidNm} : ${item.monthFireCount} 건</span>
+							<span>평균 : ${item.monthAvg} 건</span>
+						</p>                           
                        </div>
                       </c:forEach>
                     </c:when>
@@ -555,15 +660,22 @@ document.addEventListener('DOMContentLoaded', function() {
                        <p>화재 발생이 없습니다 :)</p>
                     </c:otherwise>
                 </c:choose>
+			</div>
+			<a href="/ehr/monthfiredata/monthFireData.do">자세히 보기</a>	
             </div>
             <div class="card">
-            <h5>화재 요인 - 중분류 <span class="sysMonth"><span></h5>
+			<div>
+            <h5>이달의 화재현황 - 요인(중) <span class="sysMonth"><span></h5>
                 <c:choose>
                     <c:when test="${rankFmData.size() >0 }">
                       <c:forEach var="item" items="${rankFmData}" varStatus="status">
                        <div>
-                           <p><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subFactorMidNm} : ${item.monthFireCount} 건</p>
-                           <p>평균 : ${item.monthAvg} 건</p>
+                         <p>
+							<span>
+							<i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subFactorMidNm} : ${item.monthFireCount} 건
+							</span>
+							<span>평균 : ${item.monthAvg} 건</span>
+						 </p>                           
                        </div>
                       </c:forEach>
                     </c:when>
@@ -571,12 +683,15 @@ document.addEventListener('DOMContentLoaded', function() {
                        <p>화재 발생이 없습니다 :)</p>
                     </c:otherwise>
                 </c:choose>
+			</div>
+			<a href="/ehr/monthfiredata/monthFireData.do">자세히 보기</a>	
             </div>
         </div>
     </div>
     
     <div class="subGraphBox container-fluid">
         <div class="m-0 mt-3 row g-1">
+			<h3 class="text-center">연간 화재건수</h3>
             <div id="graphBox2"></div>
         </div>
     </div>

@@ -673,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <h3>관리자 페이지 - 화재 정보 </h3>
 
     <div class="row g-1 align-items-center mt-2">
-        <div class="col-md-12">
+        <div class="col-md-auto">
            <button id="doDeleteData" class="btn btn-danger">삭제</button>
            <button id="doSaveData" class="btn btn-success">추가</button>
         </div>
