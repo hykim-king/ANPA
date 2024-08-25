@@ -447,6 +447,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 메인, 메인 차트 함수 실행
     doRetrieveAjax();
+	
+	// 현재 날짜를 가져옵니다
+	const now = new Date();
+
+	// 년도와 월을 가져옵니다
+	const year = now.getFullYear();
+	const month = now.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다
+
+	// 두 자리 수로 포맷팅
+	const formattedMonth = month < 10 ? `0${month}` : month;
+
+	// 연도와 월을 YY/MM 형식으로 포맷팅
+	const yearMonth = `${year}-${formattedMonth}`;
+	
+	const sysMonths = document.querySelectorAll('.sysMonth');
+	sysMonths.forEach(sysMonth => {
+	    sysMonth.innerHTML = "(" + yearMonth + " 기준)";
+	});
 });
 </script>    
 </head>
@@ -506,15 +524,16 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="rankBox container-fluid">
         <div class="m-0 mt-4">
             <div class="card">
-            <h5>화재 장소 - 대분류</h5>
+            <h5>화재 장소 - 대분류 <span class="sysMonth"><span></h5>
 				<c:choose>
 					<c:when test="${rankLbData.size() >0 }">
-					  <c:forEach var="item" items="${rankLbData}">
+					<c:forEach var="item" items="${rankLbData}" varStatus="status">
 					   <div>
-						   <p><i class="bi bi-1-square-fill"></i>  ${item.subLocBigNm} : ${item.monthFireCount} 건</p>
-						   <p>평균 : ${item.monthAvg} 건</p>
+					       <!-- status.index는 0부터 시작하므로 +1을 추가하여 1부터 시작하도록 조정 -->
+					       <p><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocBigNm} : ${item.monthFireCount} 건</p>
+					       <p>평균 : ${item.monthAvg} 건</p>
 					   </div>
-					  </c:forEach>
+					</c:forEach>
 					</c:when>
 					<c:otherwise>
 					   <p>화재 발생이 없습니다 :)</p>
@@ -522,12 +541,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				</c:choose>
             </div>
             <div class="card">
-            <h5>화재 장소 - 중분류</h5>
+            <h5>화재 장소 - 중분류 <span class="sysMonth"><span></h5>
                 <c:choose>
                     <c:when test="${rankLmData.size() >0 }">
-                      <c:forEach var="item" items="${rankLmData}">
+                      <c:forEach var="item" items="${rankLmData}" varStatus="status">
                        <div>
-                           <p><i class="bi bi-2-square-fill"></i> ${item.subLocMidNm} : ${item.monthFireCount} 건</p>
+                           <p><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocMidNm} : ${item.monthFireCount} 건</p>
                            <p>평균 : ${item.monthAvg} 건</p>
                        </div>
                       </c:forEach>
@@ -538,12 +557,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 </c:choose>
             </div>
             <div class="card">
-            <h5>화재 요인 - 중분류</h5>
+            <h5>화재 요인 - 중분류 <span class="sysMonth"><span></h5>
                 <c:choose>
                     <c:when test="${rankFmData.size() >0 }">
-                      <c:forEach var="item" items="${rankFmData}">
+                      <c:forEach var="item" items="${rankFmData}" varStatus="status">
                        <div>
-                           <p><i class="bi bi-3-square-fill"></i> ${item.subFactorMidNm} : ${item.monthFireCount} 건</p>
+                           <p><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subFactorMidNm} : ${item.monthFireCount} 건</p>
                            <p>평균 : ${item.monthAvg} 건</p>
                        </div>
                       </c:forEach>
