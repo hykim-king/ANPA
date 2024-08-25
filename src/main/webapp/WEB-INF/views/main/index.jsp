@@ -235,9 +235,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const contentHTML =
         '<p class="main_title">' + '작은 대비가 큰 안전을 만듭니다!' + '</p>' +
         '<p class="main_sub_title">' + '안녕하세요 안전파수꾼입니다' + '</p>' +
-        '<p class="main_fd1">화재건수 : ' + todayFireCount + '</p>' +
-        '<p class="main_fd2">인명피해 : ' + todayInjured + '</p>' +
-        '<p class="main_fd3">재산피해 : ' + formattedTodayAmount + ' (단위 : 천원)' + '</p>'
+        '<p class="main_fd1">금일 화재건수 : ' + todayFireCount + ' 건</p>' +
+        '<p class="main_fd2">금일 인명피해 : ' + todayInjured + ' 명</p>' +
+        '<p class="main_fd3">금일 재산피해 : ' + formattedTodayAmount + ' (단위 : 천원)' + '</p>'
         ;
 
         mainTitleBox.innerHTML = contentHTML;
@@ -559,9 +559,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// sysMonth 클래스를 가진 모든 요소를 선택합니다
 	const sysMonths = document.querySelectorAll('.sysMonth');
+	const graphDate = document.querySelector('.graphDate');
 	sysMonths.forEach(sysMonth => {
 	    sysMonth.innerHTML = "(" + yearMonth + " 기준)";
 	});
+	graphDate.innerHTML = year + "년 " + formattedMonth + "월";
 });
 </script>    
 </head>
@@ -579,8 +581,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	    
 	    <div class="graph">
 	        <div class="graphTitle">
-	            <h3 class="m-0 d-flex align-items-center">전국 <span class="blueBox"></span> 1달전 <span class="redBox"></span> 현재</h3>
-	            <div class="graphDate">2024년 08월</div>
+	            <h3 class="m-0 d-flex align-items-center">전국 <span class="blueBox"></span> <span class="graphlabel">1달전</span> <span class="redBox"></span> <span class="graphlabel">현재</span></h3>
+	            <div class="graphDate"></div>
 	        </div>
 	        <div id="graphBox1_1"></div>
 	        <div id="graphBox1_2"></div>

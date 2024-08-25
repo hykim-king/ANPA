@@ -39,11 +39,7 @@
     font-size: 30px;
     font-weight: bold;
 }
-.main_sub_title{
-    left : 30px;
-    bottom: 50px;
-    font-size: 20px;
-}
+.main_sub_title{font-size: 20px;}
 .main_fd1{animation: fadeAndSlideUp 0.5s ease forwards;}
 .main_fd2{animation: fadeAndSlideUp 0.5s ease .5s forwards;}
 .main_fd3{animation: fadeAndSlideUp 0.5s ease 1s forwards;}
@@ -54,7 +50,7 @@
     font-size: 15px;    
 }
 .main_fd2,
-.main_fd3{margin-left: 40px;}
+.main_fd3{margin-left: 15px;}
 
 .graph{
 	text-align: center;
@@ -87,6 +83,7 @@
 .graphTitle h3,
 .graphTitle .graphDate{display: inline-block;}
 .graphTitle h3{float : left;}
+.graphTitle h3 .graphlabel{font-size: 16px;}
 .graphTitle .graphDate{
 	background-color : #48b0f7;
 	border-radius : 20px;
@@ -95,6 +92,7 @@
 	float : right;
 	color : white;
 }
+.blueBox{margin : 0 10px 0 20px;}
 .blueBox,
 .redBox{
 	display: inline-block;
@@ -224,6 +222,10 @@
 	border-bottom : 1px solid rgba(0, 0, 0, 0.175);
     padding-bottom : 15px;	
 }
+.sysMonth{
+	font-size: 12px;
+	color: #7e7c7c;
+}
 .rankBox > div > .card p{
 	margin : 0;
 	display: flex; /* Flexbox 레이아웃 적용 */
@@ -310,6 +312,22 @@
 }
 
 @media (max-width: 800px) {
+	.main_title_box{
+		width: 100%;
+		text-align: center;
+	    left : 50%;
+	    bottom: 50%;
+		transform: translate(-50%, 50%);
+	}
+	.main_title_box p{margin-bottom: 10px;}
+	.main_fd1,
+	.main_fd2,
+	.main_fd3{
+	    display: block;
+	    font-size: 15px;    
+	}
+	.main_fd2,
+	.main_fd3{margin-left: 0;}
 	.graphTitle h3{
 		width : 100%;
 		float : none;
