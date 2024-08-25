@@ -27,4 +27,30 @@
     margin-left: 50px; /* 오른쪽 여백 추가 */
 }
 .card-icon{font-size: 55px;}
+
+#mRfrm{height: 50px;}
+.ymSelectBox{
+	width: 300px;
+	float:left;
+}
+#selectBtn{
+	width: 100px;
+	padding: 5px;
+	background-color:#f2f2f2;
+}
+.mRsysdate{float: right;}
 /* 영역 끝 */
+
+@media screen and (max-width: 860px){
+	#mRfrm{height: auto;}
+	.ymSelectBox{
+		width: auto;
+		float: none;
+	}
+	#selectBtn{
+		width: auto;
+		padding: 5px;
+		background-color:#f2f2f2;
+	}
+	.mRsysdate{float: none;}
+}

@@ -554,11 +554,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <section class="content content2 content3 align-items-center">
     <h3>한 눈에 보는 화재 현황</h3>
 
-    <form name = "mRfrm" id = "mRfrm"style="height: 50px;">
+    <form name = "mRfrm" id = "mRfrm">
         <input type = "hidden" name = "work_div" id = "work_div">
         <input type="hidden" name="page_no" id="page_no" placeholder="페이지 번호">
         <input type = "hidden" name = "seq" id = "seq">
-        <div class="col-md-4 d-grid gap-2 d-md-flex" style="width: 300px; float:left">                   
+        <div class="col-md-4 d-grid gap-2 d-md-flex ymSelectBox">                   
             <!-- 연 / 월  -->
             <select class="form-control" id="yearSelect">
             </select>  
@@ -566,10 +566,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <option value="월 선택">월 선택</option>
             </select>    
             
-            <input class="form-control" type="button" id="selectBtn" name="selectBtn" value="조회"
-       style="width: 100px; padding: 5px; background-color:#f2f2f2">     
+            <input class="form-control" type="button" id="selectBtn" name="selectBtn" value="조회">     
         </div>
-		  <div class="col-md-7 d-flex justify-content-end mRsysdate" style="float: right">
+		  <div class="col-md-7 d-flex justify-content-end mRsysdate">
 		    <%
 		       Date date = new Date();
 		       SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
