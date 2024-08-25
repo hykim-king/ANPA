@@ -43,12 +43,13 @@
     </select>
     
     <select id="locBigData" parameterType="String" resultType="Firedata">
-        SELECT big_list as subLocBigNm , monthFireCount,round(monthFireCount/12)AS monthAvg
+        SELECT big_list as subLocBigNm , NVL(monthFireCount, 0) AS monthFireCount,
+                NVL(ROUND(monthFireCount/30), 0) AS monthAvg
         FROM (
                 WITH RankedData AS (
                     SELECT
                         c.big_list,
-                        COUNT(*) AS monthFireCount,
+                        NVL(COUNT(*), 0) AS monthFireCount,
                         DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk
                     FROM fire_data f
                     JOIN code c ON f.sub_loc = c.sub_code
@@ -65,7 +66,7 @@
     </select>
     
     <select id="locMidData" parameterType="String" resultType="Firedata">
-    SELECT mid_list as subLocMidNm, monthFireCount,round(monthFireCount/12)AS monthAvg
+    SELECT mid_list as subLocMidNm, monthFireCount,round(monthFireCount/30)AS monthAvg
 	FROM (
 	        WITH RankedData AS (
 	            SELECT
@@ -86,7 +87,7 @@
     </select>
     
     <select id="factorMidData" parameterType="String" resultType="Firedata">
-		SELECT mid_list as subFactorMidNm, monthFireCount,round(monthFireCount/12)AS monthAvg
+		SELECT mid_list as subFactorMidNm, monthFireCount,round(monthFireCount/30)AS monthAvg
 		FROM (
 		        WITH RankedData AS (
 		            SELECT
