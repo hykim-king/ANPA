@@ -855,22 +855,22 @@ document.addEventListener('DOMContentLoaded', function() {
   
   <div class="row m-0 mb-2">
       <label for="injuredSum" class="pLabel col-sm-3 col-form-label">사상자</label>
-      <input type="number" class="pInput form-control" name="injuredSum" id="injuredSum"   required="required">
+      <input type="number" class="pInput form-control" name="injuredSum" id="injuredSum" required="required" min="0">
   </div>
   
   <div class="row m-0 mb-2">
       <label for="dead" class="pLabel col-sm-3 col-form-label">사망자</label>
-      <input type="number" class="pInput form-control" name="dead" id="dead" required="required">
+      <input type="number" class="pInput form-control" name="dead" id="dead" required="required" min="0">
   </div>  
   
   <div class="row m-0 mb-2">
       <label for="injured" class="pLabel col-sm-3 col-form-label">부상자</label>
-      <input type="number" class="pInput form-control" name="injured" id="injured" required="required">
+      <input type="number" class="pInput form-control" name="injured" id="injured" required="required" min="0">
   </div>
   
   <div class="row m-0 mb-2">
       <label for="amount" class="pLabel col-sm-3 col-form-label">피해금액 (단위 : 천원)</label>
-      <input type="number" class="pInput form-control" name="amount" id="amount" required="required">
+      <input type="number" class="pInput form-control" name="amount" id="amount" required="required" min="0">
   </div>    
   
   <div class="row m-0 mb-2">
