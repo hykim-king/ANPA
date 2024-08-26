@@ -30,32 +30,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const carFireBtn = document.querySelector('#carFire');
     const cigaFireBtn = document.querySelector('#cigaFire');
     
-    appMenus.addEventListener('click', function(){
-        console.log("상단 앱 메뉴 클릭");
-    });
     // header end
     
     //주택화재 예방요령 바로가기
     houseFireBtn.addEventListener('click', function(){
-        console.log("houseFireBtn click:"+houseFireBtn);
+        //console.log("houseFireBtn click:"+houseFireBtn);
     	event.stopPropagation(); // 이벤트 버블링 방지        
     	window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=413";
     });
     //전기화재 예방요령 바로가기
     elecFireBtn.addEventListener('click', function(){
-        console.log("elecFireBtn click:"+elecFireBtn);
+        //console.log("elecFireBtn click:"+elecFireBtn);
         event.stopPropagation(); // 이벤트 버블링 방지        
         window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=412";
     });    
     //전기화재 예방요령 바로가기
     carFireBtn.addEventListener('click', function(){
-        console.log("elecFireBtn click:"+elecFireBtn);
+        //console.log("elecFireBtn click:"+elecFireBtn);
         event.stopPropagation(); // 이벤트 버블링 방지        
         window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=419";
     });
     //차량화재 예방요령 바로가기
     cigaFireBtn.addEventListener('click', function(){
-        console.log("elecFireBtn click:"+elecFireBtn);
+        //console.log("elecFireBtn click:"+elecFireBtn);
         event.stopPropagation(); // 이벤트 버블링 방지        
         window.location.href = "/ehr/prevent/doSelectOne.do?preventSeq=411";
     });
@@ -204,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	                    	updateGraph(todayFireCount, todayInjured, todayAmount, monthFireCount, monthInjured, monthAmount);
 	                    	updateGraph2();
 						}else{
-							console.log("nothing to happen");
+							//console.log("nothing to happen");
 						}
                     }else{ //데이터 없는 경우
                     	updateMainTitleBox(0, 0, 0);
@@ -213,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }                   
                     
                     sessionStorage.setItem("tFCntSess", todayFireCount); // 세션에 저장
-                    console.log("todayCnt : " + sessionStorage.getItem("tFCntSess"));
+                    //console.log("todayCnt : " + sessionStorage.getItem("tFCntSess"));
                         
                 }catch(e){
                     console.error("실시간 데이터 오류입니다. 관리자에게 문의 주세요");
@@ -555,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// 연도와 월을 YY/MM 형식으로 포맷팅
 	const yearMonth = year + "/" + formattedMonth;
-	console.log(yearMonth);
+	//console.log(yearMonth);
 
 	// sysMonth 클래스를 가진 모든 요소를 선택합니다
 	const sysMonths = document.querySelectorAll('.sysMonth');

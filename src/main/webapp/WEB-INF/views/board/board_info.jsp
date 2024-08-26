@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
     	const userId = "${user.userId}";
     	const boardSeq = "${board.boardSeq}";
     	const contents = document.querySelector('.answerContents');
-    	console.log("userId : " + userId);
-    	console.log("boardSeq : " + boardSeq);
-    	console.log("contents : " + contents);
+    	//console.log("userId : " + userId);
+    	//console.log("boardSeq : " + boardSeq);
+    	//console.log("contents : " + contents);
     	
         //비동기 통신
         let type= "POST";  
@@ -194,13 +194,13 @@ let maxNum = '${list[0].totalCnt}';
 doRetrieve(url, 1);    
 });   
 function doDelAnswerClick(){
-    console.log('┌────────────────')
-    console.log('doDeleteAnswer')
-    console.log('└────────────────')
+    //console.log('┌────────────────')
+    //console.log('doDeleteAnswer')
+    //console.log('└────────────────')
     const answerDelBtns = document.querySelectorAll("#answerTable tr .btn-danger");
-    console.log('┌────────────────')
-    console.log(answerDelBtns)
-    console.log('└────────────────')
+    //console.log('┌────────────────')
+    //console.log(answerDelBtns)
+    //console.log('└────────────────')
     
     answerDelBtns.forEach(function(answerDelBtn) {
         answerDelBtn.addEventListener("click", function() {   
@@ -211,7 +211,7 @@ function doDelAnswerClick(){
             const answerSeq = row.querySelector('.answerSeq').textContent;
             const answerCon = row.querySelector('.answerContents2').textContent;
             
-            console.log(answerSeq, answerCon);
+            //console.log(answerSeq, answerCon);
             doDelAnswer(answerSeq, answerCon);
         });
     });     
@@ -229,7 +229,7 @@ function doUpdateAnswerClick(){
             const answerCon = row.querySelector('.answerContents2').value;
             const answerConTag = row.querySelector('.answerContents2');
             
-            console.log(answerSeq, answerCon, userId, answerConTag);
+            //console.log(answerSeq, answerCon, userId, answerConTag);
             doUpdateAnswer(answerSeq, answerCon, userId, answerConTag);
         });
     });     
@@ -321,10 +321,10 @@ function doRetrieve(url, pageNo){
         let html = '';
         if(isEmpty(data) === false){
             try{
-                console.log(data);
+                //console.log(data);
                 data.forEach(function(item){
-                	console.log(item);
-                	console.log(item.modId);
+                	//console.log(item);
+                	//console.log(item.modId);
                     if(item.modId == "${user.userId}" || 1 == "${user.adminYn}"){  	
                     html += '<tr><th class="answerSeq d-none">';
                     html += item.answerSeq;
@@ -349,7 +349,7 @@ function doRetrieve(url, pageNo){
                 table.innerHTML = html;
                 renderingPaging(maxNum, 1, 10, 10, url, 'doRetrieve');
             }catch(e){
-                 console.log("data를 확인 하세요.");     
+                 //console.log("data를 확인 하세요.");     
                  alert("data를 확인 하세요.");     
             }
             table.innerHTML = html;

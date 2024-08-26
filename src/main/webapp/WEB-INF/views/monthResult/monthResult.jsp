@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // .nav 클래스의 두 번째 .nav-item의 자식 .nav-link를 선택합니다
     const firstNavLink = document.querySelector('.nav .nav-item:nth-child(2) .nav-link');
     const selectBtn = document.querySelector("#selectBtn");
-    console.log("selectBtn"+selectBtn);
+    //console.log("selectBtn"+selectBtn);
     const yearSelectInput = document.querySelector("#yearSelect");
-    console.log("yearSelectInput"+yearSelectInput);
+    //console.log("yearSelectInput"+yearSelectInput);
     const monthSelectInput = document.querySelector("#monthSelect");
-    console.log("monthSelectInput"+monthSelectInput);
+    //console.log("monthSelectInput"+monthSelectInput);
 
     
     // 시작, 끝 날짜 디폴트 값
@@ -52,18 +52,18 @@ document.addEventListener('DOMContentLoaded', function() {
    
     // 연도 선택 박스의 값이 변경될 때 호출되는 함수
     yearSelectInput.addEventListener("change", function(event) {
-    	console.log("yearSelectInput 연도 선택 : "+yearSelectInput.value);
+    	//console.log("yearSelectInput 연도 선택 : "+yearSelectInput.value);
     	yearChange()
         
     });
     
     monthSelectInput.addEventListener("change",function(event){
-        console.log("monthSelectInput 월 선택 : "+monthSelectInput.value);
+        //console.log("monthSelectInput 월 선택 : "+monthSelectInput.value);
         event.stopPropagation();//이벤트 버블링 방지
     });
     
     selectBtn.addEventListener("click",function(event){
-	   	console.log("selectBtn click");
+	   	//console.log("selectBtn click");
 	   	event.stopPropagation();//이벤트 버블링 방지
 	   	todayMonthData();
 	   	locBigData();
@@ -126,15 +126,15 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         PClass.pAjax(url,params,dataType,type,async,function(data){
-            console.log("data: ",data);
+            //console.log("data: ",data);
             
                     
             if(data){
                 try{
                     const jsonData = JSON.parse(data);
                     const allMessage = jsonData.message;
-                    console.log(jsonData);
-                    console.log(allMessage.messageId);
+                    //console.log(jsonData);
+                    //console.log(allMessage.messageId);
                     
 
                     if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }//--selectYear() end
     
     function todayMonthData(regDt){
-    	console.log("todayMonthData(regDt):"+selectBtn);
+    	//console.log("todayMonthData(regDt):"+selectBtn);
     	
     	if(isEmpty(yearSelectInput.value)) {
             alert("연도를 선택하세요.");
@@ -205,14 +205,14 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         PClass.pAjax(url,params,dataType,type,async,function(data){
-            console.log("data: ",data);
+            //console.log("data: ",data);
             
             if(data){
                 try{
                     const jsonData = JSON.parse(data);
                     const allMessage = jsonData.message;
-                    console.log(jsonData);
-                    console.log(allMessage.messageId);
+                    //console.log(jsonData);
+                    //console.log(allMessage.messageId);
                     if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
                         //alert(allMessage.messageContents);
                         tmJSON(jsonData);
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }//--todayMonthData() end
     
    function locBigData(regDt){
-        console.log("locBigData(regDt):"+selectBtn);
+        //console.log("locBigData(regDt):"+selectBtn);
         
         //비동기 통신
         let type = "GET";
@@ -242,14 +242,14 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         
         PClass.pAjax(url,params,dataType,type,async,function(data){
-            console.log("data: ",data);
+            //console.log("data: ",data);
             
             if(data){
                 try{
                     const jsonData = JSON.parse(data);
                     const allMessage = jsonData.message;
-                    console.log(jsonData);
-                    console.log(allMessage.messageId);
+                    //console.log(jsonData);
+                    //console.log(allMessage.messageId);
 
                     if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
                         //alert(allMessage.messageContents);
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }//--locBigData() end
     
    function locMidData(regDt){
-       console.log("locMidData(regDt):"+selectBtn);
+       //console.log("locMidData(regDt):"+selectBtn);
        
        //비동기 통신
        let type = "GET";
@@ -280,14 +280,14 @@ document.addEventListener('DOMContentLoaded', function() {
        };
        
        PClass.pAjax(url,params,dataType,type,async,function(data){
-           console.log("data: ",data);
+           //console.log("data: ",data);
            
            if(data){
                try{
                    const jsonData = JSON.parse(data);
                    const allMessage = jsonData.message;
-                   console.log(jsonData);
-                   console.log(allMessage.messageId);
+                   //console.log(jsonData);
+                   //console.log(allMessage.messageId);
 
                    if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
                        //alert(allMessage.messageContents);
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
    }//--locMidData() end
    
    function factorMidData(regDt){
-       console.log("factorMidData(regDt):"+selectBtn);
+       //console.log("factorMidData(regDt):"+selectBtn);
        
        //비동기 통신
        let type = "GET";
@@ -318,14 +318,14 @@ document.addEventListener('DOMContentLoaded', function() {
        };
        
        PClass.pAjax(url,params,dataType,type,async,function(data){
-           console.log("data: ",data);
+           //console.log("data: ",data);
            
            if(data){
                try{
                    const jsonData = JSON.parse(data);
                    const allMessage = jsonData.message;
-                   console.log(jsonData);
-                   console.log(allMessage.messageId);
+                   //console.log(jsonData);
+                   //console.log(allMessage.messageId);
 
                    if(isEmpty(allMessage) === false && 1 === allMessage.messageId){
                        //alert(allMessage.messageContents);
@@ -345,11 +345,11 @@ document.addEventListener('DOMContentLoaded', function() {
    
     
    function fmJSON(jsonData) {
-       console.log("fmData:"+jsonData.fmData);
-       console.log("fmData[0]:"+jsonData.fmData[0].subFactorMidNm);
+       //console.log("fmData:"+jsonData.fmData);
+       //console.log("fmData[0]:"+jsonData.fmData[0].subFactorMidNm);
        //쿼리 화재요인소분류1순위
        const subFactorMidNm1 = jsonData.fmData[0].subFactorMidNm.toLocaleString();
-       console.log("subFactorMidNm1:"+subFactorMidNm1);
+       //console.log("subFactorMidNm1:"+subFactorMidNm1);
        const monthFireCount1 = jsonData.fmData[0].monthFireCount.toLocaleString();
        const monthAvg1 = jsonData.fmData[0].monthAvg.toLocaleString();
        //쿼리 화재요인소분류2순위
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
        const subFactorMidNm3 = jsonData.fmData[2].subFactorMidNm.toLocaleString();
        const monthFireCount3 = jsonData.fmData[2].monthFireCount.toLocaleString();
        const monthAvg3 = jsonData.fmData[2].monthAvg.toLocaleString();
-       console.log("monthAvg3:"+monthAvg3);
+       //console.log("monthAvg3:"+monthAvg3);
 
        //--<div>태그 id
        const FactorMidDiv = document.querySelector('#FactorMid');
@@ -382,11 +382,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
    
    function lmJSON(jsonData) {
-       console.log("lmData:"+jsonData.lmData);
-       console.log("lmData[0]:"+jsonData.lmData[0].subLocMidNm);
+       //console.log("lmData:"+jsonData.lmData);
+       //console.log("lmData[0]:"+jsonData.lmData[0].subLocMidNm);
        //쿼리 화재장소소분류1순위
        const subLocMidNm1 = jsonData.lmData[0].subLocMidNm.toLocaleString();
-       console.log("subLocBigNm1:"+subLocMidNm1);
+       //console.log("subLocBigNm1:"+subLocMidNm1);
        const monthFireCount1 = jsonData.lmData[0].monthFireCount.toLocaleString();
        const monthAvg1 = jsonData.lmData[0].monthAvg.toLocaleString();
        //쿼리 화재장소소분류2순위
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
        const subLocMidNm3 = jsonData.lmData[2].subLocMidNm.toLocaleString();
        const monthFireCount3 = jsonData.lmData[2].monthFireCount.toLocaleString();
        const monthAvg3 = jsonData.lmData[2].monthAvg.toLocaleString();
-       console.log("monthAvg3:"+monthAvg3);
+       //console.log("monthAvg3:"+monthAvg3);
 
        //--<div>태그 id
        const LocMidDiv = document.querySelector('#LocMid');
@@ -417,11 +417,11 @@ document.addEventListener('DOMContentLoaded', function() {
    }//--lmJSON end
     
     function lbJSON(jsonData) {
-    	console.log("lbJSON:"+jsonData.lbData);
-    	console.log("lbJSON[0]:"+jsonData.lbData[0]);
+    	//console.log("lbJSON:"+jsonData.lbData);
+    	//console.log("lbJSON[0]:"+jsonData.lbData[0]);
     	//쿼리 화재장소대분류1순위
         const subLocBigNm1 = jsonData.lbData[0].subLocBigNm.toLocaleString();
-        console.log("subLocBigNm1:"+subLocBigNm1);
+        //console.log("subLocBigNm1:"+subLocBigNm1);
         const monthFireCount1 = jsonData.lbData[0].monthFireCount.toLocaleString();
         const monthAvg1 = jsonData.lbData[0].monthAvg.toLocaleString();
         //쿼리 화재장소대분류2순위
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const subLocBigNm3 = jsonData.lbData[2].subLocBigNm.toLocaleString();
         const monthFireCount3 = jsonData.lbData[2].monthFireCount.toLocaleString();
         const monthAvg3 = jsonData.lbData[2].monthAvg.toLocaleString();
-        console.log("monthAvg3:"+monthAvg3);
+        //console.log("monthAvg3:"+monthAvg3);
 
         //--<div>태그 id
         const LocBigDiv = document.querySelector('#LocBig');
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function tmJSON(jsonData) {
 		//--쿼리 데이터 값
 		const todayFireCount = jsonData.tmData.todayFireCount.toLocaleString();
-		console.log("todayFireCount:"+todayFireCount);
+		//console.log("todayFireCount:"+todayFireCount);
 		const monthFireCount = jsonData.tmData.monthFireCount.toLocaleString();
 		const lastYearDayFireCount = jsonData.tmData.lastYearDayFireCount.toLocaleString();
 		const lastYearMonthFireCount = jsonData.tmData.lastYearMonthFireCount.toLocaleString();

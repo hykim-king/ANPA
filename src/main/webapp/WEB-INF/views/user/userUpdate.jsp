@@ -34,7 +34,7 @@ $(document).ready(function(){
     
     setTimeout(function() {
     	cMselect.value = subCityValue;
-    }, 150);
+    }, 200);
     
     cBselect.addEventListener("change",function(){
         cityCodeSet("", cBselect, cMselect);  

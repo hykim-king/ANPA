@@ -9,7 +9,7 @@
 <head>
 <script>
 document.addEventListener("DOMContentLoaded", function(){
-    console.log("DOMContentLoaded");    
+    //console.log("DOMContentLoaded");    
     const appmenuWrapBtn = document.querySelector("#appmenuWrapBtn");                 
     const appmenuWrap = document.querySelector(".appmenuWrap");                 
     const appmenu = document.querySelector(".appmenu");      
@@ -35,10 +35,10 @@ document.addEventListener("DOMContentLoaded", function(){
     
     if(document.querySelector(".logout-btn")){
         const logoutAnkers = document.querySelectorAll(".logout-btn");
-        console.log("logoutAnkers",logoutAnkers);
+        //console.log("logoutAnkers",logoutAnkers);
         logoutAnkers.forEach(function(logoutAnker){
             logoutAnker.addEventListener("click", function(event){
-                console.log("logoutAnker click", event);
+                //console.log("logoutAnker click", event);
                 event.stopPropagation();
                 if (confirm('로그아웃 하시겠습니까?') === false) return;
                 logout();
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     function logout() {
-        console.log("logout()");
+        //console.log("logout()");
         $.ajax({
             type: "GET",
             url: "/ehr/user/logout.do",
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function(){
                 if (data) {
                     try {
                         const message = data;
-                        console.log(message);
+                        //console.log(message);
                         if (message.messageId === 1) { 
                             alert(message.messageContents);
                             window.location.replace("/ehr/main/index.do"); 

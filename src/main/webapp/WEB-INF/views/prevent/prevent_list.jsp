@@ -25,7 +25,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const test = "${search}";
-        console.log(test);
+        //console.log(test);
 
         // .nav 클래스의 3번째 .nav-item의 자식 .nav-link를 선택합니다
         const firstNavLink = document
@@ -47,7 +47,7 @@
     function pageRetrieve(url, pageNo) {
         const frm = document.querySelector("#preventFrm");
         frm.pageNo.value = pageNo;
-        console.log("pageNo: " + pageNo);
+        //console.log("pageNo: " + pageNo);
 
         frm.action = url;
         frm.submit();
@@ -61,7 +61,7 @@
         });
 
         function doRetrieve() {
-            console.log("doRetrieve()");
+            //console.log("doRetrieve()");
             const frm = document.querySelector("#preventFrm");
 
             frm.action = "/ehr/prevent/doRetrieve.do";
