@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </c:otherwise>
     </c:choose>
     <div class="row g-1 align-items-center">
-        <form name="bRfrm" id="bRfrm" class="col-md-5">
+        <form name="bRfrm" id="bRfrm" class="col-md-auto">
             <div class="row g-1">
                 <input type="hidden" name="work_div" id="work_div">
                 <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
@@ -124,13 +124,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </div>
 
-                <div class="col-md-7">
+                <div class="col-md-auto">
                     <input class="form-control mt-3" type="search" name="searchWord" id="searchWord" placeholder="검색어 입력" value="${search.searchWord}">
                 </div>
             </div>
         </form>
         
-        <div class="col-md-auto d-flex">
+        <div class="col-md-auto d-flex col-md-auto">
             <button id="searchBtn" type="button" class="btn btn-dark mt-3">
                 <i class="bi bi-search"></i>
             </button>
