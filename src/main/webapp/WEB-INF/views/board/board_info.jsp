@@ -218,8 +218,7 @@ function doUpdateAnswerClick(){
     const answerUpBtns = document.querySelectorAll("#answerTable tr .btn-secondary");
     
     answerUpBtns.forEach(function(answerUpBtn) {
-        answerUpBtn.addEventListener("click", function() {   
-            if(confirm('댓글을 수정 하시겠습니까?') === false) return;             
+        answerUpBtn.addEventListener("click", function() {             
             // 클릭된 버튼이 속한 행을 찾습니다
             const row = this.closest('tr');
             
@@ -270,7 +269,7 @@ function doUpdateAnswer(answerSeq, answerCon, userId, answerConTag){
         return;
     }  
     
-    if(confirm('수정 하시겠습니까?') === false) return;
+    if(confirm('댓글을 수정 하시겠습니까?') === false) return;
     
     //비동기 통신
     let type= "POST";  
