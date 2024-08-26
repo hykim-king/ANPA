@@ -50,7 +50,7 @@
                     SELECT
                         c.big_list,
                         NVL(COUNT(*), 0) AS monthFireCount,
-                        DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk
+                        ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rnk
                     FROM fire_data f
                     JOIN code c ON f.sub_loc = c.sub_code
                     WHERE c.master_code = 'location'    
@@ -72,7 +72,7 @@
 	            SELECT
 	                c.mid_list,
 	                COUNT(*) AS monthFireCount,
-	                DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk
+	                ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rnk
 	            FROM fire_data f
 	            JOIN code c ON f.sub_loc = c.sub_code
 	            WHERE c.master_code = 'location'    
@@ -93,7 +93,7 @@
 		            SELECT
 		                c.mid_list,
 		                COUNT(*) AS monthFireCount,
-		                DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk
+		                ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rnk
 		            FROM fire_data f
 		            JOIN code c ON f.sub_factor = c.sub_code
 		            WHERE c.master_code = 'factor'    
