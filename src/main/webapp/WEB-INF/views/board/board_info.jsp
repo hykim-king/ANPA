@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
     	
     	const userId = "${user.userId}";
     	const boardSeq = "${board.boardSeq}";
-    	const contents = document.querySelector('.answerContents').value;
+    	const contents = document.querySelector('.answerContents');
     	console.log("userId : " + userId);
     	console.log("boardSeq : " + boardSeq);
     	console.log("contents : " + contents);
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         //markdown getter : simplemde.value()
         let params = {
-            'contents' : contents,
+            'contents' : contents.value,
             'boardSeq' : boardSeq,
             'regId'    : userId
         }
@@ -91,7 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
                         doRetrieve('/ehr/board/doAnswerAjax.do', 1);
-                        contents.innerHTML = '';
+                        const contents = document.querySelector('.answerContents');
+                        contents.value = '';
                     }else{
                         alert("에러: "+data.messageContents);
                     }
@@ -151,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }  
         
-        if(confirm('수정 하시겠습니까?') === false) return;
+        if(confirm('댓글을 수정 하시겠습니까?') === false) return;
         
         //비동기 통신
         let type= "POST";  
@@ -269,8 +270,6 @@ function doUpdateAnswer(answerSeq, answerCon, userId, answerConTag){
         answerConTag.focus();
         return;
     }  
-    
-    if(confirm('댓글을 수정 하시겠습니까?') === false) return;
     
     //비동기 통신
     let type= "POST";  
@@ -443,7 +442,14 @@ function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scrip
 <body>
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <section class="board_info content content2 content3 align-items-center">
-    <h3>공지사항</h3>
+    <c:choose>
+        <c:when test="${search.getDiv() == 10}">
+            <h3>건의사항 / 소통 게시판</h3>
+        </c:when>
+        <c:otherwise>
+            <h3>공지사항 게시판</h3>
+        </c:otherwise>
+    </c:choose>
     <div class="d-flex justify-content-end">             
         <p class="table-btn btn btn-success" id="moveList">목록</p>                
     </div>
