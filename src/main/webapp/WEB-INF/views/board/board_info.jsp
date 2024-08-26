@@ -443,13 +443,13 @@ function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scrip
 <jsp:include page="/WEB-INF/views/header.jsp" />
 <section class="board_info content content2 content3 align-items-center">
     <c:choose>
-        <c:when test="${search.getDiv() == 10}">
+        <c:when test="${board.divYn == 10}">
             <h3>건의사항 / 소통 게시판</h3>
         </c:when>
         <c:otherwise>
             <h3>공지사항 게시판</h3>
         </c:otherwise>
-    </c:choose>
+    </c:choose>    
     <div class="d-flex justify-content-end">             
         <p class="table-btn btn btn-success" id="moveList">목록</p>                
     </div>
