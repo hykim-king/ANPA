@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		//바닥글 :
 		int bottomCount = search.BOTTOM_COUNT;
 		
-		String url = "/ehr/manage/doRetrieveData.do";
+		String url = "/ehr/manage/doRetrieveMember.do";
 		String scriptName = "pageRetrieve";
 		
 		out.print(StringUtil.renderingPaging(maxNum, currentPageNo, rowPerPage, bottomCount, url, scriptName));
