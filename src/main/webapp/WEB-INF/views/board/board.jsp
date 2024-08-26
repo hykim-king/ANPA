@@ -323,11 +323,9 @@ function renderingPaging(maxNum,currentPageNo,rowPerPage,bottomCount, url, scrip
 function rowClick(){
     const rows = document.querySelectorAll("#boardTable tbody tr");
     rows.forEach(function(row){
-        row.addEventListener("click",function(event){
+        row.addEventListener("dblclick",function(event){
             
             let boardSeq = this.querySelector(".tbseq input").value;
-            
-            if(confirm('게시글을 조회하시겠습니까?') ==false) return;
             
             doSelectOne(boardSeq);
         });

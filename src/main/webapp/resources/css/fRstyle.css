@@ -12,7 +12,10 @@
     stroke-opacity: 1;
     stroke-width:0.5;
 }
-.land:hover{fill : skyblue;}
+.land:hover{
+    fill: #157347;
+    cursor: pointer;
+}
 .map{
 	top : 0;
 	left: 0;
