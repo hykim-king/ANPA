@@ -61,113 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
     	doUpdate();
     });
     
-    //함수    
-    function doDelAnswerClick(){
-        const answerDelBtns = document.querySelectorAll("#answerTable tbody tr .btn-danger");
-        
-        answerDelBtns.forEach(function(answerDelBtn) {
-        	answerDelBtn.addEventListener("click", function() {   
-                if(confirm('댓글을 삭제 하시겠습니까?') === false) return;             
-                // 클릭된 버튼이 속한 행을 찾습니다
-                const row = this.closest('tr');
-                
-                const answerSeq = row.querySelector('.answerSeq').textContent;
-                const answerCon = row.querySelector('.answerContents2').textContent;
-                
-                console.log(answerSeq, answerCon);
-                doDelAnswer(answerSeq, answerCon);
-            });
-        });    	
-    }
-    function doDelAnswer(answerSeq, answerCon){        
-        //비동기 통신
-        let type= "GET";  
-        let url = "/ehr/board/doDelAnswer.do";
-        let async = "true";
-        let dataType = "json";
-        
-        let params = {
-            "answerSeq" : answerSeq,
-            "contents" : answerCon
-        }
-        
-        PClass.pAjax(url,params,dataType,type,async,function(data){
-            if(data){
-                try{
-                    if(isEmpty(data) === false && 1 === data.messageId){
-                        alert(data.messageContents);
-                        doRetrieve('/ehr/board/doAnswerAjax.do', 1);
-                    }else{
-                        alert("에러발생 : "+data.messageContents);
-                    }
-                    
-                }catch(e){
-                     alert("댓글삭제 예외발생 : 개발자에게 문의 요망");     
-                }
-                
-            }
-            
-        }); 
-    }
-    function doUpdateAnswerClick(){
-        const answerUpBtns = document.querySelectorAll("#answerTable tbody tr .btn-secondary");
-        
-        answerUpBtns.forEach(function(answerUpBtn) {
-            answerUpBtn.addEventListener("click", function() {   
-                if(confirm('댓글을 수정 하시겠습니까?') === false) return;             
-                // 클릭된 버튼이 속한 행을 찾습니다
-                const row = this.closest('tr');
-                
-                const userId = "${user.userId}";
-                const answerSeq = row.querySelector('.answerSeq').textContent;
-                const answerCon = row.querySelector('.answerContents2').value;
-                const answerConTag = row.querySelector('.answerContents2');
-                
-                console.log(answerSeq, answerCon, userId, answerConTag);
-                doUpdateAnswer(answerSeq, answerCon, userId, answerConTag);
-            });
-        });     
-    }
-    function doUpdateAnswer(answerSeq, answerCon, userId, answerConTag){        
-        if(isEmpty(answerCon) == true){
-            alert('내용을 입력 하세요.')
-            answerConTag.focus();
-            return;
-        }  
-        
-        if(confirm('수정 하시겠습니까?') === false) return;
-        
-        //비동기 통신
-        let type= "POST";  
-        let url = "/ehr/board/doUpdateAnswer.do";
-        let async = "true";
-        let dataType = "json";
-        
-        //markdown getter : simplemde.value()
-        let params = { 
-            "answerSeq": answerSeq,
-            "contents": answerCon,
-            "modId": userId
-        }
-        
-        PClass.pAjax(url,params,dataType,type,async,function(data){
-            if(data){
-                try{
-                    if(isEmpty(data) === false && 1 === data.messageId){
-                        alert(data.messageContents);
-                        doRetrieve('/ehr/board/doAnswerAjax.do', 1);
-                    }else{
-                        alert("에러: "+data.messageContents);
-                    }
-                    
-                }catch(e){
-                     alert("예외 발생 : 개발자에게 문의 요망");     
-                }
-                
-            }
-            
-        });
-    }
+    //함수        
     function doSaveAnswer(){
     	if(confirm('비방이나 모욕적인 댓글은 삭제될 수 있습니다. 등록하시겠습니까?') === false) return;
     	
@@ -297,6 +191,118 @@ let url = '/ehr/board/doAnswerAjax.do';
 let maxNum = '${list[0].totalCnt}';
 doRetrieve(url, 1);    
 });   
+function doDelAnswerClick(){
+    console.log('┌────────────────')
+    console.log('doDeleteAnswer')
+    console.log('└────────────────')
+    const answerDelBtns = document.querySelectorAll("#answerTable tr .btn-danger");
+    console.log('┌────────────────')
+    console.log(answerDelBtns)
+    console.log('└────────────────')
+    
+    answerDelBtns.forEach(function(answerDelBtn) {
+        answerDelBtn.addEventListener("click", function() {   
+            if(confirm('댓글을 삭제 하시겠습니까?') === false) return;             
+            // 클릭된 버튼이 속한 행을 찾습니다
+            const row = this.closest('tr');
+            
+            const answerSeq = row.querySelector('.answerSeq').textContent;
+            const answerCon = row.querySelector('.answerContents2').textContent;
+            
+            console.log(answerSeq, answerCon);
+            doDelAnswer(answerSeq, answerCon);
+        });
+    });     
+}
+function doUpdateAnswerClick(){
+    const answerUpBtns = document.querySelectorAll("#answerTable tr .btn-secondary");
+    
+    answerUpBtns.forEach(function(answerUpBtn) {
+        answerUpBtn.addEventListener("click", function() {   
+            if(confirm('댓글을 수정 하시겠습니까?') === false) return;             
+            // 클릭된 버튼이 속한 행을 찾습니다
+            const row = this.closest('tr');
+            
+            const userId = "${user.userId}";
+            const answerSeq = row.querySelector('.answerSeq').textContent;
+            const answerCon = row.querySelector('.answerContents2').value;
+            const answerConTag = row.querySelector('.answerContents2');
+            
+            console.log(answerSeq, answerCon, userId, answerConTag);
+            doUpdateAnswer(answerSeq, answerCon, userId, answerConTag);
+        });
+    });     
+}
+function doDelAnswer(answerSeq, answerCon){        
+    //비동기 통신
+    let type= "GET";  
+    let url = "/ehr/board/doDelAnswer.do";
+    let async = "true";
+    let dataType = "json";
+    
+    let params = {
+        "answerSeq" : answerSeq,
+        "contents" : answerCon
+    }
+    
+    PClass.pAjax(url,params,dataType,type,async,function(data){
+        if(data){
+            try{
+                if(isEmpty(data) === false && 1 === data.messageId){
+                    alert(data.messageContents);
+                    doRetrieve('/ehr/board/doAnswerAjax.do', 1);
+                }else{
+                    alert("에러발생 : "+data.messageContents);
+                }
+                
+            }catch(e){
+                 alert("댓글삭제 예외발생 : 개발자에게 문의 요망");     
+            }
+            
+        }
+        
+    }); 
+}
+function doUpdateAnswer(answerSeq, answerCon, userId, answerConTag){        
+    if(isEmpty(answerCon) == true){
+        alert('내용을 입력 하세요.')
+        answerConTag.focus();
+        return;
+    }  
+    
+    if(confirm('수정 하시겠습니까?') === false) return;
+    
+    //비동기 통신
+    let type= "POST";  
+    let url = "/ehr/board/doUpdateAnswer.do";
+    let async = "true";
+    let dataType = "json";
+    
+    //markdown getter : simplemde.value()
+    let params = { 
+        "answerSeq": answerSeq,
+        "contents": answerCon,
+        "modId": userId
+    }
+    
+    PClass.pAjax(url,params,dataType,type,async,function(data){
+        if(data){
+            try{
+                if(isEmpty(data) === false && 1 === data.messageId){
+                    alert(data.messageContents);
+                    doRetrieve('/ehr/board/doAnswerAjax.do', 1);
+                }else{
+                    alert("에러: "+data.messageContents);
+                }
+                
+            }catch(e){
+                 alert("예외 발생 : 개발자에게 문의 요망");     
+            }
+            
+        }
+        
+    });
+}
 //페이징
 function doRetrieve(url, pageNo){
     const boardSeq = "${board.boardSeq}";
@@ -349,6 +355,8 @@ function doRetrieve(url, pageNo){
             }
             table.innerHTML = html;
             renderingPaging(maxNum, pageNo,10,10, url, 'doRetrieve');
+            doDelAnswerClick();
+            doUpdateAnswerClick();
         }else{
             html = '<tr><td class="text-center" colspan="99" >댓글이 없습니다</td></tr>';
             table.innerHTML = html;
