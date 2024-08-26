@@ -44,7 +44,7 @@ $(document).ready(function(){
     // 회원정보수정
     $("#doUpdate").on("click", function(event){
         event.preventDefault();         
-        console.log("doUpdate click");        
+        //console.log("doUpdate click");        
         doUpdate();
     });
 	
@@ -85,7 +85,7 @@ $(document).ready(function(){
     
     //회원정보 수정 입력
 	function doUpdate(){
-    	console.log("${outVO.userId}");
+    	//console.log("${outVO.userId}");
     	if(isEmpty($("#email").val())){
             alert("이메일을 입력하세요.");
             $("#email").focus();
@@ -167,12 +167,12 @@ $(document).ready(function(){
          if(confirm("회원정보를 수정하시겠습니까?") === false) return;
          
          PClass.pAjax(url,params,dataType,type,async,function(data){
-             console.log("data: ",data);
+             //console.log("data: ",data);
              if(data){
                  let message = JSON.parse(data); 
                  try{
                      if(1 == message.messageId){    
-                    	 console.log("message.messageId:"+message.messageId);
+                    	 //console.log("message.messageId:"+message.messageId);
                          //alert(message.messageContents);
                          window.location.href = "/ehr/main/index.do";
                          alert("회원정보 수정이 완료되었습니다.");
@@ -214,7 +214,7 @@ $(document).ready(function(){
                 contentType: "application/x-www-form-urlencoded",
                 success: function(response) {
                     const optionCodeData = JSON.parse(response);
-                    console.log(optionCodeData);
+                    //console.log(optionCodeData);
                     cMselect.innerHTML = '<option value="">' + "시군구 전체" + '</option>';
                     optionCodeData.forEach(function(item) {
                     	
