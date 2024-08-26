@@ -85,20 +85,15 @@ document.addEventListener('DOMContentLoaded', function() {
     //초기화
     resycleBtn.addEventListener("click",function(event){
         event.stopPropagation();
-        $('g').addClass('d-none');
-        $('#CSV').addClass('d-none');
         bigList.value = '';
         midList.value = '';
-        searchConditions.textContent = '';
         fRdateEnd.value = currentDate;
         fRdateStart.value = lastMonthDate;
-        fireCnt.innerHTML = '';
-        fireAmount.innerHTML = '';
-        result.innerHTML = '';
-        $('#thead').html('');
-        $('#tbody').html('');
         sido.value = '';
         sigungo.value = '';
+        
+        factorList();
+        doData();
     });
     
     //CSV파일 다운로드
@@ -196,8 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
             sido.value = title;
             
             let searchDiv = '20';
-            div = 'city';
-            categoryMidList(searchDiv,div,title,sigungo);
+            let cityDiv = 'city';
+            categoryMidList(searchDiv,cityDiv,title,sigungo);
             
             doData();
         });
