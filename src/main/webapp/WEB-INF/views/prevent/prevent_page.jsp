@@ -52,11 +52,13 @@
         max-width : 960px;
         height: auto;
         margin-bottom: 10px;
+        padding: 20px 0;
     }
     .content-footer {
         display: flex;
-        justify-content: end;
+        justify-content: center;
         align-items: center;
+        padding-bottom: 50px;
     }
     .btn {
         background-color: #4CAF50;

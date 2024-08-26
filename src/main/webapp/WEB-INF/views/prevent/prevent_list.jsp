@@ -148,6 +148,19 @@ h1 {
 .btn-custom:hover {
     background-color: #5a6268; 
 }
+
+@media screen and (max-width: 1200px){
+	.card-list {
+	    grid-template-columns: repeat(3, minmax(80px, 1fr)); 
+	    gap: 20px; 
+	}
+}
+@media screen and (max-width: 900px){
+	.card-list {
+	    grid-template-columns: repeat(2, minmax(80px, 1fr)); 
+	    gap: 15px; 
+	}
+}
 </style>
 </head>
 <body>
