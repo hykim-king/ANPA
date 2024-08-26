@@ -632,7 +632,15 @@ document.addEventListener('DOMContentLoaded', function() {
 					   <div>
 					       <!-- status.index는 0부터 시작하므로 +1을 추가하여 1부터 시작하도록 조정 -->
 					       <p>
-						   <span><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocBigNm} : ${item.monthFireCount} 건</span><span>평균 : ${item.monthAvg} 건</span>
+						   <span><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocBigNm} : ${item.monthFireCount} 건</span>
+							   <c:choose>
+		                           <c:when test="${item.monthAvg < 10}">
+									   <span>일 평균 : 0${item.monthAvg} 건</span>
+		                           </c:when>
+		                           <c:otherwise>
+									   <span>일 평균 : ${item.monthAvg} 건</span>
+		                           </c:otherwise>
+							   </c:choose>
 						   </p>
 					   </div>
 					</c:forEach>
@@ -653,8 +661,15 @@ document.addEventListener('DOMContentLoaded', function() {
                        <div>
                            <p>
 							<span><i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subLocMidNm} : ${item.monthFireCount} 건</span>
-							<span>평균 : ${item.monthAvg} 건</span>
-						</p>                           
+				            <c:choose>
+                                <c:when test="${item.monthAvg < 10}">
+									<span>일 평균 : 0${item.monthAvg} 건</span>
+                                </c:when>
+                                <c:otherwise>
+									<span>일 평균 : ${item.monthAvg} 건</span>
+                                </c:otherwise>
+                            </c:choose>
+						   </p>                           
                        </div>
                       </c:forEach>
                     </c:when>
@@ -676,7 +691,14 @@ document.addEventListener('DOMContentLoaded', function() {
 							<span>
 							<i class="bi bi-<c:out value="${status.index + 1}" />-square-fill"></i> ${item.subFactorMidNm} : ${item.monthFireCount} 건
 							</span>
-							<span>평균 : ${item.monthAvg} 건</span>
+							<c:choose>
+                                <c:when test="${item.monthAvg < 10}">
+                                    <span>일 평균 : 0${item.monthAvg} 건</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span>일 평균 : ${item.monthAvg} 건</span>
+                                </c:otherwise>
+                            </c:choose>
 						 </p>                           
                        </div>
                       </c:forEach>

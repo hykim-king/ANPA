@@ -252,9 +252,11 @@
 .subGraphBox{
 	padding : 0 20px;
 	margin : 25px auto;
-	background-color: #fff;
 }	
-.subGraphBox div{padding: 20px 5px;}
+.subGraphBox div{
+	padding: 20px 5px;
+    background-color: #fff;	
+}
 
 .subGraphBox > div{box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, .3);}
 @media screen and (max-width: 1200px) {
