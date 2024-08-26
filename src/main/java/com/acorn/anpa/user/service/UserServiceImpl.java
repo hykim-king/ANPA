@@ -1,5 +1,7 @@
 package com.acorn.anpa.user.service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService, PLog {
     @Override
     public Member login(Member inVO) throws SQLException {
         log.debug("1. param :" + inVO);
+        inVO.setPassword(sha256PW(inVO.getPassword()));
         Member member = userMapper.login(inVO);
         log.debug("2. login info :" + member);
         return member;
@@ -47,6 +50,8 @@ public class UserServiceImpl implements UserService, PLog {
 		}
 		
 		// passwordCheck : 1 성공/0 실패 -> 20
+		inVO.setPassword(sha256PW(inVO.getPassword()));
+		
 		int passwordCnt = userMapper.passwordCheck(inVO);
 		if(0 == passwordCnt) {
 			status = 20;
@@ -61,6 +66,9 @@ public class UserServiceImpl implements UserService, PLog {
     @Override
     public Member loginInfo(Member inVO) throws SQLException {
         log.debug("1. param :" + inVO);
+        
+        inVO.setPassword(sha256PW(inVO.getPassword()));
+        
         Member loginInfo = userMapper.loginInfo(inVO);
         log.debug("2. loginInfo :" + loginInfo);
         return loginInfo;
@@ -70,6 +78,7 @@ public class UserServiceImpl implements UserService, PLog {
     public int signUp(Member member) throws SQLException {
         int flag = 0;
         log.debug(member);
+        member.setPassword(sha256PW(member.getPassword()));
         flag = userMapper.signUp(member);
         log.debug("flag:" + flag);
         return flag;
@@ -113,7 +122,6 @@ public class UserServiceImpl implements UserService, PLog {
 			log.debug("userId : "+userId);
 			log.debug("userEmail : "+userEmail);
 			log.debug("name : "+name);
-			
 			flag = userMapper.findPassword(member);
 			StringBuilder sb = new StringBuilder(100); //메일 내용
 			String password = ""; //초기화 비밀번호
@@ -142,7 +150,8 @@ public class UserServiceImpl implements UserService, PLog {
 				String contents = sb.toString();
 				log.debug("contents : "+contents);
 				
-				member.setPassword(password);
+				String sha256PW = sha256PW(password);
+				member.setPassword(sha256PW);
 				int flagPw = userMapper.passwordUpdate(member);
 				
 				if(flagPw == 1) {
@@ -186,7 +195,7 @@ public class UserServiceImpl implements UserService, PLog {
 	    }
 		
 		//비밀번호 초기화
-		 private static String generateRandomPassword() {
+		 private String generateRandomPassword() {
 			 final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
 		     final int MIN_LENGTH = 8;
 		     final int MAX_LENGTH = 10;
@@ -199,9 +208,32 @@ public class UserServiceImpl implements UserService, PLog {
 		         int randomIndex = RANDOM.nextInt(CHARACTERS.length());
 		         password.append(CHARACTERS.charAt(randomIndex));
 		     }
+		     
 		        
 		     return password.toString();
 		 }
+		 
+	 //비밀번호 암호화
+     public String sha256PW(String password) {
+    	 StringBuilder sb = new StringBuilder(256);
+    	 
+    	 try{
+    		 MessageDigest md = MessageDigest.getInstance("SHA-256");
+    		 
+    		 md.update(password.getBytes());
+    		 
+    		 byte[] data = md.digest();
+    		 
+    		 for(byte b : data) {
+    			 sb.append(String.format("%02x", b));
+    		 }
+    	 }catch(NoSuchAlgorithmException e) {
+    		 e.printStackTrace();
+    	 }
+    	 
+    	 
+    	 return sb.toString();
+     }
 	
 	 @Override
 		public int passwordUpdate(Member inVO) throws SQLException {
@@ -221,7 +253,8 @@ public class UserServiceImpl implements UserService, PLog {
 	
 	@Override
 	public int doUpdate(Member inVO) throws SQLException {
-		log.debug("1. param : " + inVO);	
+		log.debug("1. param : " + inVO);
+		inVO.setPassword(sha256PW(inVO.getPassword()));
 		int flag = this.userMapper.doUpdate(inVO);
 		log.debug("2. flag : " + flag);
 		
@@ -249,6 +282,7 @@ public class UserServiceImpl implements UserService, PLog {
 	@Override
 	public int doSave(Member inVO) throws SQLException {
 		log.debug("1. param : " + inVO);	
+		inVO.setPassword(sha256PW(inVO.getPassword()));
 		int flag = this.userMapper.doUpdate(inVO);
 		log.debug("2. flag : " + flag);
 		
