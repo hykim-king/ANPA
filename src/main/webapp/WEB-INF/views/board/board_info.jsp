@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
-                        doRetrieve(url, 1);
+                        doRetrieve('/ehr/board/doAnswerAjax.do', 1);
                     }else{
                         alert("에러발생 : "+data.messageContents);
                     }
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
-                        doRetrieve(url, 1);
+                        doRetrieve('/ehr/board/doAnswerAjax.do', 1);
                     }else{
                         alert("에러: "+data.messageContents);
                     }
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try{
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
-                        doRetrieve(url, 1);
+                        doRetrieve('/ehr/board/doAnswerAjax.do', 1);
                     }else{
                         alert("에러: "+data.messageContents);
                     }
@@ -320,14 +320,14 @@ function doRetrieve(url, pageNo){
                 data.forEach(function(item){
                 	console.log(item);
                 	console.log(item.modId);
-                    if(item.modId == "${user.userId}"){  	
+                    if(item.modId == "${user.userId}" || 1 == "${user.adminYn}"){  	
                     html += '<tr><th class="answerSeq d-none">';
                     html += item.answerSeq;
                     html += '</th><th class="table-dark col-md-2 text-center" style="vertical-align: middle;">';
                     html += item.modId;
                     html += '</th><td class="col-md-7"><p class="col-md-12 m-0 answerCon"><textarea class="form-control answerContents2">';
                     html += item.contents;
-                    html += '</textarea></p><div class="col-md-auto m-0 mt-2" style="float : right;"><button class="btn btn-secondary">수정</button><button class="btn btn-danger">삭제</button></div></td><td class="col-md-1 text-center" style="vertical-align: middle;">';
+                    html += '</textarea></p><div class="col-md-auto m-0 mt-2" style="float : right;"><button class="answerUpbtn btn btn-secondary">수정</button><button class="btn btn-danger">삭제</button></div></td><td class="col-md-1 text-center" style="vertical-align: middle;">';
                     html += item.modDt;
                     html += '</td></tr>';
                     }else{

@@ -51,6 +51,15 @@
   transform: translateY(-5px);
 }
 .table-btn:last-child{margin-left: 10px;}
+.answerCount{
+	margin-left: 10px;
+    background-color: #ff6161;
+    color: white;
+    width: 27px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 20px;
+}
 @media screen and (max-width: 800px){
   .table-btn{
     width: 50%;
@@ -67,6 +76,7 @@
 .answerContents2{	
     resize: none;
 }
+.answerUpbtn{margin-right : 5px;}
 .answerBtn{
 	margin : 0;
     float : right;	

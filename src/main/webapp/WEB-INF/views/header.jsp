@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function(){
     const appmenuWrapBtn = document.querySelector("#appmenuWrapBtn");                 
     const appmenuWrap = document.querySelector(".appmenuWrap");                 
     const appmenu = document.querySelector(".appmenu");      
-    const doSelectOneBtn = document.querySelector("#doSelectOne");  
+    const doSelectOneBtns = document.querySelectorAll(".user-name");  
     
     appmenuWrapBtn.addEventListener("click",function(event){
     	appmenuWrap.classList.toggle('hide');
@@ -24,11 +24,13 @@ document.addEventListener("DOMContentLoaded", function(){
         event.stopPropagation(); // 이벤트 버블링 방지        
     });
     
-    if(doSelectOneBtn){    	
-	    doSelectOneBtn.addEventListener("click",function(event){
-	        event.stopPropagation(); // 이벤트 버블링 방지        
-	        window.location.href = "/ehr/user/doSelectOne.do";
-	    });  
+    if(doSelectOneBtns){    	
+        doSelectOneBtns.forEach(function(doSelectOneBtn) {
+        	doSelectOneBtn.addEventListener("click", function(event) {
+                event.stopPropagation(); // 이벤트 버블링 방지
+                window.location.href = "/ehr/user/doSelectOne.do"; // 클릭 시 페이지 이동
+            });
+        });
     }
     
     if(document.querySelector(".logout-btn")){

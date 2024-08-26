@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </c:otherwise>
     </c:choose>
     <div class="row g-1 align-items-center">
-        <form name="bRfrm" id="bRfrm" class="col-md-6">
+        <form name="bRfrm" id="bRfrm" class="col-md-5">
             <div class="row g-1">
                 <input type="hidden" name="work_div" id="work_div">
                 <input type="hidden" name="pageNo" id="pageNo" placeholder="페이지 번호">
@@ -213,7 +213,7 @@ function doRetrieve(url, pageNo){
                     
                     html += '<div class="title">'+item.title;
                     if(Number(item.no) > 0){
-	                    html += '<span>['+item.no+']</span></div>'; 
+	                    html += '<span class="answerCount">'+item.no+'</span></div>'; 
                     }else{
                         html += '</div>'; 
                     }

@@ -83,7 +83,7 @@ h1 {
 .card-list {
     display: grid;
     grid-template-columns: repeat(5, minmax(80px, 1fr)); 
-    gap: 10px; 
+    gap: 25px; 
 }
 
 .card {

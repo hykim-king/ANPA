@@ -49,12 +49,13 @@
         display: block;
         margin: 0 auto;
         width: 80%;
+        max-width : 960px;
         height: auto;
         margin-bottom: 10px;
     }
     .content-footer {
         display: flex;
-        justify-content: space-between;
+        justify-content: end;
         align-items: center;
     }
     .btn {
