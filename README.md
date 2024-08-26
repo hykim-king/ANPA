@@ -15,7 +15,7 @@
 * **장민수** [minsooj119@gmail.com] 🖥️ 화재 통계, 게시판, 비밀번호 찾기(재발급)  
   
 ✔️ 전체일정  
-<img style="width:800px;" src="https://github.com/user-attachments/assets/d6c37a5b-7291-435d-b61d-2c91b18dea11"> 
+<img style="width:900px;" src="https://github.com/user-attachments/assets/b96cc7b8-da45-49d7-b059-29e7934d5d9d"> 
 
 ---  
 ## 🚒 프로젝트 배경
