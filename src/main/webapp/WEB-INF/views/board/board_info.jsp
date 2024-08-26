@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(isEmpty(data) === false && 1 === data.messageId){
                         alert(data.messageContents);
                         doRetrieve('/ehr/board/doAnswerAjax.do', 1);
+                        contents.innerHTML = '';
                     }else{
                         alert("에러: "+data.messageContents);
                     }
