@@ -67,8 +67,8 @@
     <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
         <!-- <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> -->
         <property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-        <!--<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@118.33.104.105:7777:xe"></property> -->
-        <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@192.168.0.55:1521:xe"></property>
+        <property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@118.33.104.105:7777:xe"></property>
+        <!--<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@192.168.0.55:1521:xe"></property>-->
         <property name="username" value="ANPA"></property>
         <property name="password" value="pcwk12"></property>
         
@@ -93,7 +93,7 @@
         <property name="host" value="smtp.naver.com"></property>
         <property name="port" value="465"></property>
         <property name="username" value="anpa1995@naver.com"></property>
-        <property name="password" value="pcwk1234pcwk1995"></property>
+        <property name="password" value="password"></property>
         <property name="defaultEncoding" value="UTF-8"></property>
         
         <property name="javaMailProperties">
