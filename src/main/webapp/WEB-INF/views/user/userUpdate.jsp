@@ -16,7 +16,6 @@
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 <link rel="stylesheet" href="${CP}/resources/css/main_style.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="${CP}/resources/js/common.js"></script> 
 <title>ANPA | 회원정보 수정</title>
 <script>  
 $(document).ready(function(){

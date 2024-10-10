@@ -27,9 +27,10 @@
         
     <servlet-mapping>
         <servlet-name>appServlet</servlet-name>
+        <url-pattern>/</url-pattern> 
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
-
+	
     <!-- 브라우저 to WAS : WAS전송 encoding -->
     <filter>
         <filter-name>encodingFilter</filter-name>

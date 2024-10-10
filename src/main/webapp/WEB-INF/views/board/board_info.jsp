@@ -17,7 +17,6 @@
 <!-- bootstrap icon -->
 <link rel="stylesheet" href="${CP}/resources/css/basic_style.css">
 <link rel="stylesheet" href="${CP}/resources/css/board_style.css">
-<script src="${CP}/resources/js/common.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <%-- simplemde --%>
 <link rel="stylesheet" href="${CP}/resources/css/simplemde.min.css">

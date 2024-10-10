@@ -59,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function(){
                         const message = data;
                         //console.log(message);
                         if (message.messageId === 1) { 
+							localStorage.removeItem('jwtToken');
                             alert(message.messageContents);
                             window.location.replace("/ehr/main/index.do"); 
                         } else {
@@ -75,8 +76,10 @@ document.addEventListener("DOMContentLoaded", function(){
             }
         });
     }    
+		
 });
 </script>
+<script src="${CP}/resources/js/common.js"></script> 
 <style>
 .user-name, .login-btn, .logout-btn {
     cursor: pointer;

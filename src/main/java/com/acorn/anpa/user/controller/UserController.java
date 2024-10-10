@@ -32,6 +32,7 @@ import com.acorn.anpa.cmn.StringUtil;
 import com.acorn.anpa.code.domain.Code;
 import com.acorn.anpa.code.service.CodeService;
 import com.acorn.anpa.member.domain.Member;
+import com.acorn.anpa.user.service.JwtUtil;
 import com.acorn.anpa.user.service.UserService;
 
 
@@ -128,56 +129,91 @@ public class UserController implements PLog{
     // 로그인
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     @ResponseBody
-	public String loginInfo(Member inVO, HttpSession httpSession) throws SQLException {
-		String jsonString = "";
+    public String loginInfo(@RequestBody Map<String, String> params, HttpSession httpSession) throws SQLException {
+        String jsonString = "";
+        String token = "";
 
-		log.debug("1 param:" + inVO);
-		int checkCount = userService.idPasswordCheck(inVO);
+        // 요청 본문에서 사용자 ID와 비밀번호 추출
+        String userId = params.get("userId");
+        String password = params.get("password");
 
-		String loginMessage = "";
-		if (10 == checkCount) {
-			loginMessage = "아이디가 일치하지 않습니다";
-		} else if (20 == checkCount) {
-			loginMessage = "비밀번호가 일치하지 않습니다";
-		} else if (30 == checkCount) {
-			loginMessage = "아이디 및 비밀번호가 일치합니다!";
+        Member inVO = new Member();
+        inVO.setUserId(userId);
+        inVO.setPassword(password);
 
-			// 회원정보
-			Member member = userService.loginInfo(inVO);
-			if (null != member) {
-				httpSession.setAttribute("user", member);
-			}
-		}
+        log.debug("1 param:" + inVO);
+        int checkCount = userService.idPasswordCheck(inVO);
 
-		Message message = new Message(checkCount, loginMessage);
+        String loginMessage = "";
+        if (10 == checkCount) {
+            loginMessage = "아이디가 일치하지 않습니다";
+        } else if (20 == checkCount) {
+            loginMessage = "비밀번호가 일치하지 않습니다";
+        } else if (30 == checkCount) {
+            loginMessage = "아이디 및 비밀번호가 일치합니다!";
 
-		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(message);
-		log.debug("1.jsonString:" + jsonString);
+            // 회원정보
+            Member member = userService.loginInfo(inVO);
 
-		return jsonString;
-	}
+            String username = member.getUserName();
+            
+            if (null != member) {
+                // JWT 생성
+                token = JwtUtil.generateToken(userId, username);
+                httpSession.setAttribute("user", member);
+            }
+        }
+
+        // Message 객체 생성 시 token 사용
+        Message message = new Message(checkCount, loginMessage, token);
+
+        jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(message);
+        log.debug("1.jsonString:" + jsonString);
+
+        return jsonString;
+    }
        
     // 로그아웃
     @RequestMapping(value = "/logout.do", method = RequestMethod.GET)
     @ResponseBody
-    public String logout(HttpSession httpSession) {
-    	String jsonString = "";
-		log.debug("logout()");
-		
-		String loginOutMessage = "로그아웃";
-		int flag = 0;
-		if( null != httpSession.getAttribute("user")) {
-			httpSession.invalidate();
-					
-			loginOutMessage = "로그아웃이 완료되었습니다";
-			flag = 1;
-		}
-		
-		Message message=new Message(flag, loginOutMessage);
-		jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(message);
-		log.debug("1.jsonString:" + jsonString);		
-		
-		return jsonString;
+    public String logout(HttpSession httpSession, HttpServletRequest request) {
+        String jsonString = "";
+        String logoutMessage = "로그아웃";
+        int flag = 0;
+        
+        try {
+            // 세션 무효화
+            if (httpSession != null && httpSession.getAttribute("user") != null) {
+                httpSession.invalidate();
+                flag = 1;
+                logoutMessage = "로그아웃이 완료되었습니다";
+            }
+
+            // JWT 무효화 (클라이언트에서 보내는 토큰을 사용)
+            String token = extractTokenFromRequest(request);
+            if (token != null && !token.isEmpty()) {
+                JwtUtil.blacklistToken(token); // JWT를 블랙리스트에 추가하여 무효화
+            }
+
+        } catch (Exception e) {
+            logoutMessage = "로그아웃 처리 중 오류가 발생했습니다";
+            e.printStackTrace();
+        }
+
+        // 메시지 객체 생성 및 JSON 변환
+        Message message = new Message(flag, logoutMessage);
+        jsonString = new GsonBuilder().setPrettyPrinting().create().toJson(message);
+        log.debug("1.jsonString:" + jsonString);
+
+        return jsonString;
+    }
+
+    private String extractTokenFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7); // "Bearer "를 제거하고 토큰 반환
+        }
+        return null;
     }
 
     

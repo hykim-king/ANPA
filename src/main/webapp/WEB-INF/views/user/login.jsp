@@ -30,52 +30,71 @@
             loginInfo(); 
         });
         
-        // 로그인 처리 함수
-        function loginInfo(){
-            if (isEmpty(userIdInput.value)) {
-                alert("아이디를 입력하세요.");
-                userIdInput.focus();
-                return;
-            }
-            
-            if (isEmpty(passwordInput.value)) {
-                alert("비밀번호를 입력하세요.");
-                passwordInput.focus();
-                return;
-            }       
+		// 로그인 처리 함수
+		function loginInfo() {
+		    if (isEmpty(userIdInput.value)) {
+		        alert("아이디를 입력하세요.");
+		        userIdInput.focus();
+		        return;
+		    }
 
-            let type= "POST";  
-            let url = "/ehr/user/login.do";
-            let dataType = "json";  
-            let async = true;
-            let params = {  
-                "userId": userIdInput.value.trim(),
-                "password": passwordInput.value.trim()      
-            };        
-            
-            $.ajax({
-                type: type,
-                url: url,
-                data: params,
-                dataType: dataType,
-                async: async,
-                success: function (data) {
-                    if (data) {
-                        if (data.messageId === 30) {  // 로그인 성공
-                            alert("환영합니다 안전파수꾼 입니다!");
-                            window.location.href = "/ehr/main/index.do";
-                        } else {  // 로그인 실패
-                            alert(data.messageContents);
-                            userIdInput.focus();
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    alert("로그인 처리 중 오류가 발생했습니다.");
-                    console.error("Error: " + error);
-                }
-            });
-        }
+		    if (isEmpty(passwordInput.value)) {
+		        alert("비밀번호를 입력하세요.");
+		        passwordInput.focus();
+		        return;
+		    }
+
+			console.log("┌───────────────────────────────────────────");
+			console.log("│아이디 : " + userIdInput.value.trim());
+			console.log("└───────────────────────────────────────────");
+			console.log("┌───────────────────────────────────────────");
+			console.log("│비밀번호 : " + passwordInput.value.trim());
+			console.log("└───────────────────────────────────────────");
+			
+			const url = "/ehr/user/login.do";
+			const params = {
+			    userId: userIdInput.value.trim(),
+			    password: passwordInput.value.trim()
+			};
+
+			fetch(url, {
+			    method: 'POST',
+			    headers: {
+			        'Content-Type': 'application/json'
+			    },
+			    body: JSON.stringify(params)  // 파라미터를 JSON 문자열로 변환
+			})
+			.then(response => response.json())  // 응답을 JSON으로 파싱
+			.then(data => {
+			    console.log("┌───────────────────────────────────────────");
+			    console.log("│메세지 : " + data.messageId);
+			    console.log("└───────────────────────────────────────────");
+			    if (data) {
+			        if (data.messageId === 30) {  // 로그인 성공
+			            const token = data.token;
+			            if (token) {
+			                localStorage.setItem('jwtToken', token);
+			                console.log('JWT Token saved to local storage:', token);
+							
+							// jwt 토큰 여부 확인 및 출력
+							initializeUserInfo();
+			            } else {
+			                console.error('JWT Token not found in response');
+			            }
+			            alert("환영합니다 안전파수꾼 입니다!");
+			            window.location.href = "/ehr/main/index.do";  // 페이지 리다이렉션
+			        } else {  // 로그인 실패
+			            alert("로그인 실패 코드 : " + data.loginMessage);  // 로그인 실패 메시지 표시
+			            userIdInput.focus();
+			        }
+			    }
+			})
+			.catch(error => {
+			    alert("로그인 처리 중 오류가 발생했습니다.");
+			    console.error("Error:", error);
+			});
+			
+		}
         
         // 유효성 검사 함수
         function isEmpty(value) {

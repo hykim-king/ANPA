@@ -114,3 +114,64 @@ let pager = function (maxNum, currentPageNo, rowPerPage, bottomCount, url, scrip
 
     return html.join('');
 }
+
+// JWT를 디코딩하는 방법 (예: base64url 디코딩)
+function parseJwt(token) {
+    if (!token) return null;
+
+    const base64Url = token.split('.')[1];
+    const base64 = decodeURIComponent(atob(base64Url).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(base64);
+}
+
+// JWT가 존재하는지 확인
+function isTokenAvailable() {
+    const token = localStorage.getItem('jwtToken');
+    return token !== null;
+}
+
+// JWT를 로컬 스토리지에서 가져오고 디코딩한 후, 사용자 정보 반환
+function getUserInfo() {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+        const decodedToken = parseJwt(token);
+        if (decodedToken) {
+            return {
+                userId: decodedToken.userId,
+                username: decodedToken.username
+            };
+        }
+    }
+    return null;
+}
+
+// 사용자가 로그인 되어 있는지 확인
+function isUserLoggedIn() {
+    return isTokenAvailable();
+}
+
+// 사용자 정보 표시 함수
+function displayUserInfo() {
+    const userInfo = getUserInfo();
+    if (userInfo) {
+    	console.log("JWT 정보 : " + userInfo.username + " / " + userInfo.userId);
+    }else{
+		console.log("사용자 정보 출력불가 규격 외 오류발생");
+	}
+}
+
+// 초기화 함수, 페이지 로드 시 호출
+function initializeUserInfo() {
+    if (isUserLoggedIn()) {
+        displayUserInfo();
+    } else {
+        console.log('GUEST 모드입니다');
+    }
+}
+
+// 페이지 로드 시 초기화 호출
+document.addEventListener('DOMContentLoaded', function() {
+	initializeUserInfo();
+}); 

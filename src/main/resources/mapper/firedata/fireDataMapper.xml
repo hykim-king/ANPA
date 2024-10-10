@@ -196,6 +196,7 @@
                         LEFT JOIN CODE loc ON loc.master_code = 'location' AND loc.sub_code = FIRE_DATA.sub_loc AND loc.use_yn = 1
                         LEFT JOIN CODE city ON city.master_code = 'city' AND city.sub_code = FIRE_DATA.sub_city AND city.use_yn = 1
                     WHERE 1=1
+            		AND FIRE_DATA.use_yn = 1
                     <include refid="doRetrieveWhere"/>
                     ORDER BY FIRE_DATA.reg_dt
                 ) T1
@@ -304,8 +305,9 @@
     </update>
     
     <delete id="doDelete">
-        DELETE FROM FIRE_DATA 
-        WHERE fire_seq = #{fireSeq}
+        UPDATE  FIRE_DATA 
+        SET		USE_YN = 0
+        WHERE 	fire_seq = #{fireSeq}
     </delete>
     
     <select id="doSelectOne" parameterType="Firedata" resultType="Firedata">

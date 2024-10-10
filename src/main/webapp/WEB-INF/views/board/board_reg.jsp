@@ -36,9 +36,6 @@
 <%-- jquery --%>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 
-<%-- common js --%>
-<script src="${CP}/resources/js/common.js"></script>
-
 <%-- google Nanum+Gothic --%>
 <link rel="stylesheet"
 	href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
